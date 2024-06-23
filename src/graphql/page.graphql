@@ -1,0 +1,36 @@
+query page {
+  home(id: "72nNzGBROuyZ1d2whMcQuU") {
+    photo {
+      sys {
+        id
+      }
+      description
+      image {
+        url
+        width
+        height
+      }
+    }
+
+    socialMediasCollection {
+      items {
+        sys {
+          id
+        }
+        url
+        icon {
+          description
+          image {
+            url
+            width
+            height
+          }
+        }
+      }
+    }
+
+    upperText
+    name
+    role
+  }
+}
