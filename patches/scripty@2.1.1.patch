@@ -1,0 +1,3116 @@
+diff --git a/node_modules/scripty/.17dbaf7dc567edff-0000000B.glob-first.js b/.17dbaf7dc567edff-0000000B.glob-first.js
+new file mode 100644
+index 0000000000000000000000000000000000000000..0970bf0bf1c4a8affdbd46d2b3e8c19ea7ec8670
+--- /dev/null
++++ b/.17dbaf7dc567edff-0000000B.glob-first.js
+@@ -0,0 +1,16 @@
++var path = require('path')
++var _ = require('lodash')
++var glob = require('glob')
++var async = require('async')
++
++module.exports = function (globPatterns, cb) {
++  async.map(globPatterns, function (globPattern, cb) {
++    glob(globPattern, { nodir: true }, cb)
++  }, function (er, result) {
++    if (er) return cb(er)
++    var firstMatches = _(result).reject(_.isEmpty).first()
++    cb(er, _.map(firstMatches, function (f) {
++      return path.resolve(f)
++    }))
++  })
++}
+diff --git a/node_modules/scripty/.17dfff76bd0fdef7-0000000E.glob-patterns.test.js b/.17dfff76bd0fdef7-0000000E.glob-patterns.test.js
+new file mode 100644
+index 0000000000000000000000000000000000000000..1aff55f5fdc2aaefce6837453351f70c2534bca6
+--- /dev/null
++++ b/.17dfff76bd0fdef7-0000000E.glob-patterns.test.js
+@@ -0,0 +1,36 @@
++var path = require('path')
++var subject = require('./glob-patterns')
++
++module.exports = {
++  simpleCase: function () {
++    var result = subject(__dirname, 'foo:bar', [])
++
++    assert.equal(result.length, 3)
++    assert.equal(result[0], path.resolve(__dirname, 'foo/bar') + '+(|.*)')
++    assert.equal(result[1], path.resolve(__dirname, 'foo/bar/index') + '+(|.*)')
++    assert.equal(result[2], path.resolve(__dirname, 'foo/bar/*'))
++  },
++  modulesCase: function () {
++    var result = subject(
++      __dirname,
++      'foo:bar',
++      [
++        path.join(process.cwd(), 'node_modules/bar/scripts'),
++        path.join(process.cwd(), 'node_modules/baz/scripts')
++      ]
++    )
++
++    assert.equal(result.length, 9)
++    assert.equal(result[0], path.resolve(__dirname, 'foo/bar') + '+(|.*)')
++    assert.equal(result[1], path.resolve(__dirname, 'foo/bar/index') + '+(|.*)')
++    assert.equal(result[2], path.resolve(__dirname, 'foo/bar/*'))
++
++    assert.equal(result[3], path.resolve(process.cwd(), 'node_modules/bar/scripts/foo/bar') + '+(|.*)')
++    assert.equal(result[4], path.resolve(process.cwd(), 'node_modules/bar/scripts/foo/bar/index') + '+(|.*)')
++    assert.equal(result[5], path.resolve(process.cwd(), 'node_modules/bar/scripts/foo/bar/*'))
++
++    assert.equal(result[6], path.resolve(process.cwd(), 'node_modules/baz/scripts/foo/bar') + '+(|.*)')
++    assert.equal(result[7], path.resolve(process.cwd(), 'node_modules/baz/scripts/foo/bar/index') + '+(|.*)')
++    assert.equal(result[8], path.resolve(process.cwd(), 'node_modules/baz/scripts/foo/bar/*'))
++  }
++}
+diff --git a/node_modules/scripty/.17ffbe4db5ffbbfa-0000000C.glob-first.test.js b/.17ffbe4db5ffbbfa-0000000C.glob-first.test.js
+new file mode 100644
+index 0000000000000000000000000000000000000000..5cb17277cbe2f845c7cc48a8b9934c225676980b
+--- /dev/null
++++ b/.17ffbe4db5ffbbfa-0000000C.glob-first.test.js
+@@ -0,0 +1,34 @@
++var _ = require('lodash')
++var path = require('path')
++
++var base = function (segment) {
++  return path.resolve('test/fixtures/unit/glob-first', segment)
++}
++var subject = require('./glob-first')
++
++module.exports = {
++  hitMissMiss: function (done) {
++    var patterns = [base('test2+(|.*)'), base('test2/index+(|.*)'), base('test2/*')]
++
++    subject(patterns, function (er, result) {
++      assert.equal(result, base('test2'))
++      done(er)
++    })
++  },
++  missHitHit: function (done) {
++    var patterns = [base('test+(|.*)'), base('test/index+(|.*)'), base('test/*')]
++
++    subject(patterns, function (er, result) {
++      assert.equal(result, base('test/index.sh'))
++      done(er)
++    })
++  },
++  missMissHit: function (done) {
++    var patterns = [base('(test3+(|.*)'), base('test3/index+(|.*)'), base('test3/*')]
++
++    subject(patterns, function (er, result) {
++      assert.deepEqual(_.sortBy(result), [base('test3/bar.foo'), base('test3/index2')])
++      done(er)
++    })
++  }
++}
+diff --git a/node_modules/scripty/.17ffef5b96ef67ed-00000019.scripty.js b/.17ffef5b96ef67ed-00000019.scripty.js
+new file mode 100644
+index 0000000000000000000000000000000000000000..5b77dff0558e52b4dcbd733b6dc53b0cadfeaca3
+--- /dev/null
++++ b/.17ffef5b96ef67ed-00000019.scripty.js
+@@ -0,0 +1,20 @@
++var optionify = require('./optionify')
++var resolveScript = require('./resolve-script')
++var run = require('./run')
++var log = require('./log')
++
++module.exports = optionify(function scripty (npmLifecycle, options, cb) {
++  log.level = options.logLevel
++
++  resolveScript(npmLifecycle, options.resolve, function (er, scriptFiles) {
++    if (er) return cb(er)
++    run(scriptFiles, options, cb)
++  })
++}, {
++  userArgs: [],
++  parallel: false,
++  dryRun: false,
++  logLevel: 'info',
++  spawn: {},
++  resolve: {}
++})
+diff --git a/node_modules/scripty/.17ffeff2b54fedd5-00000013.all.js b/.17ffeff2b54fedd5-00000013.all.js
+new file mode 100644
+index 0000000000000000000000000000000000000000..69c8f6470c91aaab3e0cac0d69764945681d09db
+--- /dev/null
++++ b/.17ffeff2b54fedd5-00000013.all.js
+@@ -0,0 +1,6 @@
++var async = require('async')
++
++module.exports = function (commands, parallel, cb) {
++  var runner = async[parallel ? 'parallel' : 'series']
++  runner(commands, cb)
++}
+diff --git a/node_modules/scripty/.1fdbefcb807fff4e-00000001.derive-log-level.js b/.1fdbefcb807fff4e-00000001.derive-log-level.js
+new file mode 100644
+index 0000000000000000000000000000000000000000..59a1e69065d66d5e55e92ae62b2cbd6c9bc07322
+--- /dev/null
++++ b/.1fdbefcb807fff4e-00000001.derive-log-level.js
+@@ -0,0 +1,25 @@
++const log = require('./log')
++
++const npmLevel = {
++  silent: log.silent,
++  error: log.error,
++  warn: log.warn,
++  notice: log.info,
++  http: log.info,
++  timing: log.info,
++  info: log.info,
++  verbose: log.verbose,
++  silly: log.verbose
++}
++
++module.exports = function deriveLogLevel (userOptions = {}) {
++  if (userOptions.logLevel) return userOptions.logLevel
++
++  if (userOptions.verbose) return log.verbose
++
++  if (userOptions.dryRun) return log.info
++
++  if (userOptions.silent || userOptions.quiet) return log.silent
++
++  return npmLevel[process.env.npm_config_loglevel]
++}
+diff --git a/node_modules/scripty/.1ffbefcfdddeff3e-0000000F.index.js b/.1ffbefcfdddeff3e-0000000F.index.js
+new file mode 100644
+index 0000000000000000000000000000000000000000..7178374adf96562e6d2aa827d0b297ab8c4e796d
+--- /dev/null
++++ b/.1ffbefcfdddeff3e-0000000F.index.js
+@@ -0,0 +1,26 @@
++var globPatterns = require('./glob-patterns')
++var findExecutables = require('./find-executables')
++var scriptDirs = require('./script-dirs')
++
++module.exports = function (name, options, cb) {
++  var dirs = scriptDirs(options)
++  var userGlob = globPatterns(dirs.userDir, name, dirs.moduleDirs)
++  findExecutables(userGlob, function (er, userPaths) {
++    if (userPaths.length > 0) {
++      cb(er, userPaths)
++    } else {
++      var ourGlob = globPatterns(dirs.ourDir, name, [])
++      findExecutables(ourGlob, function (er, ourPaths) {
++        if (ourPaths.length > 0) {
++          cb(er, ourPaths)
++        } else {
++          cb(new Error(`No script found for npm lifecycle '${name}' matching any of:\n` +
++            `  ${String(userGlob).replace(/,/g, '\n  ')}\n` +
++            `  ${String(ourGlob).replace(/,/g, '\n  ')}\n` +
++            `Either define a script or remove "scripty" from 'scripts.${name}' in your package.json.`
++          ), null)
++        }
++      })
++    }
++  })
++}
+diff --git a/node_modules/scripty/.37dbee55f8df4f55-00000005.log.js b/.37dbee55f8df4f55-00000005.log.js
+new file mode 100644
+index 0000000000000000000000000000000000000000..34b81f90ae70963f23e0f455f02277df86a4d936
+--- /dev/null
++++ b/.37dbee55f8df4f55-00000005.log.js
+@@ -0,0 +1,52 @@
++const util = require('util')
++
++const constant = val => () => val
++
++const formatError = args =>
++  args.map(arg => arg instanceof Error ? arg.message : arg)
++
++const loggerWithPrefix = (prefix, writer) => (...args) =>
++  writer()(prefix, util.format(...formatError(args))
++    .replace(/(\r?\n)(?=[\s\S]+)/g, `$1${prefix} `))
++
++const silentLogger = (...args) => {
++  output += util.format(...args) + '\n'
++}
++
++let level
++let output
++
++module.exports = {
++  get level () {
++    return level.toString()
++  },
++
++  set level (l) {
++    level = module.exports[String(l).toLowerCase()]
++  },
++
++  read: () => output,
++
++  reset: () => {
++    output = ''
++    module.exports.level = 'info'
++  }
++}
++
++;[
++  ['verbose', '>'],
++  ['info', '>'],
++  ['warn', 'WARN'],
++  ['error', 'ERR!'],
++  ['silent']
++].forEach(([name, prefix], index) => {
++  const logger = loggerWithPrefix(`scripty ${prefix}`, () =>
++    level <= logger ? console.error : silentLogger)
++
++  logger.valueOf = constant(index + 1)
++  logger.toString = constant(name)
++
++  module.exports[name] = logger
++})
++
++module.exports.reset()
+diff --git a/node_modules/scripty/.37dbef5faef77aee-0000001B.package.json b/.37dbef5faef77aee-0000001B.package.json
+new file mode 100644
+index 0000000000000000000000000000000000000000..00d210b1e1450223560dd20b1a45cf881e08e884
+--- /dev/null
++++ b/.37dbef5faef77aee-0000001B.package.json
+@@ -0,0 +1,66 @@
++{
++  "name": "scripty",
++  "version": "2.1.1",
++  "homepage": "https://github.com/testdouble/scripty#readme",
++  "description": "Because no one should be shell-scripting inside a JSON file.",
++  "license": "MIT",
++  "author": "Justin Searls <searls@gmail.com>",
++  "repository": {
++    "type": "git",
++    "url": "git+https://github.com/testdouble/scripty.git"
++  },
++  "bugs": {
++    "url": "https://github.com/testdouble/scripty/issues"
++  },
++  "main": "lib/scripty.js",
++  "bin": "cli.js",
++  "files": [
++    "cli.js",
++    "lib",
++    "scripts",
++    "scripts-win"
++  ],
++  "scripts": {
++    "test:unit": "teenytest 'lib/**/*.test.js' --helper test/unit-helper.js",
++    "test:safe": "teenytest 'test/safe/**/*.js' --helper test/safe-helper.js",
++    "test:style": "standard",
++    "test": "npm run test:unit && npm run test:style && npm run test:safe",
++    "test:cover": "npm run test:cover:unit && npm run test:cover:safe",
++    "posttest:cover": "istanbul report",
++    "test:cover:unit": "istanbul cover --dir coverage/unit teenytest -- 'lib/**/*.test.js' --helper test/unit-helper.js",
++    "test:cover:safe": "istanbul cover --dir coverage/safe teenytest -- 'test/safe/**/*.js' --helper test/safe-helper.js",
++    "postversion": "npm publish && git push --follow-tags"
++  },
++  "dependencies": {
++    "async": "^2.6.4",
++    "cross-spawn": "^7.0.3",
++    "glob": "^7.0.3",
++    "lodash": "^4.17.11",
++    "resolve-pkg": "^1.0.0"
++  },
++  "devDependencies": {
++    "assert": "^1.3.0",
++    "intercept-stdout": "^0.1.2",
++    "istanbul": "^0.4.3",
++    "semver": "^5.1.0",
++    "standard": "^12.0.1",
++    "teenytest": "^5.1.1",
++    "testdouble": "^3.9.1"
++  },
++  "keywords": [
++    "npm",
++    "scripts",
++    "dry",
++    "scripts",
++    "shell",
++    "script",
++    "management"
++  ],
++  "standard": {
++    "globals": [
++      "td",
++      "assert",
++      "UNSUPPORTED_TDD"
++    ]
++  }
++}
+diff --git a/node_modules/scripty/.37dfbf537fe0fc8c-0000001F.noop.cmd b/.37dfbf537fe0fc8c-0000001F.noop.cmd
+new file mode 100644
+index 0000000000000000000000000000000000000000..8b137891791fe96927ad78e64b0aad7bded08bdc
+--- /dev/null
++++ b/.37dfbf537fe0fc8c-0000001F.noop.cmd
+@@ -0,0 +1 @@
++
+diff --git a/node_modules/scripty/.37ffeff9ce5ef6ec-00000016.print-script.js b/.37ffeff9ce5ef6ec-00000016.print-script.js
+new file mode 100644
+index 0000000000000000000000000000000000000000..845ce40b0316318e859cfa4c8d4e0982398048de
+--- /dev/null
++++ b/.37ffeff9ce5ef6ec-00000016.print-script.js
+@@ -0,0 +1,15 @@
++var fs = require('fs')
++var log = require('../log')
++
++module.exports = function (scriptFile) {
++  log.info(`Executing "${scriptFile}":\n`)
++  log.verbose(`${read(scriptFile)}`)
++}
++
++function read (scriptFile) {
++  try {
++    return fs.readFileSync(scriptFile).toString()
++  } catch (e) {
++    log.warn(`Failed to read '${scriptFile}':\n${e.message}`)
++  }
++}
+diff --git a/node_modules/scripty/.3fdbae69faf5d4ce-0000001C.README.md b/.3fdbae69faf5d4ce-0000001C.README.md
+new file mode 100644
+index 0000000000000000000000000000000000000000..35ccb22bbe32a2c7f2b0e534caaf41574cd5e996
+--- /dev/null
++++ b/.3fdbae69faf5d4ce-0000001C.README.md
+@@ -0,0 +1,338 @@
++# scripty
++
++[![Latest npm release](https://img.shields.io/npm/v/scripty?logo=npm)](https://www.npmjs.com/package/scripty)
++[![Test Status](https://img.shields.io/github/workflow/status/testdouble/scripty/Test/main?logo=github)](https://github.com/testdouble/scripty/actions?query=workflow%3ATest+branch%3Amain)
++
++## What is?
++
++Using [npm-scripts](https://docs.npmjs.com/misc/scripts) has become a popular
++way of maintaining the various build tasks needed to develop Node.js modules.
++People like npm-scripts because it's simple! This is a common refrain:
++
++> Don't bother with grunt, gulp, or broccoli, just add a little script to your
++package.json and run it with `npm run name:of:script`
++
++Indeed, this _is_ much simpler, but it can quickly become a mess. Take a look at
++what happened to our
++[testdouble.js](https://github.com/testdouble/testdouble.js) library's
++[package.json](https://github.com/testdouble/testdouble.js/blob/30e27f54de0e84fe99a9c33340a0474c3a21369b/package.json#L16-L42).
++Using npm-scripts for everything is simple to start with, but it can't hope to
++guard against the complexity that naturally accumulates over the life of a
++project.
++
++We wrote scripty to help us extract our npm scripts—particularly the gnarly
++ones—into their own files without changing the command we use to run
++them. To see how to do this yourself, read on!
++
++## Install
++
++```
++$ npm install --save-dev scripty
++```
++
++## Usage
++
++1. From your module's root, create a `scripts` directory
++2. If you want to define an npm script named "foo:bar", write an executable
++file at `scripts/foo/bar`
++3. Feel a liberating breeze roll over your knuckles as
++your script is free to roam within its own file, beyond the stuffy confines of a
++quote-escaped string inside a pile of JSON
++4. Declare your `"foo:bar"` script in `"scripts"` in your `package.json`:
++
++``` json
++"scripts": {
++  "foo:bar": "scripty"
++}
++```
++
++From this point on, you can run `npm run foo:bar` and scripty will use npm's
++built-in `npm_lifecycle_event` environment variable to look up
++`scripts/foo/bar` and execute it for you.
++
++This pattern is great for extracting
++scripts that are starting to become unwieldy inside your `package.json`, while
++still explicitly calling out the scripts that your package supports (though
++where to take that aspect from here is [up for
++debate](https://github.com/testdouble/scripty/issues/1)).
++
++## Advanced Usage
++
++Ready to take things to the next level? Check this stuff out:
++
++### Passing command-line args
++
++To pass command-line args when you're running an npm script, set them after
++`--` and npm will forward them to your script (and scripty will do its part by
++forwarding them along).
++
++For example, if you had a script in `scripts/echo/hello`:
++
++``` sh
++#!/usr/bin/env sh
++
++echo Hello, "$1"!
++```
++
++Then you can run `npm run echo:hello -- WORLD` and see your script print
++`"Hello, WORLD!"`.
++
++### Batching "sub-scripts"
++
++Let's say you have two test tasks in `scripts/test/unit` and
++`scripts/test/integration`:
++
++``` json
++"scripts": {
++  "test:unit": "scripty",
++  "test:integration": "scripty"
++}
++```
++
++And you want `npm test` to simply run all of them, regardless of order. In that
++case, just add a `"test"` entry to your `package.json` like so:
++
++``` json
++"scripts": {
++  "test:unit": "scripty",
++  "test:integration": "scripty",
++  "test": "scripty"
++}
++```
++
++And from then on, running `npm test` will result in scripty running all the
++executable files it can find in `scripts/test/*`.
++
++### Defining an explicit parent script
++
++Suppose in the example above, it becomes important for us to run our scripts in
++a particular order. Or, perhaps, when running `npm test` we need to do some other
++custom scripting as well. Fear, not!
++
++Without changing the JSON from the previous example:
++
++``` json
++"scripts": {
++  "test:unit": "scripty",
++  "test:integration": "scripty",
++  "test": "scripty"
++}
++```
++
++Defining a script named `scripts/test/index` will cause scripty to only run that
++`index` script, as opposed to globbing for all the scripts it finds in
++`scripts/test/*`.
++
++### Running scripts in parallel
++
++If you have a certain command that will match mutiple child scripts (for
++instance, if `npm run watch` matches `scripts/watch/js` and
++`scripts/watch/css`), then you can tell scripty to run the sub-scripts in
++parallel by setting a `SCRIPTY_PARALLEL` env variable to `'true'`. This may
++be used to similar effect as the
++[npm-run-all](https://www.npmjs.com/package/npm-run-all) module.
++
++To illustrate, to run a scripty script in parallel, you might:
++
++```
++$ SCRIPTY_PARALLEL=true npm run watch
++```
++
++Or, if that particular script should always be run in parallel, you can set the
++variable in your package.json:
++
++``` json
++"scripts": {
++  "watch": "SCRIPTY_PARALLEL=true scripty"
++}
++```
++
++Which will run any sub-scripts in parallel whenever you run `npm run watch`.
++
++Finally, if you **always** want to run scripts in parallel, any option can be
++set in your package.json under a `"scripty"` entry:
++
++```json
++"config": {
++  "scripty": {
++    "parallel": true
++  }
++}
++```
++
++### Windows support
++
++Windows support is provided by scripty in two ways:
++
++1. If everything in your `scripts` directory can be safely executed by Windows,
++no action is needed (this is only likely if you don't have collaborators on
++Unix-like platforms)
++2. If your project needs to run scripts in both Windows & Unix, then you may
++define a `scripts-win/` directory with a symmetrical set of scripts to whatever
++Unix  scripts might be found in `scripts/`
++
++To illustrate the above, suppose you have this bash script configured as
++``"test/unit"`` in your package.json file and this bash script defined in
++`scripts/test/unit`:
++
++``` bash
++#!/usr/bin/env bash
++
++teenytest --helper test/unit-helper.js "lib/**/*.test.js"
++```
++
++In order to add Windows support, you could define `scripts-win/test/unit.cmd`
++with this script:
++
++``` bat
++@ECHO OFF
++
++teenytest --helper test\unit-helper.js "lib\**\*.test.js"
++```
++
++With a configuration like the above, if `npm run test:unit` is run from a Unix
++platform, the initial bash script in `scripts/` will run. If the same CLI
++command is run from Windows, however, the batch script in `scripts-win/` will be
++run.
++
++### Specifying custom script directories
++
++By default, scripty will search for scripts in `scripts/` relative to your
++module root (and if you're running windows, it'll check `scripts-win/` first).
++If you'd like to customize the base directories scripty uses to search for your
++scripts, add a `"scripty"` object property to your package.json like so:
++
++``` json
++"config": {
++  "scripty": {
++    "path": "../core/scripts",
++    "windowsPath": "../core/scripts-win"
++  }
++}
++```
++
++You can configure either or both of `"path"` and `"windowsPath"` to custom
++locations of your choosing. This may be handy in situations where multiple
++projects share the same set of scripts.
++
++### Sharing scripts via node modules
++
++You can configure scripty to include certain node modules into its executable
++search space. This is beneficial if you would like to create a centralized place
++for your scripts and then share them across multiple projects. To include modules
++add a `"scripty"` object property, `modules`, to your package.json like so:
++
++``` json
++"config": {
++  "scripty": {
++    "modules": ["packageA", "packageB"]
++  }
++}
++```
++
++Each node module must contain a `scripts` directory. Below is an example directory
++structure:
++
++```
++root/
++  scripts/
++    foo
++  node_modules/
++    packageA/
++      scripts/
++        foo
++        bar
++    packageB/
++      scripts/
++        bar
++        baz
++```
++
++In the above example the resolution of `foo` would resolve to `root.scripts.foo`. Local scripts
++take priority over ones defined in modules. The resolution of `bar` would resolve to
++`root.node_modules.packageA.scripts.bar` as packageA was the first module defined
++in the `scripty.modules` config.
++
++### Dry runs
++
++To perform a dry run of your scripts—something that's handy to check which
++scripts will run from a particular command without actually executing potentially
++destructive scripts, you can set an environment variable like so:
++
++```
++$ SCRIPTY_DRY_RUN=true npm run publish:danger:stuff
++```
++
++This will print the path and contents of each script the command would execute in
++the order they would be executed if you were to run the command normally.
++
++Worth mentioning, like all options this can be set in package.json under a
++`"scripty"` entry:
++
++```json
++"config": {
++  "scripty": {
++    "dryRun": true
++  }
++}
++```
++
++### Log output
++
++Scripty is now quieter by default.
++The output can be configured to a level of `verbose`, `info`, `warn`, or `error`.
++Any logs equal to or higher than the setting are shown.
++All logs are printed to STDERR (to aid in redirection and piping).
++
++```
++$ SCRIPTY_LOG_LEVEL=verbose npm run publish:danger:stuff
++```
++
++This will print the path and contents of each script the command executes.
++
++If you always want scripty to run your scripts at a certain level,
++you can set it in your package.json under a `"scripty"` entry:
++
++```json
++"config": {
++  "scripty": {
++    "logLevel": "warn"
++  }
++}
++```
++
++`SCRIPTY_SILENT` and `SCRIPTY_QUIET` are aliases for `SCRIPTY_LOG_LEVEL=silent`
++`SCRIPTY_VERBOSE` is an alias for `SCRIPTY_LOG_LEVEL=verbose`
++(also `"silent": true`, etc in package.json#scripty)
++
++`SCRIPTY_DRY_RUN=true` implies log level `info`
++
++Explicit setting from logLevel takes precedence; otherwise,
++conflicting values between silent/verbose/dryRun will respect the highest level.
++If no setting is provided, scripty will infer its log level from npm's log level.
++
++## Likely questions
++
++* **Is this pure magic?** - Nope! For once, instilling some convention didn't
++require any clever metaprogramming, just environment variables npm already sets;
++try running `printenv` from a script some time!
++* **Why isn't my script executing?** - If your script isn't executing, make sure
++it's **executable**! In UNIX, this can be accomplished by running
++`chmod +x scripts/path/to/my/script` (permissions will also be stored in git)
++* **How can I expect my users to understand what this does?** Documenting your
++project's use of `scripty` in the `README` is probably a good idea. Here's
++some copy pasta if you don't feel like writing it up yourself:
++
++  > ## npm scripts
++  > MyProject uses [`scripty`](https://github.com/testdouble/scripty) to organize
++  > npm scripts. The scripts are defined in the [`scripts`](/scripts) directory.
++  > In `package.json` you'll see the word `scripty` as opposed to the script
++  > content you'd expect. For more info, see
++  > [scripty's GitHub](https://github.com/testdouble/scripty).
++
++  > {{ insert table containing script names and what they do, e.g.
++  > [this](https://github.com/ashleygwilliams/relational-node#scripts) }}
++
++## Code of Conduct
++
++This project follows Test Double's [code of conduct](https://testdouble.com/code-of-conduct) for all community interactions, including (but not limited to) one-on-one communications, public posts/comments, code reviews, pull requests, and GitHub issues. If violations occur, Test Double will take any action they deem appropriate for the infraction, up to and including blocking a user from the organization's repositories.
+diff --git a/node_modules/scripty/.3fdfbe57fbffa7ec-00000006.log.test.js b/.3fdfbe57fbffa7ec-00000006.log.test.js
+new file mode 100644
+index 0000000000000000000000000000000000000000..0af4f7e62e7b784dd2fe9388df8bb8d555deb7f0
+--- /dev/null
++++ b/.3fdfbe57fbffa7ec-00000006.log.test.js
+@@ -0,0 +1,72 @@
++var subject = require('./log')
++
++module.exports = {
++  beforeEach: function () {
++    td.replace(console, 'error')
++    subject.reset()
++  },
++  writesToStderr: function () {
++    subject.info('foo')
++
++    td.verify(console.error('scripty >', 'foo'))
++  },
++  setTheLogLevel: {
++    verbose: function () {
++      subject.level = subject.verbose
++      subject.verbose('ity')
++      td.verify(console.error('scripty >', 'ity'))
++    },
++    info: function () {
++      subject.level = subject.info
++      td.when(console.error('ity')).thenThrow(new Error('Should not log verbose calls at INFO level'))
++      subject.verbose('ity')
++      subject.info('mation')
++      td.verify(console.error('scripty >', 'mation'))
++    },
++    warn: function () {
++      subject.level = subject.warn
++      td.when(console.error('mation')).thenThrow(new Error('Should not log info calls at WARN level'))
++      subject.info('mation')
++      subject.warn('ing')
++      td.verify(console.error('scripty WARN', 'ing'))
++    },
++    error: function () {
++      subject.level = subject.error
++      td.when(console.error('ing')).thenThrow(new Error('Should not log warn calls at ERROR level'))
++      subject.warn('ing')
++      subject.error('fail')
++      td.verify(console.error('scripty ERR!', 'fail'))
++    },
++    silent: function () {
++      subject.level = subject.silent
++      td.when(console.error('fail')).thenThrow(new Error('Should not log error calls at SILENT level'))
++      subject.error('fail')
++    }
++  },
++  modeSwitchCapturesLogs: function () {
++    subject.level = subject.silent
++
++    subject.info('bar')
++    subject.info('baz', 'noz')
++
++    td.verify(console.error(), { ignoreExtraArgs: true, times: 0 })
++    assert.equal(subject.read(), 'scripty > bar\nscripty > baz noz\n')
++  },
++  resetResetsMode: function () {
++    subject.level = subject.silent
++
++    subject.reset()
++
++    subject.info('biz')
++    td.verify(console.error('scripty >', 'biz'))
++  },
++  resetResetsLog: function () {
++    subject.level = subject.silent
++
++    subject.info('lalalal')
++
++    subject.reset()
++
++    assert.equal(subject.read(), '')
++  }
++}
+diff --git a/node_modules/scripty/.3fdfefedc9ebdf6e-00000003.load-option.js b/.3fdfefedc9ebdf6e-00000003.load-option.js
+new file mode 100644
+index 0000000000000000000000000000000000000000..3f4138abb83f2023efde3d1783fada7a82bcdaf3
+--- /dev/null
++++ b/.3fdfefedc9ebdf6e-00000003.load-option.js
+@@ -0,0 +1,57 @@
++var _ = require('lodash')
++
++module.exports = function loadOption (name) {
++  if (envVarSet(posixEnvVarName(name))) {
++    return boolEnvVarValue(posixEnvVarName(name))
++  } else if (envVarSet(packageEnvVarName(name))) {
++    return boolEnvVarValue(packageEnvVarName(name))
++  } else if (envVarSet(packageEnvConfigVarName(name))) {
++    return boolEnvVarValue(packageEnvConfigVarName(name))
++  } else if (envVarSet(packageArrayEnvVarName(name))) {
++    return arrayEnvVarValue(packageEnvVarName(name))
++  }
++}
++
++function boolEnvVarValue (envVarName) {
++  var value = process.env[envVarName]
++
++  if (value === 'true') {
++    return true
++  } else if (value === 'false') {
++    return false
++  } else {
++    return value
++  }
++}
++
++function arrayEnvVarValue (envVarName) {
++  var count = 0
++  var result = []
++
++  while (envVarSet(envVarName + '_' + count)) {
++    result.push(process.env[envVarName + '_' + count])
++    count++
++  }
++
++  return result
++}
++
++function envVarSet (envVarName) {
++  return !!process.env[envVarName]
++}
++
++function posixEnvVarName (optionName) {
++  return 'SCRIPTY_' + _.snakeCase(optionName).toUpperCase()
++}
++
++function packageEnvVarName (optionName) { // Backwards compatible for npm v6
++  return 'npm_package_scripty_' + optionName
++}
++
++function packageEnvConfigVarName (optionName) {
++  return 'npm_package_config_scripty_' + optionName
++}
++
++function packageArrayEnvVarName (optionName) {
++  return packageEnvVarName(optionName) + '_0'
++}
+diff --git a/node_modules/scripty/.3fdfeffb8fcafefe-0000001D.noop b/.3fdfeffb8fcafefe-0000001D.noop
+new file mode 100644
+index 0000000000000000000000000000000000000000..0be4fec0969e860ee1c4264ade6f88eae3df6e60
+--- /dev/null
++++ b/.3fdfeffb8fcafefe-0000001D.noop
+@@ -0,0 +1,3 @@
++#!/usr/bin/env bash
++
++:
+diff --git a/node_modules/scripty/.57dfbf775beb743c-0000001B.package.json b/.57dfbf775beb743c-0000001B.package.json
+new file mode 100644
+index 0000000000000000000000000000000000000000..00d210b1e1450223560dd20b1a45cf881e08e884
+--- /dev/null
++++ b/.57dfbf775beb743c-0000001B.package.json
+@@ -0,0 +1,66 @@
++{
++  "name": "scripty",
++  "version": "2.1.1",
++  "homepage": "https://github.com/testdouble/scripty#readme",
++  "description": "Because no one should be shell-scripting inside a JSON file.",
++  "license": "MIT",
++  "author": "Justin Searls <searls@gmail.com>",
++  "repository": {
++    "type": "git",
++    "url": "git+https://github.com/testdouble/scripty.git"
++  },
++  "bugs": {
++    "url": "https://github.com/testdouble/scripty/issues"
++  },
++  "main": "lib/scripty.js",
++  "bin": "cli.js",
++  "files": [
++    "cli.js",
++    "lib",
++    "scripts",
++    "scripts-win"
++  ],
++  "scripts": {
++    "test:unit": "teenytest 'lib/**/*.test.js' --helper test/unit-helper.js",
++    "test:safe": "teenytest 'test/safe/**/*.js' --helper test/safe-helper.js",
++    "test:style": "standard",
++    "test": "npm run test:unit && npm run test:style && npm run test:safe",
++    "test:cover": "npm run test:cover:unit && npm run test:cover:safe",
++    "posttest:cover": "istanbul report",
++    "test:cover:unit": "istanbul cover --dir coverage/unit teenytest -- 'lib/**/*.test.js' --helper test/unit-helper.js",
++    "test:cover:safe": "istanbul cover --dir coverage/safe teenytest -- 'test/safe/**/*.js' --helper test/safe-helper.js",
++    "postversion": "npm publish && git push --follow-tags"
++  },
++  "dependencies": {
++    "async": "^2.6.4",
++    "cross-spawn": "^7.0.3",
++    "glob": "^7.0.3",
++    "lodash": "^4.17.11",
++    "resolve-pkg": "^1.0.0"
++  },
++  "devDependencies": {
++    "assert": "^1.3.0",
++    "intercept-stdout": "^0.1.2",
++    "istanbul": "^0.4.3",
++    "semver": "^5.1.0",
++    "standard": "^12.0.1",
++    "teenytest": "^5.1.1",
++    "testdouble": "^3.9.1"
++  },
++  "keywords": [
++    "npm",
++    "scripts",
++    "dry",
++    "scripts",
++    "shell",
++    "script",
++    "management"
++  ],
++  "standard": {
++    "globals": [
++      "td",
++      "assert",
++      "UNSUPPORTED_TDD"
++    ]
++  }
++}
+diff --git a/node_modules/scripty/.57fbbe79cbbff78d-00000017.print-script.test.js b/.57fbbe79cbbff78d-00000017.print-script.test.js
+new file mode 100644
+index 0000000000000000000000000000000000000000..37c42714fe9ddbb86703aed7860baaa9405efb75
+--- /dev/null
++++ b/.57fbbe79cbbff78d-00000017.print-script.test.js
+@@ -0,0 +1,27 @@
++var path = require('path')
++
++var log = require('../log')
++
++module.exports = {
++  beforeEach: function () {
++    log.level = 'silent'
++    this.subject = require('./print-script')
++  },
++  happyPath: function () {
++    var script = path.resolve('scripts/test/debug')
++
++    this.subject(script)
++
++    assert.includes(log.read(), 'scripty > Executing "' + script + '":\n')
++    assert.includes(log.read(), 'scripty > #!/usr/bin/env sh')
++    assert.includes(log.read(), 'scripty > npm test -- --debug-brk')
++  },
++  sadPath: function () {
++    var script = '/silly/nonsense'
++
++    this.subject(script)
++
++    assert.includes(log.read(), `scripty WARN Failed to read '/silly/nonsense':`)
++    assert.includes(log.read(), `scripty WARN ENOENT`)
++  }
++}
+diff --git a/node_modules/scripty/.57ffffd28bbef4f2-0000000F.index.js b/.57ffffd28bbef4f2-0000000F.index.js
+new file mode 100644
+index 0000000000000000000000000000000000000000..7178374adf96562e6d2aa827d0b297ab8c4e796d
+--- /dev/null
++++ b/.57ffffd28bbef4f2-0000000F.index.js
+@@ -0,0 +1,26 @@
++var globPatterns = require('./glob-patterns')
++var findExecutables = require('./find-executables')
++var scriptDirs = require('./script-dirs')
++
++module.exports = function (name, options, cb) {
++  var dirs = scriptDirs(options)
++  var userGlob = globPatterns(dirs.userDir, name, dirs.moduleDirs)
++  findExecutables(userGlob, function (er, userPaths) {
++    if (userPaths.length > 0) {
++      cb(er, userPaths)
++    } else {
++      var ourGlob = globPatterns(dirs.ourDir, name, [])
++      findExecutables(ourGlob, function (er, ourPaths) {
++        if (ourPaths.length > 0) {
++          cb(er, ourPaths)
++        } else {
++          cb(new Error(`No script found for npm lifecycle '${name}' matching any of:\n` +
++            `  ${String(userGlob).replace(/,/g, '\n  ')}\n` +
++            `  ${String(ourGlob).replace(/,/g, '\n  ')}\n` +
++            `Either define a script or remove "scripty" from 'scripts.${name}' in your package.json.`
++          ), null)
++        }
++      })
++    }
++  })
++}
+diff --git a/node_modules/scripty/.5fdbaf7e1e7a48be-0000001E.debug b/.5fdbaf7e1e7a48be-0000001E.debug
+new file mode 100644
+index 0000000000000000000000000000000000000000..0afa38dbbd6decd2f92f507a42ce4748a6468c60
+--- /dev/null
++++ b/.5fdbaf7e1e7a48be-0000001E.debug
+@@ -0,0 +1,3 @@
++#!/usr/bin/env sh
++
++npm test -- --debug-brk
+diff --git a/node_modules/scripty/.5fdfeff2f4ee7edb-0000000C.glob-first.test.js b/.5fdfeff2f4ee7edb-0000000C.glob-first.test.js
+new file mode 100644
+index 0000000000000000000000000000000000000000..5cb17277cbe2f845c7cc48a8b9934c225676980b
+--- /dev/null
++++ b/.5fdfeff2f4ee7edb-0000000C.glob-first.test.js
+@@ -0,0 +1,34 @@
++var _ = require('lodash')
++var path = require('path')
++
++var base = function (segment) {
++  return path.resolve('test/fixtures/unit/glob-first', segment)
++}
++var subject = require('./glob-first')
++
++module.exports = {
++  hitMissMiss: function (done) {
++    var patterns = [base('test2+(|.*)'), base('test2/index+(|.*)'), base('test2/*')]
++
++    subject(patterns, function (er, result) {
++      assert.equal(result, base('test2'))
++      done(er)
++    })
++  },
++  missHitHit: function (done) {
++    var patterns = [base('test+(|.*)'), base('test/index+(|.*)'), base('test/*')]
++
++    subject(patterns, function (er, result) {
++      assert.equal(result, base('test/index.sh'))
++      done(er)
++    })
++  },
++  missMissHit: function (done) {
++    var patterns = [base('(test3+(|.*)'), base('test3/index+(|.*)'), base('test3/*')]
++
++    subject(patterns, function (er, result) {
++      assert.deepEqual(_.sortBy(result), [base('test3/bar.foo'), base('test3/index2')])
++      done(er)
++    })
++  }
++}
+diff --git a/node_modules/scripty/.5fffaed24f9f7fd8-0000000D.glob-patterns.js b/.5fffaed24f9f7fd8-0000000D.glob-patterns.js
+new file mode 100644
+index 0000000000000000000000000000000000000000..1790c7765cceae1cb6800ef5f796be24a2b407f9
+--- /dev/null
++++ b/.5fffaed24f9f7fd8-0000000D.glob-patterns.js
+@@ -0,0 +1,22 @@
++var path = require('path')
++
++module.exports = function (dir1, dir2, moduleDirs) {
++  var globs = []
++  var scriptPath = path.join.apply(this, dir2.split(':'))
++  var searchSpaceDirs = [].concat(dir1, moduleDirs)
++
++  searchSpaceDirs.forEach(function (dir) {
++    var scriptDir = path.resolve(dir, scriptPath)
++
++    // exact file match (+ any same-named extensions)
++    globs.push(scriptDir + '+(|.*)')
++
++    // a nested index file match (+ any same-named extensions)
++    globs.push(path.join(scriptDir, 'index+(|.*)'))
++
++    // any nested files at all
++    globs.push(path.join(scriptDir, '*'))
++  })
++
++  return globs
++}
+diff --git a/node_modules/scripty/.5fffeed7cfb738a4-00000011.script-dirs.js b/.5fffeed7cfb738a4-00000011.script-dirs.js
+new file mode 100644
+index 0000000000000000000000000000000000000000..26cf6d22a91d792cfc27ea48cdde6b20661b622f
+--- /dev/null
++++ b/.5fffeed7cfb738a4-00000011.script-dirs.js
+@@ -0,0 +1,44 @@
++var path = require('path')
++var fs = require('fs')
++var lodash = require('lodash')
++var resolvePkg = require('resolve-pkg')
++
++module.exports = function (options, platform) {
++  platform = platform || process.platform
++  var modules = lodash.get(options, 'modules', [])
++  return {
++    userDir: find(process.cwd(), options, 'scripts', platform),
++    moduleDirs: findModulePaths(modules).map(function (path) { return find(path, options, 'scripts', platform) }),
++    ourDir: find(path.resolve(__dirname, '../..'), options, 'builtIn', platform)
++  }
++}
++
++function find (base, options, key, platform) {
++  if (platform === 'win32' && options[key + 'Win']) {
++    return options[key + 'Win']
++  } else if (platform === 'win32' && fs.existsSync(path.resolve(base, 'scripts-win'))) {
++    return path.resolve(base, 'scripts-win')
++  } else if (platform === 'win32' && fs.existsSync(path.resolve(base, 'script-win'))) {
++    return path.resolve(base, 'script-win')
++  } else if (options[key]) {
++    return options[key]
++  } else if (fs.existsSync(path.resolve(base, 'scripts'))) {
++    return path.resolve(base, 'scripts')
++  } else {
++    return path.resolve(base, 'script')
++  }
++}
++
++function findModulePaths (modules) {
++  var modulePaths = []
++
++  modules.forEach(function (moduleName) {
++    var modulePath = resolvePkg(moduleName)
++
++    if (modulePath) {
++      modulePaths.push(modulePath)
++    }
++  })
++
++  return modulePaths
++}
+diff --git a/node_modules/scripty/.77dbaed9ebdfefbd-00000012.script-dirs.test.js b/.77dbaed9ebdfefbd-00000012.script-dirs.test.js
+new file mode 100644
+index 0000000000000000000000000000000000000000..c87f15dfcef5aaa430f50e95ba490d1e0a89b95f
+--- /dev/null
++++ b/.77dbaed9ebdfefbd-00000012.script-dirs.test.js
+@@ -0,0 +1,104 @@
++var path = require('path')
++
++module.exports = {
++  beforeEach: function () {
++    this.resolvePkg = td.replace('resolve-pkg')
++    this.fsExistsSync = td.replace('fs').existsSync
++    this.subject = require('./script-dirs')
++  },
++  unixUserScripts: {
++    'prefer scripts key if set': function () {
++      assert.equal(this.subject({ scripts: 'A', scriptsWin: 'B' }, 'lolnix').userDir, 'A')
++    },
++
++    'first fallback to scripts if it exists': function () {
++      td.when(this.fsExistsSync(td.matchers.contains(/scripts$/))).thenReturn(true)
++      assert.equal(this.subject({ scripts: null, scriptsWin: 'B' }, 'lolnix').userDir,
++        path.resolve(process.cwd(), 'scripts'))
++    },
++
++    'final fallback to script': function () {
++      td.when(this.fsExistsSync(td.matchers.contains(/scripts$/))).thenReturn(false)
++      assert.equal(this.subject({ scripts: null, scriptsWin: null }, 'lolnix').userDir,
++        path.resolve(process.cwd(), 'script'))
++    }
++  },
++  unixBuiltInScripts: function () {
++    td.when(this.fsExistsSync(td.matchers.contains(/scripts$/))).thenReturn(true)
++    assert.equal(this.subject({ builtIn: 'A', builtInWin: 'B' }, 'lolnix').ourDir, 'A')
++    assert.equal(this.subject({ builtIn: null, builtInWin: 'B' }, 'lolnix').ourDir,
++      path.resolve(__dirname, '../../scripts'))
++  },
++  windowsUserScripts: {
++    'prefer scriptsWin value if set': function () {
++      assert.equal(this.subject({ scripts: 'A', scriptsWin: 'B' }, 'win32').userDir, 'B')
++    },
++
++    'first fallback to scripts-win if exists': function () {
++      td.when(this.fsExistsSync(td.matchers.contains(/scripts-win$/))).thenReturn(true)
++      assert.equal(this.subject({ scripts: 'A', scriptsWin: null }, 'win32').userDir,
++        path.resolve(process.cwd(), 'scripts-win'))
++    },
++
++    'second fallback to script-win if it exists': function () {
++      td.when(this.fsExistsSync(td.matchers.contains(/scripts-win$/))).thenReturn(false)
++      td.when(this.fsExistsSync(td.matchers.contains(/script-win$/))).thenReturn(true)
++      assert.equal(this.subject({ scripts: 'A', scriptsWin: null }, 'win32').userDir,
++        path.resolve(process.cwd(), 'script-win'))
++    },
++
++    'third fallback to scripts key if set': function () {
++      td.when(this.fsExistsSync(td.matchers.contains(/scripts-win$/))).thenReturn(false)
++      td.when(this.fsExistsSync(td.matchers.contains(/script-win$/))).thenReturn(false)
++      assert.equal(this.subject({ scripts: 'A', scriptsWin: null }, 'win32').userDir, 'A')
++    },
++
++    'fourth fallback to scripts if it exists': function () {
++      td.when(this.fsExistsSync(td.matchers.contains(/scripts-win$/))).thenReturn(false)
++      td.when(this.fsExistsSync(td.matchers.contains(/script-win$/))).thenReturn(false)
++      td.when(this.fsExistsSync(td.matchers.contains(/scripts$/))).thenReturn(true)
++      assert.equal(this.subject({ scripts: null, scriptsWin: null }, 'win32').userDir,
++        path.resolve(process.cwd(), 'scripts'))
++    },
++
++    'final fallback to script': function () {
++      td.when(this.fsExistsSync(td.matchers.contains(/scripts-win$/))).thenReturn(false)
++      td.when(this.fsExistsSync(td.matchers.contains(/script-win$/))).thenReturn(false)
++      td.when(this.fsExistsSync(td.matchers.contains(/scripts$/))).thenReturn(false)
++      assert.equal(this.subject({ scripts: null, scriptsWin: null }, 'win32').userDir,
++        path.resolve(process.cwd(), 'script'))
++    }
++  },
++  windowsBuiltIn: function () {
++    td.when(this.fsExistsSync(td.matchers.contains(/scripts-win$/))).thenReturn(true)
++    assert.equal(this.subject({ builtIn: 'A', builtInWin: 'B' }, 'win32').ourDir, 'B')
++    assert.equal(this.subject({ builtIn: 'A', builtInWin: null }, 'win32').ourDir,
++      path.resolve(__dirname, '../../scripts-win'))
++  },
++  moduleDirs: {
++    'prefer scripts if it exists': function () {
++      td.when(this.resolvePkg('bar')).thenReturn('node_modules/bar')
++      td.when(this.fsExistsSync(td.matchers.contains(/scripts$/))).thenReturn(true)
++
++      assert.deepEqual(
++        this.subject({
++          modules: ['bar']
++        },
++        'lolnix'
++        ).moduleDirs, [path.resolve(process.cwd(), 'node_modules/bar/scripts')]
++      )
++    },
++
++    'fallback to script': function () {
++      td.when(this.resolvePkg('bar')).thenReturn('node_modules/bar')
++      td.when(this.fsExistsSync(td.matchers.contains(/scripts$/))).thenReturn(false)
++      assert.deepEqual(
++        this.subject({
++          modules: ['bar']
++        },
++        'lolnix'
++        ).moduleDirs, [path.resolve(process.cwd(), 'node_modules/bar/script')]
++      )
++    }
++  }
++}
+diff --git a/node_modules/scripty/.77dbfe4d89ffb7d6-00000009.find-executables.js b/.77dbfe4d89ffb7d6-00000009.find-executables.js
+new file mode 100644
+index 0000000000000000000000000000000000000000..02082e06b630395344b25a4fc631d9886d0934f4
+--- /dev/null
++++ b/.77dbfe4d89ffb7d6-00000009.find-executables.js
+@@ -0,0 +1,21 @@
++var _ = require('lodash')
++var async = require('async')
++var fs = require('fs')
++var path = require('path')
++var globFirst = require('./glob-first')
++var log = require('../log')
++
++module.exports = (patterns, cb) =>
++  globFirst(patterns, (er, results) => {
++    if (er) return cb(er)
++
++    async.map(results,
++      (result, cb) => fs.access(result, fs.constants.R_OK | fs.constants.X_OK,
++        er => cb(null, er
++          ? log.warn(`Ignoring script '${result}' because it was not readable/executable.\n` +
++            `Run \`chmod u+rx '${result}'\` if you want scripty to run it.`)
++          : path.resolve(result))
++      ),
++      (er, results) => cb(er, _.compact(results))
++    )
++  })
+diff --git a/node_modules/scripty/.77dfbe7ff5fdfef7-00000014.dry-run.js b/.77dfbe7ff5fdfef7-00000014.dry-run.js
+new file mode 100644
+index 0000000000000000000000000000000000000000..13b857e9d44c82eee9197893674cb898f6d6654c
+--- /dev/null
++++ b/.77dfbe7ff5fdfef7-00000014.dry-run.js
+@@ -0,0 +1,10 @@
++var _ = require('lodash')
++
++var printScript = require('./print-script')
++var log = require('../log')
++
++module.exports = function (scriptFiles, cb) {
++  log.info('This is a dry run. Executed scripts would be:')
++  _.map(scriptFiles, printScript)
++  cb(null, 0)
++}
+diff --git a/node_modules/scripty/.77fbaef7fbff16df-0000000B.glob-first.js b/.77fbaef7fbff16df-0000000B.glob-first.js
+new file mode 100644
+index 0000000000000000000000000000000000000000..0970bf0bf1c4a8affdbd46d2b3e8c19ea7ec8670
+--- /dev/null
++++ b/.77fbaef7fbff16df-0000000B.glob-first.js
+@@ -0,0 +1,16 @@
++var path = require('path')
++var _ = require('lodash')
++var glob = require('glob')
++var async = require('async')
++
++module.exports = function (globPatterns, cb) {
++  async.map(globPatterns, function (globPattern, cb) {
++    glob(globPattern, { nodir: true }, cb)
++  }, function (er, result) {
++    if (er) return cb(er)
++    var firstMatches = _(result).reject(_.isEmpty).first()
++    cb(er, _.map(firstMatches, function (f) {
++      return path.resolve(f)
++    }))
++  })
++}
+diff --git a/node_modules/scripty/.77fffe5bddfc3d71-00000016.print-script.js b/.77fffe5bddfc3d71-00000016.print-script.js
+new file mode 100644
+index 0000000000000000000000000000000000000000..845ce40b0316318e859cfa4c8d4e0982398048de
+--- /dev/null
++++ b/.77fffe5bddfc3d71-00000016.print-script.js
+@@ -0,0 +1,15 @@
++var fs = require('fs')
++var log = require('../log')
++
++module.exports = function (scriptFile) {
++  log.info(`Executing "${scriptFile}":\n`)
++  log.verbose(`${read(scriptFile)}`)
++}
++
++function read (scriptFile) {
++  try {
++    return fs.readFileSync(scriptFile).toString()
++  } catch (e) {
++    log.warn(`Failed to read '${scriptFile}':\n${e.message}`)
++  }
++}
+diff --git a/node_modules/scripty/.97dfbf7b5bfdfef5-00000018.spawn-script.js b/.97dfbf7b5bfdfef5-00000018.spawn-script.js
+new file mode 100644
+index 0000000000000000000000000000000000000000..3222ec591ea96bb7c7ed5536c6451fb0e79a934f
+--- /dev/null
++++ b/.97dfbf7b5bfdfef5-00000018.spawn-script.js
+@@ -0,0 +1,20 @@
++var _ = require('lodash')
++var printScript = require('./print-script')
++var spawn = require('cross-spawn').spawn
++
++module.exports = function (scriptFile, options, cb) {
++  printScript(scriptFile)
++
++  const child = spawn(scriptFile, options.userArgs, options.spawn)
++
++  child.on('close', (code) =>
++    cb(
++      code !== 0
++        ? new Error(`script failed: '${scriptFile}'\nexit status: ${code}`)
++        : null,
++      code
++    )
++  )
++
++  _.invoke(options, 'spawn.tap', child)
++}
+diff --git a/node_modules/scripty/.97fbaf53ff6dedcc-00000009.find-executables.js b/.97fbaf53ff6dedcc-00000009.find-executables.js
+new file mode 100644
+index 0000000000000000000000000000000000000000..02082e06b630395344b25a4fc631d9886d0934f4
+--- /dev/null
++++ b/.97fbaf53ff6dedcc-00000009.find-executables.js
+@@ -0,0 +1,21 @@
++var _ = require('lodash')
++var async = require('async')
++var fs = require('fs')
++var path = require('path')
++var globFirst = require('./glob-first')
++var log = require('../log')
++
++module.exports = (patterns, cb) =>
++  globFirst(patterns, (er, results) => {
++    if (er) return cb(er)
++
++    async.map(results,
++      (result, cb) => fs.access(result, fs.constants.R_OK | fs.constants.X_OK,
++        er => cb(null, er
++          ? log.warn(`Ignoring script '${result}' because it was not readable/executable.\n` +
++            `Run \`chmod u+rx '${result}'\` if you want scripty to run it.`)
++          : path.resolve(result))
++      ),
++      (er, results) => cb(er, _.compact(results))
++    )
++  })
+diff --git a/node_modules/scripty/.97ffbfd25bd7e9a0-0000001D.noop b/.97ffbfd25bd7e9a0-0000001D.noop
+new file mode 100644
+index 0000000000000000000000000000000000000000..0be4fec0969e860ee1c4264ade6f88eae3df6e60
+--- /dev/null
++++ b/.97ffbfd25bd7e9a0-0000001D.noop
+@@ -0,0 +1,3 @@
++#!/usr/bin/env bash
++
++:
+diff --git a/node_modules/scripty/.97fffe51f3fffffe-00000001.derive-log-level.js b/.97fffe51f3fffffe-00000001.derive-log-level.js
+new file mode 100644
+index 0000000000000000000000000000000000000000..59a1e69065d66d5e55e92ae62b2cbd6c9bc07322
+--- /dev/null
++++ b/.97fffe51f3fffffe-00000001.derive-log-level.js
+@@ -0,0 +1,25 @@
++const log = require('./log')
++
++const npmLevel = {
++  silent: log.silent,
++  error: log.error,
++  warn: log.warn,
++  notice: log.info,
++  http: log.info,
++  timing: log.info,
++  info: log.info,
++  verbose: log.verbose,
++  silly: log.verbose
++}
++
++module.exports = function deriveLogLevel (userOptions = {}) {
++  if (userOptions.logLevel) return userOptions.logLevel
++
++  if (userOptions.verbose) return log.verbose
++
++  if (userOptions.dryRun) return log.info
++
++  if (userOptions.silent || userOptions.quiet) return log.silent
++
++  return npmLevel[process.env.npm_config_loglevel]
++}
+diff --git a/node_modules/scripty/.9fdbfef76ff77bf5-00000012.script-dirs.test.js b/.9fdbfef76ff77bf5-00000012.script-dirs.test.js
+new file mode 100644
+index 0000000000000000000000000000000000000000..c87f15dfcef5aaa430f50e95ba490d1e0a89b95f
+--- /dev/null
++++ b/.9fdbfef76ff77bf5-00000012.script-dirs.test.js
+@@ -0,0 +1,104 @@
++var path = require('path')
++
++module.exports = {
++  beforeEach: function () {
++    this.resolvePkg = td.replace('resolve-pkg')
++    this.fsExistsSync = td.replace('fs').existsSync
++    this.subject = require('./script-dirs')
++  },
++  unixUserScripts: {
++    'prefer scripts key if set': function () {
++      assert.equal(this.subject({ scripts: 'A', scriptsWin: 'B' }, 'lolnix').userDir, 'A')
++    },
++
++    'first fallback to scripts if it exists': function () {
++      td.when(this.fsExistsSync(td.matchers.contains(/scripts$/))).thenReturn(true)
++      assert.equal(this.subject({ scripts: null, scriptsWin: 'B' }, 'lolnix').userDir,
++        path.resolve(process.cwd(), 'scripts'))
++    },
++
++    'final fallback to script': function () {
++      td.when(this.fsExistsSync(td.matchers.contains(/scripts$/))).thenReturn(false)
++      assert.equal(this.subject({ scripts: null, scriptsWin: null }, 'lolnix').userDir,
++        path.resolve(process.cwd(), 'script'))
++    }
++  },
++  unixBuiltInScripts: function () {
++    td.when(this.fsExistsSync(td.matchers.contains(/scripts$/))).thenReturn(true)
++    assert.equal(this.subject({ builtIn: 'A', builtInWin: 'B' }, 'lolnix').ourDir, 'A')
++    assert.equal(this.subject({ builtIn: null, builtInWin: 'B' }, 'lolnix').ourDir,
++      path.resolve(__dirname, '../../scripts'))
++  },
++  windowsUserScripts: {
++    'prefer scriptsWin value if set': function () {
++      assert.equal(this.subject({ scripts: 'A', scriptsWin: 'B' }, 'win32').userDir, 'B')
++    },
++
++    'first fallback to scripts-win if exists': function () {
++      td.when(this.fsExistsSync(td.matchers.contains(/scripts-win$/))).thenReturn(true)
++      assert.equal(this.subject({ scripts: 'A', scriptsWin: null }, 'win32').userDir,
++        path.resolve(process.cwd(), 'scripts-win'))
++    },
++
++    'second fallback to script-win if it exists': function () {
++      td.when(this.fsExistsSync(td.matchers.contains(/scripts-win$/))).thenReturn(false)
++      td.when(this.fsExistsSync(td.matchers.contains(/script-win$/))).thenReturn(true)
++      assert.equal(this.subject({ scripts: 'A', scriptsWin: null }, 'win32').userDir,
++        path.resolve(process.cwd(), 'script-win'))
++    },
++
++    'third fallback to scripts key if set': function () {
++      td.when(this.fsExistsSync(td.matchers.contains(/scripts-win$/))).thenReturn(false)
++      td.when(this.fsExistsSync(td.matchers.contains(/script-win$/))).thenReturn(false)
++      assert.equal(this.subject({ scripts: 'A', scriptsWin: null }, 'win32').userDir, 'A')
++    },
++
++    'fourth fallback to scripts if it exists': function () {
++      td.when(this.fsExistsSync(td.matchers.contains(/scripts-win$/))).thenReturn(false)
++      td.when(this.fsExistsSync(td.matchers.contains(/script-win$/))).thenReturn(false)
++      td.when(this.fsExistsSync(td.matchers.contains(/scripts$/))).thenReturn(true)
++      assert.equal(this.subject({ scripts: null, scriptsWin: null }, 'win32').userDir,
++        path.resolve(process.cwd(), 'scripts'))
++    },
++
++    'final fallback to script': function () {
++      td.when(this.fsExistsSync(td.matchers.contains(/scripts-win$/))).thenReturn(false)
++      td.when(this.fsExistsSync(td.matchers.contains(/script-win$/))).thenReturn(false)
++      td.when(this.fsExistsSync(td.matchers.contains(/scripts$/))).thenReturn(false)
++      assert.equal(this.subject({ scripts: null, scriptsWin: null }, 'win32').userDir,
++        path.resolve(process.cwd(), 'script'))
++    }
++  },
++  windowsBuiltIn: function () {
++    td.when(this.fsExistsSync(td.matchers.contains(/scripts-win$/))).thenReturn(true)
++    assert.equal(this.subject({ builtIn: 'A', builtInWin: 'B' }, 'win32').ourDir, 'B')
++    assert.equal(this.subject({ builtIn: 'A', builtInWin: null }, 'win32').ourDir,
++      path.resolve(__dirname, '../../scripts-win'))
++  },
++  moduleDirs: {
++    'prefer scripts if it exists': function () {
++      td.when(this.resolvePkg('bar')).thenReturn('node_modules/bar')
++      td.when(this.fsExistsSync(td.matchers.contains(/scripts$/))).thenReturn(true)
++
++      assert.deepEqual(
++        this.subject({
++          modules: ['bar']
++        },
++        'lolnix'
++        ).moduleDirs, [path.resolve(process.cwd(), 'node_modules/bar/scripts')]
++      )
++    },
++
++    'fallback to script': function () {
++      td.when(this.resolvePkg('bar')).thenReturn('node_modules/bar')
++      td.when(this.fsExistsSync(td.matchers.contains(/scripts$/))).thenReturn(false)
++      assert.deepEqual(
++        this.subject({
++          modules: ['bar']
++        },
++        'lolnix'
++        ).moduleDirs, [path.resolve(process.cwd(), 'node_modules/bar/script')]
++      )
++    }
++  }
++}
+diff --git a/node_modules/scripty/.9ffbbef9cdec577b-00000010.index.test.js b/.9ffbbef9cdec577b-00000010.index.test.js
+new file mode 100644
+index 0000000000000000000000000000000000000000..407531097c559b897568b08151a32f0a114b95ff
+--- /dev/null
++++ b/.9ffbbef9cdec577b-00000010.index.test.js
+@@ -0,0 +1,51 @@
++var OPTIONS = { panda: true }
++
++module.exports = {
++  beforeEach: function () {
++    td.when(td.replace(process, 'cwd')()).thenReturn('/user-dir')
++    this.globPatterns = td.replace('./glob-patterns')
++    this.findExecutables = td.replace('./find-executables')
++    this.scriptDirs = td.replace('./script-dirs')
++    this.subject = require('./index')
++
++    td.when(this.scriptDirs(OPTIONS)).thenReturn({ userDir: 'A', ourDir: 'B', moduleDirs: [] })
++    td.when(this.globPatterns('A', 'fake', [])).thenReturn(['glob1'])
++    td.when(this.globPatterns('B', 'fake', [])).thenReturn(['glob2'])
++
++    td.when(this.globPatterns('A', 'fake', [])).thenReturn(['glob1'])
++    td.when(this.globPatterns('B', 'fake', [])).thenReturn(['glob2'])
++  },
++  bothUserAndBuiltInScriptsExist: function (done) {
++    td.when(this.findExecutables(['glob1'])).thenCallback(null, ['user-path'])
++    td.when(this.findExecutables(['glob2'])).thenCallback(null, ['pathA'])
++
++    this.subject('fake', OPTIONS, function (er, result) {
++      assert.deepEqual(result, ['user-path'])
++      done(er)
++    })
++  },
++  oneBuiltInScriptExists: function (done) {
++    td.when(this.findExecutables(['glob1'])).thenCallback(null, [])
++    td.when(this.findExecutables(['glob2'])).thenCallback(null, ['pathA'])
++
++    this.subject('fake', OPTIONS, function (er, result) {
++      assert.deepEqual(result, ['pathA'])
++      done(er)
++    })
++  },
++  noScriptExists: function (done) {
++    td.when(this.findExecutables(['glob1'])).thenCallback(null, [])
++    td.when(this.findExecutables(['glob2'])).thenCallback(null, [])
++
++    this.subject('fake', OPTIONS, function (er, result) {
++      assert.equal(er.message,
++        `No script found for npm lifecycle 'fake' matching any of:\n` +
++        `  glob1\n  glob2\n` +
++        `Either define a script or remove "scripty" from 'scripts.fake' in your package.json.`)
++      assert.equal(result, null)
++      done(null)
++    })
++  }
++}
++
++if (UNSUPPORTED_TDD) module.exports = {}
+diff --git a/node_modules/scripty/.9ffbeef3fbfdaedc-00000002.derive-log-level.test.js b/.9ffbeef3fbfdaedc-00000002.derive-log-level.test.js
+new file mode 100644
+index 0000000000000000000000000000000000000000..33e9f698873129ba5eb14a02da42d0fe80c87519
+--- /dev/null
++++ b/.9ffbeef3fbfdaedc-00000002.derive-log-level.test.js
+@@ -0,0 +1,43 @@
++var subject = require('./derive-log-level')
++var log = require('./log')
++
++module.exports = {
++  'defaults to inferring from npm logLevel': function () {
++    process.env.npm_config_loglevel = 'silly'
++    assert.equal(subject(), log.verbose)
++
++    process.env.npm_config_loglevel = 'notice'
++    assert.equal(subject(), log.info)
++
++    process.env.npm_config_loglevel = 'silent'
++    assert.equal(subject(), log.silent)
++  },
++
++  'explicit logLevel takes precedence': function () {
++    assert.equal(subject({
++      silent: true,
++      dryRun: true,
++      verbose: true,
++      logLevel: 'warn' }), 'warn')
++  },
++
++  'passes through unrecognized values': function () {
++    assert.equal(subject({ logLevel: 'worn' }), 'worn')
++  },
++
++  'verbose preempts dry-run and silent': function () {
++    assert.equal(subject({ silent: true, dryRun: true, verbose: true }), log.verbose)
++  },
++
++  'dry-run preempts silent': function () {
++    assert.equal(subject({ silent: true, dryRun: true }), log.info)
++  },
++
++  'silent is read last': function () {
++    assert.equal(subject({ silent: true }), log.silent)
++  },
++
++  'quiet is alias for silent': function () {
++    assert.equal(subject({ quiet: true }), log.silent)
++  }
++}
+diff --git a/node_modules/scripty/.9ffbfffffb7eea1d-0000000A.find-executables.test.js b/.9ffbfffffb7eea1d-0000000A.find-executables.test.js
+new file mode 100644
+index 0000000000000000000000000000000000000000..579860447f3d6e3cc5b4838593f81f39532399ea
+--- /dev/null
++++ b/.9ffbfffffb7eea1d-0000000A.find-executables.test.js
+@@ -0,0 +1,49 @@
++var _ = require('lodash')
++var path = require('path')
++var log = require('../log')
++
++var base = function (glob) {
++  return path.resolve('test/fixtures/unit/find-executables', glob)
++}
++var subject = require('./find-executables')
++
++module.exports = {
++  beforeEach: function () {
++    log.level = 'silent'
++  },
++  noFilesFound: function (done) {
++    subject([base('does-not-exist*')], function (er, result) {
++      assert.deepEqual(result, [])
++      done(er)
++    })
++  },
++  oneFileFound: function (done) {
++    subject([base('is-executable*')], function (er, result) {
++      assert.deepEqual(result, [base('is-executable')])
++      done(er)
++    })
++  },
++  oneFileFoundWithOneNonExecutable: function (done) {
++    if (process.platform === 'win32') return done()
++    subject([base('file.*')], function (er, result) {
++      assert.deepEqual(result, [base('file.executable')])
++      assert.includes(log.read(),
++        `scripty WARN Ignoring script '${base('file.not.executable')}' because it was not readable/executable.\n` +
++        `scripty WARN Run \`chmod u+rx '${base('file.not.executable')}'\` if you want scripty to run it.`
++      )
++      done(er)
++    })
++  },
++  twoFilesFound: function (done) {
++    subject([base('exec.*')], function (er, result) {
++      assert.deepEqual(_.sortBy(result), [base('exec.rb'), base('exec.sh')])
++      done(er)
++    })
++  },
++  dirFound: function (done) {
++    subject([base('exec-dir-wat*')], function (er, result) {
++      assert.deepEqual(result, [])
++      done(er)
++    })
++  }
++}
+diff --git a/node_modules/scripty/.9fffbe7b83ffbefe-00000014.dry-run.js b/.9fffbe7b83ffbefe-00000014.dry-run.js
+new file mode 100644
+index 0000000000000000000000000000000000000000..13b857e9d44c82eee9197893674cb898f6d6654c
+--- /dev/null
++++ b/.9fffbe7b83ffbefe-00000014.dry-run.js
+@@ -0,0 +1,10 @@
++var _ = require('lodash')
++
++var printScript = require('./print-script')
++var log = require('../log')
++
++module.exports = function (scriptFiles, cb) {
++  log.info('This is a dry run. Executed scripts would be:')
++  _.map(scriptFiles, printScript)
++  cb(null, 0)
++}
+diff --git a/node_modules/scripty/.9ffffe4bc5fbfd95-00000007.optionify.js b/.9ffffe4bc5fbfd95-00000007.optionify.js
+new file mode 100644
+index 0000000000000000000000000000000000000000..f4a3a919ae37af36c3df0035a2c023cc368db09e
+--- /dev/null
++++ b/.9ffffe4bc5fbfd95-00000007.optionify.js
+@@ -0,0 +1,20 @@
++var _ = require('lodash')
++var deriveLogLevel = require('./derive-log-level')
++
++var NULL_CB = function () {}
++module.exports = function (rawFunc, defaultOptions) {
++  return function (mainArg, userOptions, cb) {
++    if (typeof userOptions === 'function') {
++      cb = userOptions
++    }
++    if (!cb) {
++      cb = NULL_CB
++    }
++
++    var logLevel = deriveLogLevel(userOptions)
++    if (logLevel) userOptions.logLevel = logLevel
++
++    var fullOptions = _.defaultsDeep({}, userOptions, defaultOptions)
++    return rawFunc(mainArg, fullOptions, cb)
++  }
++}
+diff --git a/node_modules/scripty/.b7dfbef329fcfbfc-0000000A.find-executables.test.js b/.b7dfbef329fcfbfc-0000000A.find-executables.test.js
+new file mode 100644
+index 0000000000000000000000000000000000000000..579860447f3d6e3cc5b4838593f81f39532399ea
+--- /dev/null
++++ b/.b7dfbef329fcfbfc-0000000A.find-executables.test.js
+@@ -0,0 +1,49 @@
++var _ = require('lodash')
++var path = require('path')
++var log = require('../log')
++
++var base = function (glob) {
++  return path.resolve('test/fixtures/unit/find-executables', glob)
++}
++var subject = require('./find-executables')
++
++module.exports = {
++  beforeEach: function () {
++    log.level = 'silent'
++  },
++  noFilesFound: function (done) {
++    subject([base('does-not-exist*')], function (er, result) {
++      assert.deepEqual(result, [])
++      done(er)
++    })
++  },
++  oneFileFound: function (done) {
++    subject([base('is-executable*')], function (er, result) {
++      assert.deepEqual(result, [base('is-executable')])
++      done(er)
++    })
++  },
++  oneFileFoundWithOneNonExecutable: function (done) {
++    if (process.platform === 'win32') return done()
++    subject([base('file.*')], function (er, result) {
++      assert.deepEqual(result, [base('file.executable')])
++      assert.includes(log.read(),
++        `scripty WARN Ignoring script '${base('file.not.executable')}' because it was not readable/executable.\n` +
++        `scripty WARN Run \`chmod u+rx '${base('file.not.executable')}'\` if you want scripty to run it.`
++      )
++      done(er)
++    })
++  },
++  twoFilesFound: function (done) {
++    subject([base('exec.*')], function (er, result) {
++      assert.deepEqual(_.sortBy(result), [base('exec.rb'), base('exec.sh')])
++      done(er)
++    })
++  },
++  dirFound: function (done) {
++    subject([base('exec-dir-wat*')], function (er, result) {
++      assert.deepEqual(result, [])
++      done(er)
++    })
++  }
++}
+diff --git a/node_modules/scripty/.b7fbaf7ffe7b5ffc-00000000.cli.js b/.b7fbaf7ffe7b5ffc-00000000.cli.js
+new file mode 100644
+index 0000000000000000000000000000000000000000..088d48f621a3beac05e0f3d02ad00fe2a8cd1c56
+--- /dev/null
++++ b/.b7fbaf7ffe7b5ffc-00000000.cli.js
+@@ -0,0 +1,47 @@
++#!/usr/bin/env node
++
++var lifecycleEvent = process.env.npm_lifecycle_event
++
++if (!lifecycleEvent) {
++  console.error(
++    'scripty ERR! It seems you may be running scripty from the command-line directly.\n' +
++    'At this time, scripty can only be run within an npm script specified in your package.json.\n\n' +
++    'Example package.json entry:\n\n' +
++    '  "scripts": {\n' +
++    '    "foo:bar": "scripty"\n' +
++    '  }\n\n' +
++    'And then run via `npm run foo:bar`.\n\n' +
++    'For more documentation, see:\n' +
++    '  https://github.com/testdouble/scripty\n\n' +
++    'Exiting.'
++  )
++  process.exit(1)
++} else {
++  var scripty = require('./lib/scripty')
++  var loadOption = require('./lib/load-option')
++  var log = require('./lib/log')
++
++  scripty(lifecycleEvent, {
++    userArgs: process.argv.slice(2),
++    parallel: loadOption('parallel'),
++    dryRun: loadOption('dryRun'),
++    logLevel: loadOption('logLevel'),
++    quiet: loadOption('quiet'),
++    silent: loadOption('silent'),
++    verbose: loadOption('verbose'),
++    spawn: {
++      stdio: 'inherit'
++    },
++    resolve: {
++      modules: loadOption('modules'),
++      scripts: loadOption('path'),
++      scriptsWin: loadOption('windowsPath')
++    }
++  }, function (er, code) {
++    if (er) {
++      log.error(er)
++      code = code || er.code || 1
++    }
++    process.exitCode = code
++  })
++}
+diff --git a/node_modules/scripty/.b7ffaf5abd77373f-00000019.scripty.js b/.b7ffaf5abd77373f-00000019.scripty.js
+new file mode 100644
+index 0000000000000000000000000000000000000000..5b77dff0558e52b4dcbd733b6dc53b0cadfeaca3
+--- /dev/null
++++ b/.b7ffaf5abd77373f-00000019.scripty.js
+@@ -0,0 +1,20 @@
++var optionify = require('./optionify')
++var resolveScript = require('./resolve-script')
++var run = require('./run')
++var log = require('./log')
++
++module.exports = optionify(function scripty (npmLifecycle, options, cb) {
++  log.level = options.logLevel
++
++  resolveScript(npmLifecycle, options.resolve, function (er, scriptFiles) {
++    if (er) return cb(er)
++    run(scriptFiles, options, cb)
++  })
++}, {
++  userArgs: [],
++  parallel: false,
++  dryRun: false,
++  logLevel: 'info',
++  spawn: {},
++  resolve: {}
++})
+diff --git a/node_modules/scripty/.b7ffbef79bd7fd7b-0000001C.README.md b/.b7ffbef79bd7fd7b-0000001C.README.md
+new file mode 100644
+index 0000000000000000000000000000000000000000..35ccb22bbe32a2c7f2b0e534caaf41574cd5e996
+--- /dev/null
++++ b/.b7ffbef79bd7fd7b-0000001C.README.md
+@@ -0,0 +1,338 @@
++# scripty
++
++[![Latest npm release](https://img.shields.io/npm/v/scripty?logo=npm)](https://www.npmjs.com/package/scripty)
++[![Test Status](https://img.shields.io/github/workflow/status/testdouble/scripty/Test/main?logo=github)](https://github.com/testdouble/scripty/actions?query=workflow%3ATest+branch%3Amain)
++
++## What is?
++
++Using [npm-scripts](https://docs.npmjs.com/misc/scripts) has become a popular
++way of maintaining the various build tasks needed to develop Node.js modules.
++People like npm-scripts because it's simple! This is a common refrain:
++
++> Don't bother with grunt, gulp, or broccoli, just add a little script to your
++package.json and run it with `npm run name:of:script`
++
++Indeed, this _is_ much simpler, but it can quickly become a mess. Take a look at
++what happened to our
++[testdouble.js](https://github.com/testdouble/testdouble.js) library's
++[package.json](https://github.com/testdouble/testdouble.js/blob/30e27f54de0e84fe99a9c33340a0474c3a21369b/package.json#L16-L42).
++Using npm-scripts for everything is simple to start with, but it can't hope to
++guard against the complexity that naturally accumulates over the life of a
++project.
++
++We wrote scripty to help us extract our npm scripts—particularly the gnarly
++ones—into their own files without changing the command we use to run
++them. To see how to do this yourself, read on!
++
++## Install
++
++```
++$ npm install --save-dev scripty
++```
++
++## Usage
++
++1. From your module's root, create a `scripts` directory
++2. If you want to define an npm script named "foo:bar", write an executable
++file at `scripts/foo/bar`
++3. Feel a liberating breeze roll over your knuckles as
++your script is free to roam within its own file, beyond the stuffy confines of a
++quote-escaped string inside a pile of JSON
++4. Declare your `"foo:bar"` script in `"scripts"` in your `package.json`:
++
++``` json
++"scripts": {
++  "foo:bar": "scripty"
++}
++```
++
++From this point on, you can run `npm run foo:bar` and scripty will use npm's
++built-in `npm_lifecycle_event` environment variable to look up
++`scripts/foo/bar` and execute it for you.
++
++This pattern is great for extracting
++scripts that are starting to become unwieldy inside your `package.json`, while
++still explicitly calling out the scripts that your package supports (though
++where to take that aspect from here is [up for
++debate](https://github.com/testdouble/scripty/issues/1)).
++
++## Advanced Usage
++
++Ready to take things to the next level? Check this stuff out:
++
++### Passing command-line args
++
++To pass command-line args when you're running an npm script, set them after
++`--` and npm will forward them to your script (and scripty will do its part by
++forwarding them along).
++
++For example, if you had a script in `scripts/echo/hello`:
++
++``` sh
++#!/usr/bin/env sh
++
++echo Hello, "$1"!
++```
++
++Then you can run `npm run echo:hello -- WORLD` and see your script print
++`"Hello, WORLD!"`.
++
++### Batching "sub-scripts"
++
++Let's say you have two test tasks in `scripts/test/unit` and
++`scripts/test/integration`:
++
++``` json
++"scripts": {
++  "test:unit": "scripty",
++  "test:integration": "scripty"
++}
++```
++
++And you want `npm test` to simply run all of them, regardless of order. In that
++case, just add a `"test"` entry to your `package.json` like so:
++
++``` json
++"scripts": {
++  "test:unit": "scripty",
++  "test:integration": "scripty",
++  "test": "scripty"
++}
++```
++
++And from then on, running `npm test` will result in scripty running all the
++executable files it can find in `scripts/test/*`.
++
++### Defining an explicit parent script
++
++Suppose in the example above, it becomes important for us to run our scripts in
++a particular order. Or, perhaps, when running `npm test` we need to do some other
++custom scripting as well. Fear, not!
++
++Without changing the JSON from the previous example:
++
++``` json
++"scripts": {
++  "test:unit": "scripty",
++  "test:integration": "scripty",
++  "test": "scripty"
++}
++```
++
++Defining a script named `scripts/test/index` will cause scripty to only run that
++`index` script, as opposed to globbing for all the scripts it finds in
++`scripts/test/*`.
++
++### Running scripts in parallel
++
++If you have a certain command that will match mutiple child scripts (for
++instance, if `npm run watch` matches `scripts/watch/js` and
++`scripts/watch/css`), then you can tell scripty to run the sub-scripts in
++parallel by setting a `SCRIPTY_PARALLEL` env variable to `'true'`. This may
++be used to similar effect as the
++[npm-run-all](https://www.npmjs.com/package/npm-run-all) module.
++
++To illustrate, to run a scripty script in parallel, you might:
++
++```
++$ SCRIPTY_PARALLEL=true npm run watch
++```
++
++Or, if that particular script should always be run in parallel, you can set the
++variable in your package.json:
++
++``` json
++"scripts": {
++  "watch": "SCRIPTY_PARALLEL=true scripty"
++}
++```
++
++Which will run any sub-scripts in parallel whenever you run `npm run watch`.
++
++Finally, if you **always** want to run scripts in parallel, any option can be
++set in your package.json under a `"scripty"` entry:
++
++```json
++"config": {
++  "scripty": {
++    "parallel": true
++  }
++}
++```
++
++### Windows support
++
++Windows support is provided by scripty in two ways:
++
++1. If everything in your `scripts` directory can be safely executed by Windows,
++no action is needed (this is only likely if you don't have collaborators on
++Unix-like platforms)
++2. If your project needs to run scripts in both Windows & Unix, then you may
++define a `scripts-win/` directory with a symmetrical set of scripts to whatever
++Unix  scripts might be found in `scripts/`
++
++To illustrate the above, suppose you have this bash script configured as
++``"test/unit"`` in your package.json file and this bash script defined in
++`scripts/test/unit`:
++
++``` bash
++#!/usr/bin/env bash
++
++teenytest --helper test/unit-helper.js "lib/**/*.test.js"
++```
++
++In order to add Windows support, you could define `scripts-win/test/unit.cmd`
++with this script:
++
++``` bat
++@ECHO OFF
++
++teenytest --helper test\unit-helper.js "lib\**\*.test.js"
++```
++
++With a configuration like the above, if `npm run test:unit` is run from a Unix
++platform, the initial bash script in `scripts/` will run. If the same CLI
++command is run from Windows, however, the batch script in `scripts-win/` will be
++run.
++
++### Specifying custom script directories
++
++By default, scripty will search for scripts in `scripts/` relative to your
++module root (and if you're running windows, it'll check `scripts-win/` first).
++If you'd like to customize the base directories scripty uses to search for your
++scripts, add a `"scripty"` object property to your package.json like so:
++
++``` json
++"config": {
++  "scripty": {
++    "path": "../core/scripts",
++    "windowsPath": "../core/scripts-win"
++  }
++}
++```
++
++You can configure either or both of `"path"` and `"windowsPath"` to custom
++locations of your choosing. This may be handy in situations where multiple
++projects share the same set of scripts.
++
++### Sharing scripts via node modules
++
++You can configure scripty to include certain node modules into its executable
++search space. This is beneficial if you would like to create a centralized place
++for your scripts and then share them across multiple projects. To include modules
++add a `"scripty"` object property, `modules`, to your package.json like so:
++
++``` json
++"config": {
++  "scripty": {
++    "modules": ["packageA", "packageB"]
++  }
++}
++```
++
++Each node module must contain a `scripts` directory. Below is an example directory
++structure:
++
++```
++root/
++  scripts/
++    foo
++  node_modules/
++    packageA/
++      scripts/
++        foo
++        bar
++    packageB/
++      scripts/
++        bar
++        baz
++```
++
++In the above example the resolution of `foo` would resolve to `root.scripts.foo`. Local scripts
++take priority over ones defined in modules. The resolution of `bar` would resolve to
++`root.node_modules.packageA.scripts.bar` as packageA was the first module defined
++in the `scripty.modules` config.
++
++### Dry runs
++
++To perform a dry run of your scripts—something that's handy to check which
++scripts will run from a particular command without actually executing potentially
++destructive scripts, you can set an environment variable like so:
++
++```
++$ SCRIPTY_DRY_RUN=true npm run publish:danger:stuff
++```
++
++This will print the path and contents of each script the command would execute in
++the order they would be executed if you were to run the command normally.
++
++Worth mentioning, like all options this can be set in package.json under a
++`"scripty"` entry:
++
++```json
++"config": {
++  "scripty": {
++    "dryRun": true
++  }
++}
++```
++
++### Log output
++
++Scripty is now quieter by default.
++The output can be configured to a level of `verbose`, `info`, `warn`, or `error`.
++Any logs equal to or higher than the setting are shown.
++All logs are printed to STDERR (to aid in redirection and piping).
++
++```
++$ SCRIPTY_LOG_LEVEL=verbose npm run publish:danger:stuff
++```
++
++This will print the path and contents of each script the command executes.
++
++If you always want scripty to run your scripts at a certain level,
++you can set it in your package.json under a `"scripty"` entry:
++
++```json
++"config": {
++  "scripty": {
++    "logLevel": "warn"
++  }
++}
++```
++
++`SCRIPTY_SILENT` and `SCRIPTY_QUIET` are aliases for `SCRIPTY_LOG_LEVEL=silent`
++`SCRIPTY_VERBOSE` is an alias for `SCRIPTY_LOG_LEVEL=verbose`
++(also `"silent": true`, etc in package.json#scripty)
++
++`SCRIPTY_DRY_RUN=true` implies log level `info`
++
++Explicit setting from logLevel takes precedence; otherwise,
++conflicting values between silent/verbose/dryRun will respect the highest level.
++If no setting is provided, scripty will infer its log level from npm's log level.
++
++## Likely questions
++
++* **Is this pure magic?** - Nope! For once, instilling some convention didn't
++require any clever metaprogramming, just environment variables npm already sets;
++try running `printenv` from a script some time!
++* **Why isn't my script executing?** - If your script isn't executing, make sure
++it's **executable**! In UNIX, this can be accomplished by running
++`chmod +x scripts/path/to/my/script` (permissions will also be stored in git)
++* **How can I expect my users to understand what this does?** Documenting your
++project's use of `scripty` in the `README` is probably a good idea. Here's
++some copy pasta if you don't feel like writing it up yourself:
++
++  > ## npm scripts
++  > MyProject uses [`scripty`](https://github.com/testdouble/scripty) to organize
++  > npm scripts. The scripts are defined in the [`scripts`](/scripts) directory.
++  > In `package.json` you'll see the word `scripty` as opposed to the script
++  > content you'd expect. For more info, see
++  > [scripty's GitHub](https://github.com/testdouble/scripty).
++
++  > {{ insert table containing script names and what they do, e.g.
++  > [this](https://github.com/ashleygwilliams/relational-node#scripts) }}
++
++## Code of Conduct
++
++This project follows Test Double's [code of conduct](https://testdouble.com/code-of-conduct) for all community interactions, including (but not limited to) one-on-one communications, public posts/comments, code reviews, pull requests, and GitHub issues. If violations occur, Test Double will take any action they deem appropriate for the infraction, up to and including blocking a user from the organization's repositories.
+diff --git a/node_modules/scripty/.bfdbaeed9fb5ef9d-00000004.load-option.test.js b/.bfdbaeed9fb5ef9d-00000004.load-option.test.js
+new file mode 100644
+index 0000000000000000000000000000000000000000..e132ffadde7fe27ef67159ab133c35ca9dafa165
+--- /dev/null
++++ b/.bfdbaeed9fb5ef9d-00000004.load-option.test.js
+@@ -0,0 +1,63 @@
++var subject = require('./load-option')
++
++module.exports = {
++  beforeEach: function () {
++    delete process.env.SCRIPTY_TEST_KEY
++    delete process.env.npm_package_scripty_testKey
++  },
++  envTrue: function () {
++    process.env.SCRIPTY_TEST_KEY = 'true'
++
++    assert.equal(subject('testKey'), true)
++  },
++  envFalse: function () {
++    process.env.SCRIPTY_TEST_KEY = 'false'
++
++    assert.equal(subject('testKey'), false)
++  },
++  packageTrue: function () {
++    process.env.npm_package_scripty_testKey = true
++
++    assert.equal(subject('testKey'), true)
++  },
++  packageFalse: function () {
++    process.env.npm_package_scripty_testKey = false
++
++    assert.equal(subject('testKey'), false)
++  },
++  envOverrideTrue: function () {
++    process.env.SCRIPTY_TEST_KEY = 'true'
++    process.env.npm_package_scripty_testKey = false
++
++    assert.equal(subject('testKey'), true)
++  },
++  envOverrideFalse: function () {
++    process.env.SCRIPTY_TEST_KEY = 'false'
++    process.env.npm_package_scripty_testKey = true
++
++    assert.equal(subject('testKey'), false)
++  },
++  packageString: function () {
++    process.env.npm_package_scripty_testKey = 'some value'
++
++    assert.equal(subject('testKey'), 'some value')
++  },
++  envString: function () {
++    process.env.SCRIPTY_TEST_KEY = 'some value'
++
++    assert.equal(subject('testKey'), 'some value')
++  },
++  envOverrideString: function () {
++    process.env.SCRIPTY_TEST_KEY = 'right value'
++    process.env.npm_package_scripty_testKey = 'wrong value'
++
++    assert.equal(subject('testKey'), 'right value')
++  },
++  packageArray: function () {
++    process.env.npm_package_scripty_testKey_0 = 'value 1'
++    process.env.npm_package_scripty_testKey_1 = 'value 2'
++    process.env.npm_package_scripty_testKey_2 = 'value 3'
++
++    assert.deepEqual(subject('testKey'), ['value 1', 'value 2', 'value 3'])
++  }
++}
+diff --git a/node_modules/scripty/.bfdbbff5ffcf7ffe-00000008.optionify.test.js b/.bfdbbff5ffcf7ffe-00000008.optionify.test.js
+new file mode 100644
+index 0000000000000000000000000000000000000000..3e74d94f211b1ceca434a368fa585f639c8d2c3c
+--- /dev/null
++++ b/.bfdbbff5ffcf7ffe-00000008.optionify.test.js
+@@ -0,0 +1,38 @@
++var subject = require('./optionify')
++
++module.exports = {
++  beforeEach: function () {
++    this.dummy = function (main, options, cb) {
++      return { main: main, options: options, cb: cb }
++    }
++    this.defaults = { deep: { a: 2 } }
++
++    // prevent inferring log level
++    delete process.env.npm_config_loglevel
++  },
++  deepMergeOptions: function () {
++    var cb = function () { return 'bar' }
++
++    var result = subject(this.dummy, this.defaults)('foo', { deep: { b: 3 } }, cb)
++
++    assert.equal(result.main, 'foo')
++    assert.deepEqual(result.options, { deep: { a: 2, b: 3 } })
++    assert.equal(result.cb(), 'bar')
++  },
++  nothingProvidedFine: function () {
++    var result = subject(this.dummy, this.defaults)()
++
++    assert.equal(result.main, undefined)
++    assert.deepEqual(result.options, this.defaults)
++    assert.equal(result.cb(), undefined)
++  },
++  noOptionsProvided: function () {
++    var cb = function () { return 'bar' }
++
++    var result = subject(this.dummy, this.defaults)('foo', cb)
++
++    assert.equal(result.main, 'foo')
++    assert.deepEqual(result.options, this.defaults)
++    assert.equal(result.cb(), 'bar')
++  }
++}
+diff --git a/node_modules/scripty/.bffbeee9cdff9bc7-0000000E.glob-patterns.test.js b/.bffbeee9cdff9bc7-0000000E.glob-patterns.test.js
+new file mode 100644
+index 0000000000000000000000000000000000000000..1aff55f5fdc2aaefce6837453351f70c2534bca6
+--- /dev/null
++++ b/.bffbeee9cdff9bc7-0000000E.glob-patterns.test.js
+@@ -0,0 +1,36 @@
++var path = require('path')
++var subject = require('./glob-patterns')
++
++module.exports = {
++  simpleCase: function () {
++    var result = subject(__dirname, 'foo:bar', [])
++
++    assert.equal(result.length, 3)
++    assert.equal(result[0], path.resolve(__dirname, 'foo/bar') + '+(|.*)')
++    assert.equal(result[1], path.resolve(__dirname, 'foo/bar/index') + '+(|.*)')
++    assert.equal(result[2], path.resolve(__dirname, 'foo/bar/*'))
++  },
++  modulesCase: function () {
++    var result = subject(
++      __dirname,
++      'foo:bar',
++      [
++        path.join(process.cwd(), 'node_modules/bar/scripts'),
++        path.join(process.cwd(), 'node_modules/baz/scripts')
++      ]
++    )
++
++    assert.equal(result.length, 9)
++    assert.equal(result[0], path.resolve(__dirname, 'foo/bar') + '+(|.*)')
++    assert.equal(result[1], path.resolve(__dirname, 'foo/bar/index') + '+(|.*)')
++    assert.equal(result[2], path.resolve(__dirname, 'foo/bar/*'))
++
++    assert.equal(result[3], path.resolve(process.cwd(), 'node_modules/bar/scripts/foo/bar') + '+(|.*)')
++    assert.equal(result[4], path.resolve(process.cwd(), 'node_modules/bar/scripts/foo/bar/index') + '+(|.*)')
++    assert.equal(result[5], path.resolve(process.cwd(), 'node_modules/bar/scripts/foo/bar/*'))
++
++    assert.equal(result[6], path.resolve(process.cwd(), 'node_modules/baz/scripts/foo/bar') + '+(|.*)')
++    assert.equal(result[7], path.resolve(process.cwd(), 'node_modules/baz/scripts/foo/bar/index') + '+(|.*)')
++    assert.equal(result[8], path.resolve(process.cwd(), 'node_modules/baz/scripts/foo/bar/*'))
++  }
++}
+diff --git a/node_modules/scripty/.bfffff73f4bc5d39-00000003.load-option.js b/.bfffff73f4bc5d39-00000003.load-option.js
+new file mode 100644
+index 0000000000000000000000000000000000000000..3f4138abb83f2023efde3d1783fada7a82bcdaf3
+--- /dev/null
++++ b/.bfffff73f4bc5d39-00000003.load-option.js
+@@ -0,0 +1,57 @@
++var _ = require('lodash')
++
++module.exports = function loadOption (name) {
++  if (envVarSet(posixEnvVarName(name))) {
++    return boolEnvVarValue(posixEnvVarName(name))
++  } else if (envVarSet(packageEnvVarName(name))) {
++    return boolEnvVarValue(packageEnvVarName(name))
++  } else if (envVarSet(packageEnvConfigVarName(name))) {
++    return boolEnvVarValue(packageEnvConfigVarName(name))
++  } else if (envVarSet(packageArrayEnvVarName(name))) {
++    return arrayEnvVarValue(packageEnvVarName(name))
++  }
++}
++
++function boolEnvVarValue (envVarName) {
++  var value = process.env[envVarName]
++
++  if (value === 'true') {
++    return true
++  } else if (value === 'false') {
++    return false
++  } else {
++    return value
++  }
++}
++
++function arrayEnvVarValue (envVarName) {
++  var count = 0
++  var result = []
++
++  while (envVarSet(envVarName + '_' + count)) {
++    result.push(process.env[envVarName + '_' + count])
++    count++
++  }
++
++  return result
++}
++
++function envVarSet (envVarName) {
++  return !!process.env[envVarName]
++}
++
++function posixEnvVarName (optionName) {
++  return 'SCRIPTY_' + _.snakeCase(optionName).toUpperCase()
++}
++
++function packageEnvVarName (optionName) { // Backwards compatible for npm v6
++  return 'npm_package_scripty_' + optionName
++}
++
++function packageEnvConfigVarName (optionName) {
++  return 'npm_package_config_scripty_' + optionName
++}
++
++function packageArrayEnvVarName (optionName) {
++  return packageEnvVarName(optionName) + '_0'
++}
+diff --git a/node_modules/scripty/.d7dbaf7bebde4d7e-0000001E.debug b/.d7dbaf7bebde4d7e-0000001E.debug
+new file mode 100644
+index 0000000000000000000000000000000000000000..0afa38dbbd6decd2f92f507a42ce4748a6468c60
+--- /dev/null
++++ b/.d7dbaf7bebde4d7e-0000001E.debug
+@@ -0,0 +1,3 @@
++#!/usr/bin/env sh
++
++npm test -- --debug-brk
+diff --git a/node_modules/scripty/.d7dbaffbf2bdef9d-00000005.log.js b/.d7dbaffbf2bdef9d-00000005.log.js
+new file mode 100644
+index 0000000000000000000000000000000000000000..34b81f90ae70963f23e0f455f02277df86a4d936
+--- /dev/null
++++ b/.d7dbaffbf2bdef9d-00000005.log.js
+@@ -0,0 +1,52 @@
++const util = require('util')
++
++const constant = val => () => val
++
++const formatError = args =>
++  args.map(arg => arg instanceof Error ? arg.message : arg)
++
++const loggerWithPrefix = (prefix, writer) => (...args) =>
++  writer()(prefix, util.format(...formatError(args))
++    .replace(/(\r?\n)(?=[\s\S]+)/g, `$1${prefix} `))
++
++const silentLogger = (...args) => {
++  output += util.format(...args) + '\n'
++}
++
++let level
++let output
++
++module.exports = {
++  get level () {
++    return level.toString()
++  },
++
++  set level (l) {
++    level = module.exports[String(l).toLowerCase()]
++  },
++
++  read: () => output,
++
++  reset: () => {
++    output = ''
++    module.exports.level = 'info'
++  }
++}
++
++;[
++  ['verbose', '>'],
++  ['info', '>'],
++  ['warn', 'WARN'],
++  ['error', 'ERR!'],
++  ['silent']
++].forEach(([name, prefix], index) => {
++  const logger = loggerWithPrefix(`scripty ${prefix}`, () =>
++    level <= logger ? console.error : silentLogger)
++
++  logger.valueOf = constant(index + 1)
++  logger.toString = constant(name)
++
++  module.exports[name] = logger
++})
++
++module.exports.reset()
+diff --git a/node_modules/scripty/.d7dfee57ffffbdc6-0000001A.LICENSE.txt b/.d7dfee57ffffbdc6-0000001A.LICENSE.txt
+new file mode 100644
+index 0000000000000000000000000000000000000000..fea018a8b5a221057ecf12296d672ce5c50ffe30
+--- /dev/null
++++ b/.d7dfee57ffffbdc6-0000001A.LICENSE.txt
+@@ -0,0 +1,21 @@
++The MIT License (MIT)
++
++Copyright (c) 2016 Test Double, LLC.
++
++Permission is hereby granted, free of charge, to any person obtaining a copy
++of this software and associated documentation files (the "Software"), to deal
++in the Software without restriction, including without limitation the rights
++to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
++copies of the Software, and to permit persons to whom the Software is
++furnished to do so, subject to the following conditions:
++
++The above copyright notice and this permission notice shall be included in all
++copies or substantial portions of the Software.
++
++THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
++IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
++FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
++AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
++LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
++OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
++SOFTWARE.
+diff --git a/node_modules/scripty/.d7fbfefdd1ef7f7a-0000000D.glob-patterns.js b/.d7fbfefdd1ef7f7a-0000000D.glob-patterns.js
+new file mode 100644
+index 0000000000000000000000000000000000000000..1790c7765cceae1cb6800ef5f796be24a2b407f9
+--- /dev/null
++++ b/.d7fbfefdd1ef7f7a-0000000D.glob-patterns.js
+@@ -0,0 +1,22 @@
++var path = require('path')
++
++module.exports = function (dir1, dir2, moduleDirs) {
++  var globs = []
++  var scriptPath = path.join.apply(this, dir2.split(':'))
++  var searchSpaceDirs = [].concat(dir1, moduleDirs)
++
++  searchSpaceDirs.forEach(function (dir) {
++    var scriptDir = path.resolve(dir, scriptPath)
++
++    // exact file match (+ any same-named extensions)
++    globs.push(scriptDir + '+(|.*)')
++
++    // a nested index file match (+ any same-named extensions)
++    globs.push(path.join(scriptDir, 'index+(|.*)'))
++
++    // any nested files at all
++    globs.push(path.join(scriptDir, '*'))
++  })
++
++  return globs
++}
+diff --git a/node_modules/scripty/.d7ffae698ab1df6e-0000001A.LICENSE.txt b/.d7ffae698ab1df6e-0000001A.LICENSE.txt
+new file mode 100644
+index 0000000000000000000000000000000000000000..fea018a8b5a221057ecf12296d672ce5c50ffe30
+--- /dev/null
++++ b/.d7ffae698ab1df6e-0000001A.LICENSE.txt
+@@ -0,0 +1,21 @@
++The MIT License (MIT)
++
++Copyright (c) 2016 Test Double, LLC.
++
++Permission is hereby granted, free of charge, to any person obtaining a copy
++of this software and associated documentation files (the "Software"), to deal
++in the Software without restriction, including without limitation the rights
++to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
++copies of the Software, and to permit persons to whom the Software is
++furnished to do so, subject to the following conditions:
++
++The above copyright notice and this permission notice shall be included in all
++copies or substantial portions of the Software.
++
++THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
++IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
++FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
++AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
++LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
++OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
++SOFTWARE.
+diff --git a/node_modules/scripty/.d7fffeefb2e7977f-00000002.derive-log-level.test.js b/.d7fffeefb2e7977f-00000002.derive-log-level.test.js
+new file mode 100644
+index 0000000000000000000000000000000000000000..33e9f698873129ba5eb14a02da42d0fe80c87519
+--- /dev/null
++++ b/.d7fffeefb2e7977f-00000002.derive-log-level.test.js
+@@ -0,0 +1,43 @@
++var subject = require('./derive-log-level')
++var log = require('./log')
++
++module.exports = {
++  'defaults to inferring from npm logLevel': function () {
++    process.env.npm_config_loglevel = 'silly'
++    assert.equal(subject(), log.verbose)
++
++    process.env.npm_config_loglevel = 'notice'
++    assert.equal(subject(), log.info)
++
++    process.env.npm_config_loglevel = 'silent'
++    assert.equal(subject(), log.silent)
++  },
++
++  'explicit logLevel takes precedence': function () {
++    assert.equal(subject({
++      silent: true,
++      dryRun: true,
++      verbose: true,
++      logLevel: 'warn' }), 'warn')
++  },
++
++  'passes through unrecognized values': function () {
++    assert.equal(subject({ logLevel: 'worn' }), 'worn')
++  },
++
++  'verbose preempts dry-run and silent': function () {
++    assert.equal(subject({ silent: true, dryRun: true, verbose: true }), log.verbose)
++  },
++
++  'dry-run preempts silent': function () {
++    assert.equal(subject({ silent: true, dryRun: true }), log.info)
++  },
++
++  'silent is read last': function () {
++    assert.equal(subject({ silent: true }), log.silent)
++  },
++
++  'quiet is alias for silent': function () {
++    assert.equal(subject({ quiet: true }), log.silent)
++  }
++}
+diff --git a/node_modules/scripty/.dfdbaf6d8d5faf4e-00000008.optionify.test.js b/.dfdbaf6d8d5faf4e-00000008.optionify.test.js
+new file mode 100644
+index 0000000000000000000000000000000000000000..3e74d94f211b1ceca434a368fa585f639c8d2c3c
+--- /dev/null
++++ b/.dfdbaf6d8d5faf4e-00000008.optionify.test.js
+@@ -0,0 +1,38 @@
++var subject = require('./optionify')
++
++module.exports = {
++  beforeEach: function () {
++    this.dummy = function (main, options, cb) {
++      return { main: main, options: options, cb: cb }
++    }
++    this.defaults = { deep: { a: 2 } }
++
++    // prevent inferring log level
++    delete process.env.npm_config_loglevel
++  },
++  deepMergeOptions: function () {
++    var cb = function () { return 'bar' }
++
++    var result = subject(this.dummy, this.defaults)('foo', { deep: { b: 3 } }, cb)
++
++    assert.equal(result.main, 'foo')
++    assert.deepEqual(result.options, { deep: { a: 2, b: 3 } })
++    assert.equal(result.cb(), 'bar')
++  },
++  nothingProvidedFine: function () {
++    var result = subject(this.dummy, this.defaults)()
++
++    assert.equal(result.main, undefined)
++    assert.deepEqual(result.options, this.defaults)
++    assert.equal(result.cb(), undefined)
++  },
++  noOptionsProvided: function () {
++    var cb = function () { return 'bar' }
++
++    var result = subject(this.dummy, this.defaults)('foo', cb)
++
++    assert.equal(result.main, 'foo')
++    assert.deepEqual(result.options, this.defaults)
++    assert.equal(result.cb(), 'bar')
++  }
++}
+diff --git a/node_modules/scripty/.dfdbeed99dffec4d-00000011.script-dirs.js b/.dfdbeed99dffec4d-00000011.script-dirs.js
+new file mode 100644
+index 0000000000000000000000000000000000000000..26cf6d22a91d792cfc27ea48cdde6b20661b622f
+--- /dev/null
++++ b/.dfdbeed99dffec4d-00000011.script-dirs.js
+@@ -0,0 +1,44 @@
++var path = require('path')
++var fs = require('fs')
++var lodash = require('lodash')
++var resolvePkg = require('resolve-pkg')
++
++module.exports = function (options, platform) {
++  platform = platform || process.platform
++  var modules = lodash.get(options, 'modules', [])
++  return {
++    userDir: find(process.cwd(), options, 'scripts', platform),
++    moduleDirs: findModulePaths(modules).map(function (path) { return find(path, options, 'scripts', platform) }),
++    ourDir: find(path.resolve(__dirname, '../..'), options, 'builtIn', platform)
++  }
++}
++
++function find (base, options, key, platform) {
++  if (platform === 'win32' && options[key + 'Win']) {
++    return options[key + 'Win']
++  } else if (platform === 'win32' && fs.existsSync(path.resolve(base, 'scripts-win'))) {
++    return path.resolve(base, 'scripts-win')
++  } else if (platform === 'win32' && fs.existsSync(path.resolve(base, 'script-win'))) {
++    return path.resolve(base, 'script-win')
++  } else if (options[key]) {
++    return options[key]
++  } else if (fs.existsSync(path.resolve(base, 'scripts'))) {
++    return path.resolve(base, 'scripts')
++  } else {
++    return path.resolve(base, 'script')
++  }
++}
++
++function findModulePaths (modules) {
++  var modulePaths = []
++
++  modules.forEach(function (moduleName) {
++    var modulePath = resolvePkg(moduleName)
++
++    if (modulePath) {
++      modulePaths.push(modulePath)
++    }
++  })
++
++  return modulePaths
++}
+diff --git a/node_modules/scripty/.dffbae59fbeffbfe-00000007.optionify.js b/.dffbae59fbeffbfe-00000007.optionify.js
+new file mode 100644
+index 0000000000000000000000000000000000000000..f4a3a919ae37af36c3df0035a2c023cc368db09e
+--- /dev/null
++++ b/.dffbae59fbeffbfe-00000007.optionify.js
+@@ -0,0 +1,20 @@
++var _ = require('lodash')
++var deriveLogLevel = require('./derive-log-level')
++
++var NULL_CB = function () {}
++module.exports = function (rawFunc, defaultOptions) {
++  return function (mainArg, userOptions, cb) {
++    if (typeof userOptions === 'function') {
++      cb = userOptions
++    }
++    if (!cb) {
++      cb = NULL_CB
++    }
++
++    var logLevel = deriveLogLevel(userOptions)
++    if (logLevel) userOptions.logLevel = logLevel
++
++    var fullOptions = _.defaultsDeep({}, userOptions, defaultOptions)
++    return rawFunc(mainArg, fullOptions, cb)
++  }
++}
+diff --git a/node_modules/scripty/.dffbbedf57f7bfec-00000017.print-script.test.js b/.dffbbedf57f7bfec-00000017.print-script.test.js
+new file mode 100644
+index 0000000000000000000000000000000000000000..37c42714fe9ddbb86703aed7860baaa9405efb75
+--- /dev/null
++++ b/.dffbbedf57f7bfec-00000017.print-script.test.js
+@@ -0,0 +1,27 @@
++var path = require('path')
++
++var log = require('../log')
++
++module.exports = {
++  beforeEach: function () {
++    log.level = 'silent'
++    this.subject = require('./print-script')
++  },
++  happyPath: function () {
++    var script = path.resolve('scripts/test/debug')
++
++    this.subject(script)
++
++    assert.includes(log.read(), 'scripty > Executing "' + script + '":\n')
++    assert.includes(log.read(), 'scripty > #!/usr/bin/env sh')
++    assert.includes(log.read(), 'scripty > npm test -- --debug-brk')
++  },
++  sadPath: function () {
++    var script = '/silly/nonsense'
++
++    this.subject(script)
++
++    assert.includes(log.read(), `scripty WARN Failed to read '/silly/nonsense':`)
++    assert.includes(log.read(), `scripty WARN ENOENT`)
++  }
++}
+diff --git a/node_modules/scripty/.f7dbae51fe6befff-00000004.load-option.test.js b/.f7dbae51fe6befff-00000004.load-option.test.js
+new file mode 100644
+index 0000000000000000000000000000000000000000..e132ffadde7fe27ef67159ab133c35ca9dafa165
+--- /dev/null
++++ b/.f7dbae51fe6befff-00000004.load-option.test.js
+@@ -0,0 +1,63 @@
++var subject = require('./load-option')
++
++module.exports = {
++  beforeEach: function () {
++    delete process.env.SCRIPTY_TEST_KEY
++    delete process.env.npm_package_scripty_testKey
++  },
++  envTrue: function () {
++    process.env.SCRIPTY_TEST_KEY = 'true'
++
++    assert.equal(subject('testKey'), true)
++  },
++  envFalse: function () {
++    process.env.SCRIPTY_TEST_KEY = 'false'
++
++    assert.equal(subject('testKey'), false)
++  },
++  packageTrue: function () {
++    process.env.npm_package_scripty_testKey = true
++
++    assert.equal(subject('testKey'), true)
++  },
++  packageFalse: function () {
++    process.env.npm_package_scripty_testKey = false
++
++    assert.equal(subject('testKey'), false)
++  },
++  envOverrideTrue: function () {
++    process.env.SCRIPTY_TEST_KEY = 'true'
++    process.env.npm_package_scripty_testKey = false
++
++    assert.equal(subject('testKey'), true)
++  },
++  envOverrideFalse: function () {
++    process.env.SCRIPTY_TEST_KEY = 'false'
++    process.env.npm_package_scripty_testKey = true
++
++    assert.equal(subject('testKey'), false)
++  },
++  packageString: function () {
++    process.env.npm_package_scripty_testKey = 'some value'
++
++    assert.equal(subject('testKey'), 'some value')
++  },
++  envString: function () {
++    process.env.SCRIPTY_TEST_KEY = 'some value'
++
++    assert.equal(subject('testKey'), 'some value')
++  },
++  envOverrideString: function () {
++    process.env.SCRIPTY_TEST_KEY = 'right value'
++    process.env.npm_package_scripty_testKey = 'wrong value'
++
++    assert.equal(subject('testKey'), 'right value')
++  },
++  packageArray: function () {
++    process.env.npm_package_scripty_testKey_0 = 'value 1'
++    process.env.npm_package_scripty_testKey_1 = 'value 2'
++    process.env.npm_package_scripty_testKey_2 = 'value 3'
++
++    assert.deepEqual(subject('testKey'), ['value 1', 'value 2', 'value 3'])
++  }
++}
+diff --git a/node_modules/scripty/.f7dfafcbadfd7dc0-00000006.log.test.js b/.f7dfafcbadfd7dc0-00000006.log.test.js
+new file mode 100644
+index 0000000000000000000000000000000000000000..0af4f7e62e7b784dd2fe9388df8bb8d555deb7f0
+--- /dev/null
++++ b/.f7dfafcbadfd7dc0-00000006.log.test.js
+@@ -0,0 +1,72 @@
++var subject = require('./log')
++
++module.exports = {
++  beforeEach: function () {
++    td.replace(console, 'error')
++    subject.reset()
++  },
++  writesToStderr: function () {
++    subject.info('foo')
++
++    td.verify(console.error('scripty >', 'foo'))
++  },
++  setTheLogLevel: {
++    verbose: function () {
++      subject.level = subject.verbose
++      subject.verbose('ity')
++      td.verify(console.error('scripty >', 'ity'))
++    },
++    info: function () {
++      subject.level = subject.info
++      td.when(console.error('ity')).thenThrow(new Error('Should not log verbose calls at INFO level'))
++      subject.verbose('ity')
++      subject.info('mation')
++      td.verify(console.error('scripty >', 'mation'))
++    },
++    warn: function () {
++      subject.level = subject.warn
++      td.when(console.error('mation')).thenThrow(new Error('Should not log info calls at WARN level'))
++      subject.info('mation')
++      subject.warn('ing')
++      td.verify(console.error('scripty WARN', 'ing'))
++    },
++    error: function () {
++      subject.level = subject.error
++      td.when(console.error('ing')).thenThrow(new Error('Should not log warn calls at ERROR level'))
++      subject.warn('ing')
++      subject.error('fail')
++      td.verify(console.error('scripty ERR!', 'fail'))
++    },
++    silent: function () {
++      subject.level = subject.silent
++      td.when(console.error('fail')).thenThrow(new Error('Should not log error calls at SILENT level'))
++      subject.error('fail')
++    }
++  },
++  modeSwitchCapturesLogs: function () {
++    subject.level = subject.silent
++
++    subject.info('bar')
++    subject.info('baz', 'noz')
++
++    td.verify(console.error(), { ignoreExtraArgs: true, times: 0 })
++    assert.equal(subject.read(), 'scripty > bar\nscripty > baz noz\n')
++  },
++  resetResetsMode: function () {
++    subject.level = subject.silent
++
++    subject.reset()
++
++    subject.info('biz')
++    td.verify(console.error('scripty >', 'biz'))
++  },
++  resetResetsLog: function () {
++    subject.level = subject.silent
++
++    subject.info('lalalal')
++
++    subject.reset()
++
++    assert.equal(subject.read(), '')
++  }
++}
+diff --git a/node_modules/scripty/.f7dffedb92ff91fe-0000001F.noop.cmd b/.f7dffedb92ff91fe-0000001F.noop.cmd
+new file mode 100644
+index 0000000000000000000000000000000000000000..8b137891791fe96927ad78e64b0aad7bded08bdc
+--- /dev/null
++++ b/.f7dffedb92ff91fe-0000001F.noop.cmd
+@@ -0,0 +1 @@
++
+diff --git a/node_modules/scripty/.f7fbfffe5775b2ec-00000015.index.js b/.f7fbfffe5775b2ec-00000015.index.js
+new file mode 100644
+index 0000000000000000000000000000000000000000..9309261db5e309a5b3a64a88bb5afd4bc56db35e
+--- /dev/null
++++ b/.f7fbfffe5775b2ec-00000015.index.js
+@@ -0,0 +1,16 @@
++var _ = require('lodash')
++
++const commandify = (func, items, options) =>
++  items.map(item => cb => func(item, options, cb))
++var dryRun = require('./dry-run')
++var spawnScript = require('./spawn-script')
++var all = require('./all')
++
++module.exports = function (scriptFiles, options, cb) {
++  if (options.dryRun) return dryRun(scriptFiles, cb)
++
++  var commands = commandify(spawnScript, scriptFiles, options)
++  all(commands, options.parallel, function (er, codes) {
++    cb(er, _.last(codes))
++  })
++}
+diff --git a/node_modules/scripty/.f7ffaf5f1bdedffc-00000010.index.test.js b/.f7ffaf5f1bdedffc-00000010.index.test.js
+new file mode 100644
+index 0000000000000000000000000000000000000000..407531097c559b897568b08151a32f0a114b95ff
+--- /dev/null
++++ b/.f7ffaf5f1bdedffc-00000010.index.test.js
+@@ -0,0 +1,51 @@
++var OPTIONS = { panda: true }
++
++module.exports = {
++  beforeEach: function () {
++    td.when(td.replace(process, 'cwd')()).thenReturn('/user-dir')
++    this.globPatterns = td.replace('./glob-patterns')
++    this.findExecutables = td.replace('./find-executables')
++    this.scriptDirs = td.replace('./script-dirs')
++    this.subject = require('./index')
++
++    td.when(this.scriptDirs(OPTIONS)).thenReturn({ userDir: 'A', ourDir: 'B', moduleDirs: [] })
++    td.when(this.globPatterns('A', 'fake', [])).thenReturn(['glob1'])
++    td.when(this.globPatterns('B', 'fake', [])).thenReturn(['glob2'])
++
++    td.when(this.globPatterns('A', 'fake', [])).thenReturn(['glob1'])
++    td.when(this.globPatterns('B', 'fake', [])).thenReturn(['glob2'])
++  },
++  bothUserAndBuiltInScriptsExist: function (done) {
++    td.when(this.findExecutables(['glob1'])).thenCallback(null, ['user-path'])
++    td.when(this.findExecutables(['glob2'])).thenCallback(null, ['pathA'])
++
++    this.subject('fake', OPTIONS, function (er, result) {
++      assert.deepEqual(result, ['user-path'])
++      done(er)
++    })
++  },
++  oneBuiltInScriptExists: function (done) {
++    td.when(this.findExecutables(['glob1'])).thenCallback(null, [])
++    td.when(this.findExecutables(['glob2'])).thenCallback(null, ['pathA'])
++
++    this.subject('fake', OPTIONS, function (er, result) {
++      assert.deepEqual(result, ['pathA'])
++      done(er)
++    })
++  },
++  noScriptExists: function (done) {
++    td.when(this.findExecutables(['glob1'])).thenCallback(null, [])
++    td.when(this.findExecutables(['glob2'])).thenCallback(null, [])
++
++    this.subject('fake', OPTIONS, function (er, result) {
++      assert.equal(er.message,
++        `No script found for npm lifecycle 'fake' matching any of:\n` +
++        `  glob1\n  glob2\n` +
++        `Either define a script or remove "scripty" from 'scripts.fake' in your package.json.`)
++      assert.equal(result, null)
++      done(null)
++    })
++  }
++}
++
++if (UNSUPPORTED_TDD) module.exports = {}
+diff --git a/node_modules/scripty/.ffdfafcbf6d7edec-00000018.spawn-script.js b/.ffdfafcbf6d7edec-00000018.spawn-script.js
+new file mode 100644
+index 0000000000000000000000000000000000000000..3222ec591ea96bb7c7ed5536c6451fb0e79a934f
+--- /dev/null
++++ b/.ffdfafcbf6d7edec-00000018.spawn-script.js
+@@ -0,0 +1,20 @@
++var _ = require('lodash')
++var printScript = require('./print-script')
++var spawn = require('cross-spawn').spawn
++
++module.exports = function (scriptFile, options, cb) {
++  printScript(scriptFile)
++
++  const child = spawn(scriptFile, options.userArgs, options.spawn)
++
++  child.on('close', (code) =>
++    cb(
++      code !== 0
++        ? new Error(`script failed: '${scriptFile}'\nexit status: ${code}`)
++        : null,
++      code
++    )
++  )
++
++  _.invoke(options, 'spawn.tap', child)
++}
+diff --git a/node_modules/scripty/.ffdfbeeb87def68e-00000015.index.js b/.ffdfbeeb87def68e-00000015.index.js
+new file mode 100644
+index 0000000000000000000000000000000000000000..9309261db5e309a5b3a64a88bb5afd4bc56db35e
+--- /dev/null
++++ b/.ffdfbeeb87def68e-00000015.index.js
+@@ -0,0 +1,16 @@
++var _ = require('lodash')
++
++const commandify = (func, items, options) =>
++  items.map(item => cb => func(item, options, cb))
++var dryRun = require('./dry-run')
++var spawnScript = require('./spawn-script')
++var all = require('./all')
++
++module.exports = function (scriptFiles, options, cb) {
++  if (options.dryRun) return dryRun(scriptFiles, cb)
++
++  var commands = commandify(spawnScript, scriptFiles, options)
++  all(commands, options.parallel, function (er, codes) {
++    cb(er, _.last(codes))
++  })
++}
+diff --git a/node_modules/scripty/.fffbaecffffb6c75-00000000.cli.js b/.fffbaecffffb6c75-00000000.cli.js
+new file mode 100644
+index 0000000000000000000000000000000000000000..088d48f621a3beac05e0f3d02ad00fe2a8cd1c56
+--- /dev/null
++++ b/.fffbaecffffb6c75-00000000.cli.js
+@@ -0,0 +1,47 @@
++#!/usr/bin/env node
++
++var lifecycleEvent = process.env.npm_lifecycle_event
++
++if (!lifecycleEvent) {
++  console.error(
++    'scripty ERR! It seems you may be running scripty from the command-line directly.\n' +
++    'At this time, scripty can only be run within an npm script specified in your package.json.\n\n' +
++    'Example package.json entry:\n\n' +
++    '  "scripts": {\n' +
++    '    "foo:bar": "scripty"\n' +
++    '  }\n\n' +
++    'And then run via `npm run foo:bar`.\n\n' +
++    'For more documentation, see:\n' +
++    '  https://github.com/testdouble/scripty\n\n' +
++    'Exiting.'
++  )
++  process.exit(1)
++} else {
++  var scripty = require('./lib/scripty')
++  var loadOption = require('./lib/load-option')
++  var log = require('./lib/log')
++
++  scripty(lifecycleEvent, {
++    userArgs: process.argv.slice(2),
++    parallel: loadOption('parallel'),
++    dryRun: loadOption('dryRun'),
++    logLevel: loadOption('logLevel'),
++    quiet: loadOption('quiet'),
++    silent: loadOption('silent'),
++    verbose: loadOption('verbose'),
++    spawn: {
++      stdio: 'inherit'
++    },
++    resolve: {
++      modules: loadOption('modules'),
++      scripts: loadOption('path'),
++      scriptsWin: loadOption('windowsPath')
++    }
++  }, function (er, code) {
++    if (er) {
++      log.error(er)
++      code = code || er.code || 1
++    }
++    process.exitCode = code
++  })
++}
+diff --git a/node_modules/scripty/.ffffaf498fffffed-00000013.all.js b/.ffffaf498fffffed-00000013.all.js
+new file mode 100644
+index 0000000000000000000000000000000000000000..69c8f6470c91aaab3e0cac0d69764945681d09db
+--- /dev/null
++++ b/.ffffaf498fffffed-00000013.all.js
+@@ -0,0 +1,6 @@
++var async = require('async')
++
++module.exports = function (commands, parallel, cb) {
++  var runner = async[parallel ? 'parallel' : 'series']
++  runner(commands, cb)
++}
