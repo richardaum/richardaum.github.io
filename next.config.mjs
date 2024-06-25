@@ -8,6 +8,15 @@ const nextConfig = {
       },
     ],
   },
+  webpack: (config, options) => {
+    config.module.rules.push({
+      test: /\.(graphql|gql)/,
+      exclude: /node_modules/,
+      loader: "raw-loader",
+    });
+
+    return config;
+  },
 };
 
 export default nextConfig;

@@ -1,23 +1,22 @@
-import { PageQuery } from "@/types/graphql";
+import { At } from "@/types/array";
+import { GetSinglePageQuery } from "@/types/graphql";
 import Image from "next/image";
 import { Fragment } from "react";
 
 type Props = {
-  sections: NonNullable<
-    NonNullable<PageQuery["page"]>["sectionsCollection"]
-  >["items"];
-
-  socialMedias: NonNullable<
-    NonNullable<PageQuery["home"]>["socialMediasCollection"]
-  >["items"];
+  sections: At<GetSinglePageQuery, "page.sectionsCollection.items">[];
+  socialMedias: any[];
 };
 
 export function Navbar({ sections, socialMedias }: Props) {
   return (
-    <nav className="bg-chetwode-blue w-[92px] min-h-screen flex flex-col justify-between">
-      <ul role="menubar" className="flex flex-col items-center gap-4 pt-6">
+    <nav className="fixed flex flex-col flex-shrink-0 justify-between bg-chetwode-blue w-[92px] h-screen overflow-auto">
+      <ul
+        role="menubar"
+        className="flex flex-col items-center gap-4 pt-6 text-cod-gray"
+      >
         {sections
-          .filter((section) => !section?.hideOnNavbar)
+          .filter((section) => section.title)
           .map((section, index) => (
             <Fragment key={section?.sys.id}>
               {index > 0 && (
@@ -31,14 +30,19 @@ export function Navbar({ sections, socialMedias }: Props) {
                   <path d="M0 1H20" stroke="#121212" strokeWidth="2" />
                 </svg>
               )}
-              <li className="select-none text-xl tracking-widest uppercase [writing-mode:vertical-lr] [direction:rtl]">
-                {section?.title}
+              <li className="tracking-widest select-none [writing-mode:vertical-lr] [direction:rtl]">
+                <button
+                  role="link"
+                  className="relative after:top-0 after:left-0 after:absolute after:bg-cod-gray after:w-[2px] after:h-full after:origin-top-left after:scale-y-0 hover:after:origin-bottom-left after:transition-transform after:duration-300 after:ease-[cubic-bezier(0.65_0.05_0.36_1)] hover:after:scale-y-100"
+                >
+                  <span className="text-xl uppercase">{section?.title}</span>
+                </button>
               </li>
             </Fragment>
           ))}
       </ul>
 
-      <ul className="flex flex-col items-center gap-4 pb-6 mt-6">
+      <ul className="flex flex-col items-center gap-4 mt-6 pb-6">
         {socialMedias.map((socialMedia) => (
           <li key={socialMedia?.sys.id}>
             <a

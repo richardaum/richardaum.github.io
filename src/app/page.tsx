@@ -1,46 +1,34 @@
-import Image from "next/image";
+import { CompaniesSection } from "@/components/CompaniesSection";
+import { HomeSection } from "@/components/HomeSection";
 import { Navbar } from "@/components/Navbar";
-import { GraphQLClient } from "graphql-request";
-import { getSdk } from "@/types/graphql";
-
-const client = new GraphQLClient(
-  `https://graphql.contentful.com/content/v1/spaces/${process.env.CONTENTFUL_SPACE_ID}/environments/master`,
-  {
-    headers: {
-      Authorization: `Bearer ${process.env.CONTENTFUL_ACCESS_TOKEN}`,
-    },
-  }
-);
+import getSinglePage from "@/graphql/getSinglePage.graphql";
+import { GetSinglePageQuery } from "@/types/graphql";
+import { graphqlRequest } from "@/utils/graphql";
 
 export default async function Home() {
-  const sdk = getSdk(client);
-  const data = await sdk.page();
-
-  const home = data.home;
-  const sections = data.page?.sectionsCollection?.items ?? [];
-  const socialMedias = home?.socialMediasCollection?.items ?? [];
+  const data = await graphqlRequest<GetSinglePageQuery>(getSinglePage);
+  const sections =
+    data?.page?.sectionsCollection?.items.filter(
+      (section) => section != null
+    ) ?? [];
 
   return (
-    <main className="flex">
-      <Navbar sections={sections} socialMedias={socialMedias} />
+    <main className="text-neutral-100">
+      <Navbar sections={sections} socialMedias={[]} />
 
-      {sections[0]?.content?.__typename === "Home" &&
-        sections[0]?.content?.upperText}
-
-      <Image
-        src={home?.photo?.image?.url!}
-        alt={home?.photo?.description!}
-        width={home?.photo?.image?.width!}
-        height={home?.photo?.image?.height!}
-        style={{
-          objectFit: "cover",
-          width: home?.photo?.image?.width!,
-          height: home?.photo?.image?.height!,
-          position: "absolute",
-          right: 0,
-          bottom: 0,
-        }}
-      />
+      {sections.map((section) => {
+        return (
+          <section key={section.sys.id} className="ml-[92px]">
+            {section?.__typename === "HomeSection" && (
+              <HomeSection home={section} />
+            )}
+            {section?.__typename === "CompaniesSection" && (
+              <CompaniesSection companies={section} />
+            )}
+          </section>
+        );
+      })}
+      <section>teste</section>
     </main>
   );
 }

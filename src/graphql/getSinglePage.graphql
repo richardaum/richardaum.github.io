@@ -1,0 +1,87 @@
+query getSinglePage {
+  page(id: "5mvuB3N2ynlh1wr27eh5Ui") {
+    sectionsCollection(limit: 20) {
+      items {
+        ... on Entry {
+          sys {
+            id
+          }
+        }
+        ... on HomeSection {
+          ...HomeSection
+        }
+        ... on CompaniesSection {
+          ...CompaniesSection
+        }
+      }
+    }
+  }
+}
+
+fragment HomeSection on HomeSection {
+  __typename
+  title
+  photo {
+    sys {
+      id
+    }
+    description
+    image {
+      url
+      width
+      height
+    }
+  }
+
+  socialMediasCollection(limit: 3) {
+    items {
+      sys {
+        id
+      }
+      url
+      icon {
+        ...ImageWrapper
+      }
+    }
+  }
+
+  upperText
+  role
+  name
+  summary
+}
+
+fragment CompaniesSection on CompaniesSection {
+  __typename
+  title
+  heading
+  companiesCollection {
+    items {
+      ...Company
+    }
+  }
+}
+
+fragment Company on Company {
+  sys {
+    id
+  }
+  url
+  startDate
+  endDate
+  brand {
+    ...ImageWrapper
+  }
+}
+
+fragment ImageWrapper on ImageWrapper {
+  sys {
+    id
+  }
+  description
+  image {
+    url
+    width
+    height
+  }
+}

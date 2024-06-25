@@ -8,4 +8,9 @@ generates:
     plugins:
       - typescript
       - typescript-operations
-      - typescript-graphql-request
+      # - "@devticon-os/graphql-codegen-axios"
+  # src/graphql/schema.graphql:
+  #   plugins:
+  #     - schema-ast
+  #   config:
+  #     includeDirectives: true
