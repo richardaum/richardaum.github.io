@@ -1,5 +1,6 @@
 import { At } from "@/types/array";
 import { GetSinglePageQuery } from "@/types/graphql";
+import { kebabCase } from "lodash";
 import Image from "next/image";
 import { Fragment } from "react";
 
@@ -10,47 +11,39 @@ type Props = {
 
 export function Navbar({ sections, socialMedias }: Props) {
   return (
-    <nav className="fixed flex flex-col flex-shrink-0 justify-between bg-indigo-400 w-[92px] h-screen text-gray-100 overflow-auto">
+    <nav className="fixed flex h-screen w-[92px] flex-shrink-0 flex-col justify-between overflow-auto bg-indigo-400 text-gray-100">
       <ul role="menubar" className="flex flex-col items-center gap-4 pt-6">
         {sections
-          .filter((section) => section.title)
-          .map((section, index) => (
-            <Fragment key={section?.sys.id}>
-              {index > 0 && (
-                <svg
-                  width="20"
-                  height="2"
-                  viewBox="0 0 20 2"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    className="stroke-gray-100"
-                    d="M0 1H20"
-                    strokeWidth="2"
-                  />
-                </svg>
-              )}
-              <li className="tracking-widest select-none [writing-mode:vertical-lr] [direction:rtl]">
-                <button
-                  role="link"
-                  className="relative after:top-0 after:left-0 after:absolute after:bg-gray-100 after:w-[2px] after:h-full after:origin-top-left after:scale-y-0 hover:after:origin-bottom-left after:transition-transform after:duration-300 after:ease-[cubic-bezier(0.65_0.05_0.36_1)] hover:after:scale-y-100"
-                >
-                  <span className="text-xl uppercase">{section?.title}</span>
-                </button>
-              </li>
-            </Fragment>
-          ))}
+          .map((section, index) => {
+            if (!section?.title) return;
+
+            return (
+              <Fragment key={section?.sys.id}>
+                {index > 0 && (
+                  <svg width="20" height="2" viewBox="0 0 20 2" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path className="stroke-gray-100" d="M0 1H20" strokeWidth="2" />
+                  </svg>
+                )}
+                <li className="select-none tracking-widest [direction:rtl] [writing-mode:vertical-lr]">
+                  <button
+                    role="link"
+                    className="after:ease-[cubic-bezier(0.65_0.05_0.36_1)] relative after:absolute after:left-0 after:top-0 after:h-full after:w-[2px] after:origin-top-left after:scale-y-0 after:bg-gray-100 after:transition-transform after:duration-300 hover:after:origin-bottom-left hover:after:scale-y-100"
+                  >
+                    <a href={`#${kebabCase(section.title)}`} className="text-xl uppercase">
+                      {section.title}
+                    </a>
+                  </button>
+                </li>
+              </Fragment>
+            );
+          })
+          .filter((section) => section != null)}
       </ul>
 
-      <ul className="flex flex-col items-center gap-4 mt-6 pb-6">
+      <ul className="mt-6 flex flex-col items-center gap-4 pb-6">
         {socialMedias.map((socialMedia) => (
           <li key={socialMedia?.sys.id}>
-            <a
-              href={socialMedia?.url!}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
+            <a href={socialMedia?.url!} target="_blank" rel="noopener noreferrer">
               <Image
                 src={socialMedia?.icon?.image?.url!}
                 alt={socialMedia?.icon?.description!}

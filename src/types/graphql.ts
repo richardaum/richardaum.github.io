@@ -15,6 +15,7 @@ export type Scalars = {
   DateTime: { input: any; output: any; }
   Dimension: { input: any; output: any; }
   HexColor: { input: any; output: any; }
+  JSON: { input: any; output: any; }
   Quality: { input: any; output: any; }
 };
 
@@ -583,6 +584,8 @@ export enum CompanyLinkingCollectionsWorkCollectionOrder {
   RoleDesc = 'role_DESC',
   ShortDescriptionAsc = 'shortDescription_ASC',
   ShortDescriptionDesc = 'shortDescription_DESC',
+  SlugAsc = 'slug_ASC',
+  SlugDesc = 'slug_DESC',
   StartDateAsc = 'startDate_ASC',
   StartDateDesc = 'startDate_DESC',
   SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
@@ -1469,6 +1472,8 @@ export enum ImageWrapperLinkingCollectionsWorkCollectionOrder {
   RoleDesc = 'role_DESC',
   ShortDescriptionAsc = 'shortDescription_ASC',
   ShortDescriptionDesc = 'shortDescription_DESC',
+  SlugAsc = 'slug_ASC',
+  SlugDesc = 'slug_DESC',
   StartDateAsc = 'startDate_ASC',
   StartDateDesc = 'startDate_DESC',
   SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
@@ -2071,6 +2076,16 @@ export type QueryWorkCollectionArgs = {
   where: InputMaybe<WorkFilter>;
 };
 
+export type ResourceLink = {
+  sys: ResourceSys;
+};
+
+export type ResourceSys = {
+  __typename?: 'ResourceSys';
+  linkType: Scalars['String']['output'];
+  urn: Scalars['String']['output'];
+};
+
 /** [See type definition](https://app.contentful.com/spaces/v8rltx4kw8l0/content_types/section) */
 export type Section = Entry & {
   __typename?: 'Section';
@@ -2304,6 +2319,7 @@ export enum SingleContentOrder {
 export type Skill = Entry & {
   __typename?: 'Skill';
   contentfulMetadata: ContentfulMetadata;
+  description: Maybe<SkillDescription>;
   icon: Maybe<ImageWrapper>;
   internalName: Maybe<Scalars['String']['output']>;
   linkedFrom: Maybe<SkillLinkingCollections>;
@@ -2311,6 +2327,12 @@ export type Skill = Entry & {
   sys: Sys;
   tagsCollection: Maybe<SkillTagsCollection>;
   years: Maybe<Scalars['Float']['output']>;
+};
+
+
+/** [See type definition](https://app.contentful.com/spaces/v8rltx4kw8l0/content_types/skill) */
+export type SkillDescriptionArgs = {
+  locale: InputMaybe<Scalars['String']['input']>;
 };
 
 
@@ -2364,10 +2386,61 @@ export type SkillCollection = {
   total: Scalars['Int']['output'];
 };
 
+export type SkillDescription = {
+  __typename?: 'SkillDescription';
+  json: Scalars['JSON']['output'];
+  links: SkillDescriptionLinks;
+};
+
+export type SkillDescriptionAssets = {
+  __typename?: 'SkillDescriptionAssets';
+  block: Array<Maybe<Asset>>;
+  hyperlink: Array<Maybe<Asset>>;
+};
+
+export type SkillDescriptionEntries = {
+  __typename?: 'SkillDescriptionEntries';
+  block: Array<Maybe<Entry>>;
+  hyperlink: Array<Maybe<Entry>>;
+  inline: Array<Maybe<Entry>>;
+};
+
+export type SkillDescriptionLinks = {
+  __typename?: 'SkillDescriptionLinks';
+  assets: SkillDescriptionAssets;
+  entries: SkillDescriptionEntries;
+  resources: SkillDescriptionResources;
+};
+
+export type SkillDescriptionResources = {
+  __typename?: 'SkillDescriptionResources';
+  block: Array<SkillDescriptionResourcesBlock>;
+  hyperlink: Array<SkillDescriptionResourcesHyperlink>;
+  inline: Array<SkillDescriptionResourcesInline>;
+};
+
+export type SkillDescriptionResourcesBlock = ResourceLink & {
+  __typename?: 'SkillDescriptionResourcesBlock';
+  sys: ResourceSys;
+};
+
+export type SkillDescriptionResourcesHyperlink = ResourceLink & {
+  __typename?: 'SkillDescriptionResourcesHyperlink';
+  sys: ResourceSys;
+};
+
+export type SkillDescriptionResourcesInline = ResourceLink & {
+  __typename?: 'SkillDescriptionResourcesInline';
+  sys: ResourceSys;
+};
+
 export type SkillFilter = {
   AND: InputMaybe<Array<InputMaybe<SkillFilter>>>;
   OR: InputMaybe<Array<InputMaybe<SkillFilter>>>;
   contentfulMetadata: InputMaybe<ContentfulMetadataFilter>;
+  description_contains: InputMaybe<Scalars['String']['input']>;
+  description_exists: InputMaybe<Scalars['Boolean']['input']>;
+  description_not_contains: InputMaybe<Scalars['String']['input']>;
   icon: InputMaybe<CfImageWrapperNestedFilter>;
   icon_exists: InputMaybe<Scalars['Boolean']['input']>;
   internalName: InputMaybe<Scalars['String']['input']>;
@@ -2482,6 +2555,8 @@ export enum SkillLinkingCollectionsWorkCollectionOrder {
   RoleDesc = 'role_DESC',
   ShortDescriptionAsc = 'shortDescription_ASC',
   ShortDescriptionDesc = 'shortDescription_DESC',
+  SlugAsc = 'slug_ASC',
+  SlugDesc = 'slug_DESC',
   StartDateAsc = 'startDate_ASC',
   StartDateDesc = 'startDate_DESC',
   SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
@@ -3146,6 +3221,7 @@ export type Work = Entry & {
   screenshot: Maybe<ImageWrapper>;
   shortDescription: Maybe<Scalars['String']['output']>;
   skillsCollection: Maybe<WorkSkillsCollection>;
+  slug: Maybe<Scalars['String']['output']>;
   startDate: Maybe<Scalars['DateTime']['output']>;
   sys: Sys;
   website: Maybe<Scalars['String']['output']>;
@@ -3224,6 +3300,12 @@ export type WorkSkillsCollectionArgs = {
   preview: InputMaybe<Scalars['Boolean']['input']>;
   skip?: InputMaybe<Scalars['Int']['input']>;
   where: InputMaybe<SkillFilter>;
+};
+
+
+/** [See type definition](https://app.contentful.com/spaces/v8rltx4kw8l0/content_types/work) */
+export type WorkSlugArgs = {
+  locale: InputMaybe<Scalars['String']['input']>;
 };
 
 
@@ -3307,6 +3389,13 @@ export type WorkFilter = {
   shortDescription_not_in: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   skills: InputMaybe<CfSkillNestedFilter>;
   skillsCollection_exists: InputMaybe<Scalars['Boolean']['input']>;
+  slug: InputMaybe<Scalars['String']['input']>;
+  slug_contains: InputMaybe<Scalars['String']['input']>;
+  slug_exists: InputMaybe<Scalars['Boolean']['input']>;
+  slug_in: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  slug_not: InputMaybe<Scalars['String']['input']>;
+  slug_not_contains: InputMaybe<Scalars['String']['input']>;
+  slug_not_in: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   startDate: InputMaybe<Scalars['DateTime']['input']>;
   startDate_exists: InputMaybe<Scalars['Boolean']['input']>;
   startDate_gt: InputMaybe<Scalars['DateTime']['input']>;
@@ -3375,6 +3464,8 @@ export enum WorkOrder {
   RoleDesc = 'role_DESC',
   ShortDescriptionAsc = 'shortDescription_ASC',
   ShortDescriptionDesc = 'shortDescription_DESC',
+  SlugAsc = 'slug_ASC',
+  SlugDesc = 'slug_DESC',
   StartDateAsc = 'startDate_ASC',
   StartDateDesc = 'startDate_DESC',
   SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
@@ -3542,6 +3633,9 @@ export type CfSkillNestedFilter = {
   AND: InputMaybe<Array<InputMaybe<CfSkillNestedFilter>>>;
   OR: InputMaybe<Array<InputMaybe<CfSkillNestedFilter>>>;
   contentfulMetadata: InputMaybe<ContentfulMetadataFilter>;
+  description_contains: InputMaybe<Scalars['String']['input']>;
+  description_exists: InputMaybe<Scalars['Boolean']['input']>;
+  description_not_contains: InputMaybe<Scalars['String']['input']>;
   icon_exists: InputMaybe<Scalars['Boolean']['input']>;
   internalName: InputMaybe<Scalars['String']['input']>;
   internalName_contains: InputMaybe<Scalars['String']['input']>;
@@ -3651,11 +3745,15 @@ export type CfsectionsMultiTypeNestedFilter = {
 export type GetSinglePageQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetSinglePageQuery = { __typename?: 'Query', page: { __typename?: 'Page', sectionsCollection: { __typename?: 'PageSectionsCollection', items: Array<{ __typename: 'CompaniesSection', title: string | null, heading: string | null, sys: { __typename?: 'Sys', id: string }, companiesCollection: { __typename?: 'CompaniesSectionCompaniesCollection', items: Array<{ __typename?: 'Company', url: string | null, startDate: any | null, endDate: any | null, sys: { __typename?: 'Sys', id: string }, brand: { __typename?: 'ImageWrapper', description: string | null, sys: { __typename?: 'Sys', id: string }, image: { __typename?: 'Asset', url: string | null, width: number | null, height: number | null } | null } | null } | null> } | null } | { __typename: 'HomeSection', title: string | null, upperText: string | null, role: string | null, name: string | null, summary: string | null, sys: { __typename?: 'Sys', id: string }, photo: { __typename?: 'ImageWrapper', description: string | null, sys: { __typename?: 'Sys', id: string }, image: { __typename?: 'Asset', url: string | null, width: number | null, height: number | null } | null } | null, socialMediasCollection: { __typename?: 'HomeSectionSocialMediasCollection', items: Array<{ __typename?: 'SocialMedia', url: string | null, sys: { __typename?: 'Sys', id: string }, icon: { __typename?: 'ImageWrapper', description: string | null, sys: { __typename?: 'Sys', id: string }, image: { __typename?: 'Asset', url: string | null, width: number | null, height: number | null } | null } | null } | null> } | null } | { __typename: 'SkillsSection', title: string | null, sys: { __typename?: 'Sys', id: string }, skillsCollection: { __typename?: 'SkillsSectionSkillsCollection', items: Array<{ __typename?: 'Skill', name: string | null, sys: { __typename?: 'Sys', id: string }, icon: { __typename?: 'ImageWrapper', description: string | null, sys: { __typename?: 'Sys', id: string }, image: { __typename?: 'Asset', url: string | null, width: number | null, height: number | null } | null } | null } | null> } | null } | null> } | null } | null };
+export type GetSinglePageQuery = { __typename?: 'Query', page: { __typename?: 'Page', sectionsCollection: { __typename?: 'PageSectionsCollection', items: Array<{ __typename: 'CompaniesSection', title: string | null, heading: string | null, sys: { __typename?: 'Sys', id: string }, companiesCollection: { __typename?: 'CompaniesSectionCompaniesCollection', items: Array<{ __typename?: 'Company', url: string | null, startDate: any | null, endDate: any | null, sys: { __typename?: 'Sys', id: string }, brand: { __typename?: 'ImageWrapper', description: string | null, sys: { __typename?: 'Sys', id: string }, image: { __typename?: 'Asset', url: string | null, width: number | null, height: number | null } | null } | null } | null> } | null } | { __typename: 'HomeSection', title: string | null, upperText: string | null, role: string | null, name: string | null, summary: string | null, sys: { __typename?: 'Sys', id: string }, photo: { __typename?: 'ImageWrapper', description: string | null, sys: { __typename?: 'Sys', id: string }, image: { __typename?: 'Asset', url: string | null, width: number | null, height: number | null } | null } | null, socialMediasCollection: { __typename?: 'HomeSectionSocialMediasCollection', items: Array<{ __typename?: 'SocialMedia', url: string | null, sys: { __typename?: 'Sys', id: string }, icon: { __typename?: 'ImageWrapper', description: string | null, sys: { __typename?: 'Sys', id: string }, image: { __typename?: 'Asset', url: string | null, width: number | null, height: number | null } | null } | null } | null> } | null } | { __typename: 'SkillsSection', title: string | null, sys: { __typename?: 'Sys', id: string }, skillsCollection: { __typename?: 'SkillsSectionSkillsCollection', items: Array<{ __typename?: 'Skill', name: string | null, sys: { __typename?: 'Sys', id: string }, tagsCollection: { __typename?: 'SkillTagsCollection', items: Array<{ __typename?: 'Tag', label: string | null, sys: { __typename?: 'Sys', id: string } } | null> } | null, description: { __typename?: 'SkillDescription', json: any } | null, icon: { __typename?: 'ImageWrapper', description: string | null, sys: { __typename?: 'Sys', id: string }, image: { __typename?: 'Asset', url: string | null, width: number | null, height: number | null } | null } | null } | null> } | null } | null> } | null } | null, workCollection: { __typename?: 'WorkCollection', items: Array<{ __typename?: 'Work', name: string | null, slug: string | null, sys: { __typename?: 'Sys', id: string } } | null> } | null };
 
-export type SkillsSectionFragment = { __typename: 'SkillsSection', title: string | null, skillsCollection: { __typename?: 'SkillsSectionSkillsCollection', items: Array<{ __typename?: 'Skill', name: string | null, sys: { __typename?: 'Sys', id: string }, icon: { __typename?: 'ImageWrapper', description: string | null, sys: { __typename?: 'Sys', id: string }, image: { __typename?: 'Asset', url: string | null, width: number | null, height: number | null } | null } | null } | null> } | null };
+export type WorkFragment = { __typename?: 'Work', name: string | null, slug: string | null, sys: { __typename?: 'Sys', id: string } };
 
-export type SkillFragment = { __typename?: 'Skill', name: string | null, sys: { __typename?: 'Sys', id: string }, icon: { __typename?: 'ImageWrapper', description: string | null, sys: { __typename?: 'Sys', id: string }, image: { __typename?: 'Asset', url: string | null, width: number | null, height: number | null } | null } | null };
+export type SkillsSectionFragment = { __typename: 'SkillsSection', title: string | null, skillsCollection: { __typename?: 'SkillsSectionSkillsCollection', items: Array<{ __typename?: 'Skill', name: string | null, sys: { __typename?: 'Sys', id: string }, tagsCollection: { __typename?: 'SkillTagsCollection', items: Array<{ __typename?: 'Tag', label: string | null, sys: { __typename?: 'Sys', id: string } } | null> } | null, description: { __typename?: 'SkillDescription', json: any } | null, icon: { __typename?: 'ImageWrapper', description: string | null, sys: { __typename?: 'Sys', id: string }, image: { __typename?: 'Asset', url: string | null, width: number | null, height: number | null } | null } | null } | null> } | null };
+
+export type SkillFragment = { __typename?: 'Skill', name: string | null, sys: { __typename?: 'Sys', id: string }, tagsCollection: { __typename?: 'SkillTagsCollection', items: Array<{ __typename?: 'Tag', label: string | null, sys: { __typename?: 'Sys', id: string } } | null> } | null, description: { __typename?: 'SkillDescription', json: any } | null, icon: { __typename?: 'ImageWrapper', description: string | null, sys: { __typename?: 'Sys', id: string }, image: { __typename?: 'Asset', url: string | null, width: number | null, height: number | null } | null } | null };
+
+export type TagFragment = { __typename?: 'Tag', label: string | null, sys: { __typename?: 'Sys', id: string } };
 
 export type HomeSectionFragment = { __typename: 'HomeSection', title: string | null, upperText: string | null, role: string | null, name: string | null, summary: string | null, photo: { __typename?: 'ImageWrapper', description: string | null, sys: { __typename?: 'Sys', id: string }, image: { __typename?: 'Asset', url: string | null, width: number | null, height: number | null } | null } | null, socialMediasCollection: { __typename?: 'HomeSectionSocialMediasCollection', items: Array<{ __typename?: 'SocialMedia', url: string | null, sys: { __typename?: 'Sys', id: string }, icon: { __typename?: 'ImageWrapper', description: string | null, sys: { __typename?: 'Sys', id: string }, image: { __typename?: 'Asset', url: string | null, width: number | null, height: number | null } | null } | null } | null> } | null };
 

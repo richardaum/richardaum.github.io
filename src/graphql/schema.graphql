@@ -356,6 +356,8 @@ enum CompanyLinkingCollectionsWorkCollectionOrder {
   role_DESC
   shortDescription_ASC
   shortDescription_DESC
+  slug_ASC
+  slug_DESC
   startDate_ASC
   startDate_DESC
   sys_firstPublishedAt_ASC
@@ -1001,6 +1003,8 @@ enum ImageWrapperLinkingCollectionsWorkCollectionOrder {
   role_DESC
   shortDescription_ASC
   shortDescription_DESC
+  slug_ASC
+  slug_DESC
   startDate_ASC
   startDate_DESC
   sys_firstPublishedAt_ASC
@@ -1029,6 +1033,11 @@ enum ImageWrapperOrder {
   sys_publishedVersion_ASC
   sys_publishedVersion_DESC
 }
+
+"""
+The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
+"""
+scalar JSON
 
 """
 [See type definition](https://app.contentful.com/spaces/v8rltx4kw8l0/content_types/multiContent)
@@ -1245,6 +1254,15 @@ type Query {
   workCollection(limit: Int = 100, locale: String, order: [WorkOrder], preview: Boolean, skip: Int = 0, where: WorkFilter): WorkCollection
 }
 
+interface ResourceLink {
+  sys: ResourceSys!
+}
+
+type ResourceSys {
+  linkType: String!
+  urn: String!
+}
+
 """
 [See type definition](https://app.contentful.com/spaces/v8rltx4kw8l0/content_types/section)
 """
@@ -1395,6 +1413,7 @@ enum SingleContentOrder {
 """
 type Skill implements Entry {
   contentfulMetadata: ContentfulMetadata!
+  description(locale: String): SkillDescription
   icon(locale: String, preview: Boolean, where: ImageWrapperFilter): ImageWrapper
   internalName(locale: String): String
   linkedFrom(allowedLocales: [String]): SkillLinkingCollections
@@ -1411,10 +1430,53 @@ type SkillCollection {
   total: Int!
 }
 
+type SkillDescription {
+  json: JSON!
+  links: SkillDescriptionLinks!
+}
+
+type SkillDescriptionAssets {
+  block: [Asset]!
+  hyperlink: [Asset]!
+}
+
+type SkillDescriptionEntries {
+  block: [Entry]!
+  hyperlink: [Entry]!
+  inline: [Entry]!
+}
+
+type SkillDescriptionLinks {
+  assets: SkillDescriptionAssets!
+  entries: SkillDescriptionEntries!
+  resources: SkillDescriptionResources!
+}
+
+type SkillDescriptionResources {
+  block: [SkillDescriptionResourcesBlock!]!
+  hyperlink: [SkillDescriptionResourcesHyperlink!]!
+  inline: [SkillDescriptionResourcesInline!]!
+}
+
+type SkillDescriptionResourcesBlock implements ResourceLink {
+  sys: ResourceSys!
+}
+
+type SkillDescriptionResourcesHyperlink implements ResourceLink {
+  sys: ResourceSys!
+}
+
+type SkillDescriptionResourcesInline implements ResourceLink {
+  sys: ResourceSys!
+}
+
 input SkillFilter {
   AND: [SkillFilter]
   OR: [SkillFilter]
   contentfulMetadata: ContentfulMetadataFilter
+  description_contains: String
+  description_exists: Boolean
+  description_not_contains: String
   icon: cfImageWrapperNestedFilter
   icon_exists: Boolean
   internalName: String
@@ -1493,6 +1555,8 @@ enum SkillLinkingCollectionsWorkCollectionOrder {
   role_DESC
   shortDescription_ASC
   shortDescription_DESC
+  slug_ASC
+  slug_DESC
   startDate_ASC
   startDate_DESC
   sys_firstPublishedAt_ASC
@@ -1969,6 +2033,7 @@ type Work implements Entry {
   screenshot(locale: String, preview: Boolean, where: ImageWrapperFilter): ImageWrapper
   shortDescription(locale: String): String
   skillsCollection(limit: Int = 100, locale: String, order: [WorkSkillsCollectionOrder], preview: Boolean, skip: Int = 0, where: SkillFilter): WorkSkillsCollection
+  slug(locale: String): String
   startDate(locale: String): DateTime
   sys: Sys!
   website(locale: String): String
@@ -2042,6 +2107,13 @@ input WorkFilter {
   shortDescription_not_in: [String]
   skills: cfSkillNestedFilter
   skillsCollection_exists: Boolean
+  slug: String
+  slug_contains: String
+  slug_exists: Boolean
+  slug_in: [String]
+  slug_not: String
+  slug_not_contains: String
+  slug_not_in: [String]
   startDate: DateTime
   startDate_exists: Boolean
   startDate_gt: DateTime
@@ -2092,6 +2164,8 @@ enum WorkOrder {
   role_DESC
   shortDescription_ASC
   shortDescription_DESC
+  slug_ASC
+  slug_DESC
   startDate_ASC
   startDate_DESC
   sys_firstPublishedAt_ASC
@@ -2258,6 +2332,9 @@ input cfSkillNestedFilter {
   AND: [cfSkillNestedFilter]
   OR: [cfSkillNestedFilter]
   contentfulMetadata: ContentfulMetadataFilter
+  description_contains: String
+  description_exists: Boolean
+  description_not_contains: String
   icon_exists: Boolean
   internalName: String
   internalName_contains: String

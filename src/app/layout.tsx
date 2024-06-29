@@ -1,8 +1,7 @@
+import { cn } from "@/utils/tailwind";
 import type { Metadata } from "next";
 import { Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
-import Head from "next/head";
-import { cn } from "@/utils/tailwind";
 
 const plusJakartaSans = Plus_Jakarta_Sans({
   subsets: ["latin"],
@@ -20,10 +19,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={cn(plusJakartaSans.className, "bg-neutral-900")}>
-        {children}
-      </body>
+    <html lang="en" className="scroll-smooth">
+      <body className={cn(plusJakartaSans.className, "bg-neutral-900")}>{children}</body>
     </html>
   );
 }

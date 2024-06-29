@@ -8,31 +8,20 @@ import { graphqlRequest } from "@/utils/graphql";
 
 export default async function Home() {
   const data = await graphqlRequest<GetSinglePageQuery>(getSinglePage);
-  const sections =
-    data?.page?.sectionsCollection?.items.filter(
-      (section) => section != null
-    ) ?? [];
+  const sections = data?.page?.sectionsCollection?.items.filter((section) => section != null) ?? [];
+  const works = data.workCollection?.items.filter((e) => e != null) ?? [];
 
   return (
     <main className="text-neutral-100">
       <Navbar sections={sections} socialMedias={[]} />
 
-      <div className="grid grid-cols-2 ml-[92px]">
+      <div className="ml-[92px] grid grid-cols-2">
         {sections.map((section) => {
           return (
-            <section
-              key={section.sys.id}
-              className="grid grid-cols-subgrid col-span-2"
-            >
-              {section?.__typename === "HomeSection" && (
-                <HomeSection home={section} />
-              )}
-              {section?.__typename === "CompaniesSection" && (
-                <CompaniesSection companies={section} />
-              )}
-              {section?.__typename === "SkillsSection" && (
-                <SkillsSection skills={section} />
-              )}
+            <section key={section.sys.id} className="col-span-2 grid grid-cols-subgrid">
+              {section?.__typename === "HomeSection" && <HomeSection home={section} />}
+              {section?.__typename === "CompaniesSection" && <CompaniesSection companies={section} />}
+              {section?.__typename === "SkillsSection" && <SkillsSection skills={section} works={works} />}
             </section>
           );
         })}

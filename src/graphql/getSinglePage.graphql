@@ -1,6 +1,6 @@
 query getSinglePage {
   page(id: "5mvuB3N2ynlh1wr27eh5Ui") {
-    sectionsCollection(limit: 20) {
+    sectionsCollection(limit: 5) {
       items {
         ... on Entry {
           sys {
@@ -13,6 +13,20 @@ query getSinglePage {
       }
     }
   }
+
+  workCollection {
+    items {
+      ...Work
+    }
+  }
+}
+
+fragment Work on Work {
+  sys {
+    id
+  }
+  name
+  slug
 }
 
 fragment SkillsSection on SkillsSection {
@@ -30,9 +44,24 @@ fragment Skill on Skill {
     id
   }
   name
+  tagsCollection(limit: 10) {
+    items {
+      ...Tag
+    }
+  }
+  description {
+    json
+  }
   icon {
     ...ImageWrapper
   }
+}
+
+fragment Tag on Tag {
+  sys {
+    id
+  }
+  label
 }
 
 fragment HomeSection on HomeSection {

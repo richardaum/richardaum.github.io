@@ -1,10 +1,11 @@
 import { HomeSectionFragment } from "@/types/graphql";
+import { kebabCase } from "lodash";
 import Markdown from "markdown-to-jsx";
 import Image from "next/image";
 
 export const HomeSection = ({ home }: { home: HomeSectionFragment }) => {
   return (
-    <div className="col-span-2 grid min-h-screen grid-cols-subgrid">
+    <div className="col-span-2 grid min-h-screen grid-cols-subgrid" id={kebabCase(home.title!)}>
       <div className="text-pastel-mind m-6 flex">
         <div className="my-auto">
           <div className="mb-3 text-5xl">{home.upperText}</div>
@@ -33,10 +34,6 @@ export const HomeSection = ({ home }: { home: HomeSectionFragment }) => {
         width={home?.photo?.image?.width!}
         height={home?.photo?.image?.height!}
         priority
-        style={{
-          width: home?.photo?.image?.width! * 1,
-          height: home?.photo?.image?.height! * 1,
-        }}
       />
     </div>
   );
