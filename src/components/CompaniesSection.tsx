@@ -1,6 +1,5 @@
 import { CompaniesSectionFragment } from "@/types/graphql";
 import { calculateTotalYears } from "@/utils/companies";
-import { DateTime } from "luxon";
 import Image from "next/image";
 
 export const CompaniesSection = ({
@@ -8,13 +7,12 @@ export const CompaniesSection = ({
 }: {
   companies: CompaniesSectionFragment;
 }) => {
-  const safeCompanies =
-    companies.companiesCollection?.items.filter((e) => e != null) ?? [];
-
-  const totalYears = calculateTotalYears(safeCompanies ?? []);
+  const items = companies.companiesCollection?.items;
+  const list = items?.filter((e) => e != null) ?? [];
+  const totalYears = calculateTotalYears(list ?? []);
 
   return (
-    <div className="flex flex-col items-center bg-zinc-800 mx-6 p-8 rounded-2xl text-center">
+    <div className="flex flex-col items-center col-span-2 bg-zinc-800 mx-6 p-8 rounded-2xl text-center">
       <h2 className="mb-4 text-xl">
         {companies.heading?.replace(
           "%years%",
@@ -22,22 +20,27 @@ export const CompaniesSection = ({
         )}
       </h2>
       <ul className="flex items-center gap-10">
-        {safeCompanies.map((company) => {
+        {list.map((company) => {
           return (
             <li
               key={company.sys.id}
               title={calculateTotalYears([company]).duration}
             >
-              <a href={company.url!} target="_blank" rel="noreferrer">
+              <a
+                href={company.url!}
+                target="_blank"
+                rel="noreferrer"
+                className="group"
+              >
                 <Image
+                  className="object-cover hover:scale-125 group-focus:scale-125 transition-all duration-300 ease-in-out"
                   src={company.brand?.image?.url!}
                   alt={company.brand?.description!}
                   width={company.brand?.image?.width!}
                   height={company.brand?.image?.height!}
                   style={{
-                    objectFit: "cover",
-                    width: company.brand?.image?.width! * 1,
-                    height: company.brand?.image?.height! * 1,
+                    width: company.brand?.image?.width!,
+                    height: company.brand?.image?.height!,
                   }}
                 />
               </a>

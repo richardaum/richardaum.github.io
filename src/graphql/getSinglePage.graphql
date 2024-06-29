@@ -7,14 +7,31 @@ query getSinglePage {
             id
           }
         }
-        ... on HomeSection {
-          ...HomeSection
-        }
-        ... on CompaniesSection {
-          ...CompaniesSection
-        }
+        ...HomeSection
+        ...CompaniesSection
+        ...SkillsSection
       }
     }
+  }
+}
+
+fragment SkillsSection on SkillsSection {
+  __typename
+  title
+  skillsCollection {
+    items {
+      ...Skill
+    }
+  }
+}
+
+fragment Skill on Skill {
+  sys {
+    id
+  }
+  name
+  icon {
+    ...ImageWrapper
   }
 }
 
