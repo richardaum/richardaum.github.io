@@ -1,6 +1,6 @@
 "use client";
 import { At } from "@/types/array";
-import { GetSinglePageQuery, SkillsSectionFragment, WorkFragment } from "@/types/graphql";
+import { GetSinglePageQuery, GetSkillsQuery, SkillsSectionFragment, WorkFragment } from "@/types/graphql";
 import { cn } from "@/utils/tailwind";
 import { documentToReactComponents } from "@contentful/rich-text-react-renderer";
 import { BLOCKS, Inline, INLINES } from "@contentful/rich-text-types";
@@ -11,19 +11,14 @@ import { ButtonSwitch } from "./ui/ButtonSwitch";
 import { Input } from "./ui/input";
 import { enableMapSet, produce } from "immer";
 import { kebabCase } from "lodash";
+import { SkillDictionary } from "@/utils/skills";
 
 enableMapSet();
 
-type Skill = At<SkillsSectionFragment, "skillsCollection.items">;
+type Skill = At<GetSkillsQuery, "skillCollection.items">;
 
-export const SkillsSection = ({
-  skills,
-  works,
-}: {
-  skills: SkillsSectionFragment;
-  works: At<GetSinglePageQuery, "workCollection.items">[];
-}) => {
-  const list = skills.skillsCollection?.items.filter((e) => e != null) ?? [];
+export const SkillsSection = ({ section, skills }: { section: SkillsSectionFragment; skills: SkillDictionary }) => {
+  const list = section.skillsCollection?.items?.filter((e) => e != null) ?? [];
 
   const [query, setQuery] = React.useState<string>("");
   const [selectedSkill, setSelectedSkill] = React.useState<Skill | null>(null);
@@ -38,17 +33,16 @@ export const SkillsSection = ({
     );
   };
 
+  const selectSkillProjects = selectedSkill?.linkedFrom?.workCollection?.items ?? [];
+
   return (
     <div
       className="col-span-2 grid min-h-screen auto-rows-min grid-cols-subgrid gap-x-6 px-8 pt-[100px]"
-      id={kebabCase(skills.title!)}
+      id={kebabCase(section.title!)}
     >
       <div className="col-span-2 mb-16 grid grid-cols-subgrid">
-        <h2 className="text-5xl">{skills.title}</h2>
-        <div className="rounded-l-2xl text-neutral-500">
-          I possess a diverse set of technical skills, honed through years of practical experience and continuous
-          learning.
-        </div>
+        <h2 className="text-5xl">{section.title}</h2>
+        <div className="rounded-l-2xl text-neutral-500">{section.description}</div>
       </div>
 
       <div className="col-span-2 grid grid-cols-subgrid">
@@ -102,26 +96,38 @@ export const SkillsSection = ({
               </button>
             )}
           </div>
-          <ul className="grid grid-cols-7 justify-between gap-12">
-            {list.map((skill) => (
-              <li key={skill.sys.id} title={skill.name!}>
-                <button className="mr-3" onClick={() => setSelectedSkill(skill)}>
-                  {skill.icon ? (
-                    <Image
-                      className="size-12 w-auto min-w-12"
-                      src={skill.icon.image?.url!}
-                      alt={skill.icon.description!}
-                      width={skill.icon.image?.width!}
-                      height={skill.icon.image?.height!}
-                    />
-                  ) : (
-                    <div className="flex size-12 items-center justify-center rounded-full bg-indigo-400">
-                      {skill.name![0]}
-                    </div>
-                  )}
-                </button>
-              </li>
-            ))}
+          <ul className="grid grid-cols-9 justify-between gap-8">
+            {list.map((skillRef) => {
+              const skill = skills.get(skillRef.sys.id)!;
+
+              return (
+                <li key={skill.sys.id} title={skill.name!}>
+                  <button
+                    className={cn(
+                      "mr-3 rounded-full outline-8",
+                      skill.sys.id === selectedSkill?.sys.id && "outline-indigo-400",
+                    )}
+                    onClick={() =>
+                      setSelectedSkill((previousSkill) => (previousSkill?.sys.id === skill.sys.id ? null : skill))
+                    }
+                  >
+                    {skill.icon ? (
+                      <Image
+                        className="size-12 w-auto min-w-12"
+                        src={skill.icon.image?.url!}
+                        alt={skill.icon.description!}
+                        width={skill.icon.image?.width!}
+                        height={skill.icon.image?.height!}
+                      />
+                    ) : (
+                      <div className="flex size-12 items-center justify-center rounded-full bg-indigo-400">
+                        {skill.name![0]}
+                      </div>
+                    )}
+                  </button>
+                </li>
+              );
+            })}
           </ul>
         </div>
 
@@ -130,7 +136,7 @@ export const SkillsSection = ({
             <div>
               <h3 className="mb-4 text-4xl">{selectedSkill.name}</h3>
 
-              <ul className="mb-8 flex flex-wrap">
+              <ul className="mb-8 flex flex-wrap gap-2">
                 {selectedSkill.tagsCollection?.items
                   .filter((t) => t != null)
                   .map((tag) => (
@@ -144,20 +150,26 @@ export const SkillsSection = ({
                 preserveWhitespace: true,
                 renderNode: {
                   [BLOCKS.UL_LIST]: (_, children) => <ul className="mb-4 ml-5 list-disc">{children}</ul>,
-                  [INLINES.EMBEDDED_ENTRY]: (node) => {
-                    const inline = node as Inline;
-                    const id = inline.data.target.sys.id;
-                    const work = works.find((w) => w.sys.id === id) as WorkFragment | null;
-                    return (
-                      work && (
-                        <a className="text-indigo-400" href={`#${work.slug}`}>
-                          {work.name}
-                        </a>
-                      )
-                    );
-                  },
                 },
               })}
+
+              {selectSkillProjects.length > 0 && (
+                <div>
+                  Related work:&nbsp;
+                  <ul className="inline">
+                    {selectSkillProjects
+                      .filter((w) => w != null)
+                      .map((work, index, list) => (
+                        <li className="inline" key={work.sys.id}>
+                          <a href={`#${work.slug}`} className="text-indigo-400">
+                            {work.name}
+                          </a>
+                          {index < list.length - 1 ? ", " : ""}
+                        </li>
+                      ))}
+                  </ul>
+                </div>
+              )}
             </div>
           )}
         </div>

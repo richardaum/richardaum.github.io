@@ -11,9 +11,8 @@ generates:
     config:
       avoidOptionals: true
 
-      # - "@devticon-os/graphql-codegen-axios"
-  src/graphql/schema.graphql:
-    plugins:
-      - schema-ast
-    config:
-      includeDirectives: true
+  # src/graphql/schema.graphql:
+  #   plugins:
+  #     - schema-ast
+  #   config:
+  #     includeDirectives: true
