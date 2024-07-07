@@ -3,7 +3,7 @@ import { skill } from "./fragments";
 
 export const getSkills = gql`
   query getSkills {
-    skillCollection {
+    skillCollection(order: [sys_firstPublishedAt_ASC]) {
       items {
         ${skill}
       }

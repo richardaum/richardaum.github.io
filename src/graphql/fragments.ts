@@ -30,13 +30,6 @@ export const skillsSection = toInlineFragment(gql`
     __typename
     title
     description
-    skillsCollection {
-      items {
-        sys {
-          id
-        }
-      }
-    }
   }
 `);
 

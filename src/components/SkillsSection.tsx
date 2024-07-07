@@ -18,8 +18,6 @@ enableMapSet();
 type Skill = At<GetSkillsQuery, "skillCollection.items">;
 
 export const SkillsSection = ({ section, skills }: { section: SkillsSectionFragment; skills: SkillDictionary }) => {
-  const list = section.skillsCollection?.items?.filter((e) => e != null) ?? [];
-
   const [query, setQuery] = React.useState<string>("");
   const [selectedSkill, setSelectedSkill] = React.useState<Skill | null>(null);
   const [filteredSkillsGroup, setFilteredSkillsGroup] = React.useState(new Set<string>());
@@ -33,6 +31,7 @@ export const SkillsSection = ({ section, skills }: { section: SkillsSectionFragm
     );
   };
 
+  const skillsList = Array.from(skills.values());
   const selectSkillProjects = selectedSkill?.linkedFrom?.workCollection?.items ?? [];
 
   return (
@@ -97,9 +96,7 @@ export const SkillsSection = ({ section, skills }: { section: SkillsSectionFragm
             )}
           </div>
           <ul className="grid grid-cols-9 justify-between gap-8">
-            {list.map((skillRef) => {
-              const skill = skills.get(skillRef.sys.id)!;
-
+            {skillsList.map((skill) => {
               return (
                 <li key={skill.sys.id} title={skill.name!}>
                   <button
@@ -113,7 +110,7 @@ export const SkillsSection = ({ section, skills }: { section: SkillsSectionFragm
                   >
                     {skill.icon ? (
                       <Image
-                        className="size-12 w-auto min-w-12"
+                        className="size-12 w-auto min-w-12 transition-all hover:scale-125"
                         src={skill.icon.image?.url!}
                         alt={skill.icon.description!}
                         width={skill.icon.image?.width!}
