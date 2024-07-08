@@ -1,7 +1,6 @@
-import gql from "fraql";
-import { companiesSection, homeSection, skillsSection } from "./fragments";
+import { graphql } from "@/types/graphql";
 
-export const getSinglePage = gql`
+export const getSinglePage = graphql(`
   query getSinglePage {
     page(id: "5mvuB3N2ynlh1wr27eh5Ui") {
       sectionsCollection(limit: 5) {
@@ -12,11 +11,11 @@ export const getSinglePage = gql`
             }
           }
 
-          ${homeSection}
-          ${companiesSection}
-          ${skillsSection}
+          ...HomeSection
+          ...CompaniesSection
+          ...SkillsSection
         }
       }
     }
   }
-`;
+`);

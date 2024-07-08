@@ -4,7 +4,7 @@ import { Navbar } from "@/components/Navbar";
 import { SkillsSection } from "@/components/SkillsSection";
 import { getSinglePage } from "@/graphql/getSinglePage";
 import { getSkills } from "@/graphql/getSkills";
-import { GetSinglePageQuery, GetSkillsQuery } from "@/types/graphql";
+import { GetSinglePageQuery, GetSkillsQuery } from "@/types/graphql/graphql";
 import { graphqlRequest } from "@/utils/graphql";
 import { createSkillDictionary } from "@/utils/skills";
 
@@ -23,7 +23,9 @@ export default async function Home() {
         {sections.map((section) => {
           return (
             <section key={section.sys.id} className="col-span-2 grid grid-cols-subgrid">
-              {section?.__typename === "HomeSection" && <HomeSection home={section} />}
+              {section?.__typename === "HomeSection" && (
+                <HomeSection home={section} skills={createSkillDictionary(skills)} />
+              )}
               {section?.__typename === "CompaniesSection" && <CompaniesSection companies={section} />}
               {section?.__typename === "SkillsSection" && (
                 <SkillsSection section={section} skills={createSkillDictionary(skills)} />

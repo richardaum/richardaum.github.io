@@ -1,5 +1,5 @@
 import { At } from "@/types/array";
-import { GetSkillsQuery } from "@/types/graphql";
+import { GetSkillsQuery } from "@/types/graphql/graphql";
 
 export function createSkillDictionary(skills: At<GetSkillsQuery, "skillCollection">) {
   const dictionary = new Map<string, At<GetSkillsQuery, "skillCollection.items">>();

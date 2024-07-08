@@ -1,17 +1,17 @@
 "use client";
 import { At } from "@/types/array";
-import { GetSinglePageQuery, GetSkillsQuery, SkillsSectionFragment, WorkFragment } from "@/types/graphql";
+import { GetSkillsQuery, SkillsSectionFragment } from "@/types/graphql/graphql";
+import { SkillDictionary } from "@/utils/skills";
 import { cn } from "@/utils/tailwind";
 import { documentToReactComponents } from "@contentful/rich-text-react-renderer";
-import { BLOCKS, Inline, INLINES } from "@contentful/rich-text-types";
+import { BLOCKS } from "@contentful/rich-text-types";
+import { enableMapSet, produce } from "immer";
+import { kebabCase } from "lodash";
 import { Search } from "lucide-react";
 import Image from "next/image";
 import React from "react";
 import { ButtonSwitch } from "./ui/ButtonSwitch";
 import { Input } from "./ui/input";
-import { enableMapSet, produce } from "immer";
-import { kebabCase } from "lodash";
-import { SkillDictionary } from "@/utils/skills";
 
 enableMapSet();
 

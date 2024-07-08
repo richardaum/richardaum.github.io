@@ -1,5 +1,5 @@
 import { At } from "@/types/array";
-import { GetSinglePageQuery } from "@/types/graphql";
+import { GetSinglePageQuery } from "@/types/graphql/graphql";
 import { kebabCase } from "lodash";
 import Image from "next/image";
 import { Fragment } from "react";

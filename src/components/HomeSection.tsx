@@ -1,9 +1,10 @@
-import { HomeSectionFragment } from "@/types/graphql";
+import { HomeSectionFragment } from "@/types/graphql/graphql";
+import { SkillDictionary } from "@/utils/skills";
 import { kebabCase } from "lodash";
 import Markdown from "markdown-to-jsx";
 import Image from "next/image";
 
-export const HomeSection = ({ home }: { home: HomeSectionFragment }) => {
+export const HomeSection = ({ home, skills }: { home: HomeSectionFragment; skills: SkillDictionary }) => {
   return (
     <div className="col-span-2 grid min-h-screen grid-cols-subgrid" id={kebabCase(home.title!)}>
       <div className="text-pastel-mind m-6 flex">

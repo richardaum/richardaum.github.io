@@ -1,12 +1,11 @@
-import gql from "fraql";
-import { skill } from "./fragments";
+import { graphql } from "@/types/graphql";
 
-export const getSkills = gql`
+export const getSkills = graphql(`
   query getSkills {
     skillCollection(order: [sys_firstPublishedAt_ASC]) {
       items {
-        ${skill}
+        ...Skill
       }
     }
   }
-`;
+`);
