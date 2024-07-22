@@ -1,4 +1,5 @@
 "use client";
+import { useSkillContext } from "@/providers/SkillProvider";
 import { At } from "@/types/array";
 import { GetSkillsQuery, SkillsSectionFragment } from "@/types/graphql/graphql";
 import { SkillDictionary } from "@/utils/skills";
@@ -8,8 +9,8 @@ import { BLOCKS } from "@contentful/rich-text-types";
 import { enableMapSet, produce } from "immer";
 import { kebabCase } from "lodash";
 import { Search } from "lucide-react";
-import Image from "next/image";
 import React from "react";
+import { SkillBadge } from "./SkillBadge";
 import { ButtonSwitch } from "./ui/ButtonSwitch";
 import { Input } from "./ui/input";
 
@@ -19,8 +20,8 @@ type Skill = At<GetSkillsQuery, "skillCollection.items">;
 
 export const SkillsSection = ({ section, skills }: { section: SkillsSectionFragment; skills: SkillDictionary }) => {
   const [query, setQuery] = React.useState<string>("");
-  const [selectedSkill, setSelectedSkill] = React.useState<Skill | null>(null);
   const [filteredSkillsGroup, setFilteredSkillsGroup] = React.useState(new Set<string>());
+  const { skill: selectedSkill, setSkill } = useSkillContext();
 
   const toggleSkillGroup = (group: string) => {
     setFilteredSkillsGroup(
@@ -99,29 +100,7 @@ export const SkillsSection = ({ section, skills }: { section: SkillsSectionFragm
             {skillsList.map((skill) => {
               return (
                 <li key={skill.sys.id} title={skill.name!}>
-                  <button
-                    className={cn(
-                      "mr-3 rounded-full outline-8",
-                      skill.sys.id === selectedSkill?.sys.id && "outline-indigo-400",
-                    )}
-                    onClick={() =>
-                      setSelectedSkill((previousSkill) => (previousSkill?.sys.id === skill.sys.id ? null : skill))
-                    }
-                  >
-                    {skill.icon ? (
-                      <Image
-                        className="size-12 w-auto min-w-12 transition-all hover:scale-125"
-                        src={skill.icon.image?.url!}
-                        alt={skill.icon.description!}
-                        width={skill.icon.image?.width!}
-                        height={skill.icon.image?.height!}
-                      />
-                    ) : (
-                      <div className="flex size-12 items-center justify-center rounded-full bg-indigo-400">
-                        {skill.name![0]}
-                      </div>
-                    )}
-                  </button>
+                  <SkillBadge active={selectedSkill?.sys.id === skill.sys.id} onClick={setSkill} skill={skill} />
                 </li>
               );
             })}

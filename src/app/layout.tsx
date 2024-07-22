@@ -1,3 +1,4 @@
+import { SkillProvider } from "@/providers/SkillProvider";
 import { cn } from "@/utils/tailwind";
 import type { Metadata } from "next";
 import { Plus_Jakarta_Sans } from "next/font/google";
@@ -20,7 +21,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="scroll-smooth">
-      <body className={cn(plusJakartaSans.className, "bg-neutral-900")}>{children}</body>
+      <body className={cn(plusJakartaSans.className, "bg-neutral-900")}>
+        <SkillProvider>{children}</SkillProvider>
+      </body>
     </html>
   );
 }
