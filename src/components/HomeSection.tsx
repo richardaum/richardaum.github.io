@@ -30,7 +30,7 @@ export const HomeSection = ({ home, skills }: { home: HomeSectionFragment; skill
             </Markdown>
           </div>
           <div className="mb-16 whitespace-pre text-4xl font-bold">{home.role}</div>
-          <div className="max-w-[555px] text-xl">{home.summary}</div>
+          <div className="text-xl">{home.summary}</div>
           <ul className="mt-6 flex flex-wrap">
             {home.mainSkillsCollection?.items
               .filter((e) => e != null)

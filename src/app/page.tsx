@@ -1,41 +1,31 @@
-import { CompaniesSection } from "@/components/CompaniesSection";
-import { HomeSection } from "@/components/HomeSection";
-import { Navbar } from "@/components/Navbar";
-import { SkillsSection } from "@/components/SkillsSection";
-import { getSinglePage } from "@/graphql/getSinglePage";
-import { getSkills } from "@/graphql/getSkills";
-import { GetSinglePageQuery, GetSkillsQuery } from "@/types/graphql/graphql";
-import { graphqlRequest } from "@/utils/graphql";
-import { createSkillDictionary } from "@/utils/skills";
+import logo from "@/assets/images/logo.svg";
+import { IntroductionContent } from "@/components/IntroductionContent";
+import { NavPanel } from "@/components/NavPanel";
+import { RecentWork } from "@/components/RecentWork";
+import { SelfPicture } from "@/components/SelfPicture";
+import Image from "next/image";
 
 export default async function Home() {
-  const singlePageResponse = await graphqlRequest<GetSinglePageQuery>(getSinglePage);
-  const sections = singlePageResponse?.page?.sectionsCollection?.items.filter((section) => section != null) ?? [];
-
-  const skillsResponse = await graphqlRequest<GetSkillsQuery>(getSkills);
-  const skills = skillsResponse?.skillCollection!;
-
   return (
-    <main className="text-neutral-100">
-      <Navbar sections={sections} socialMedias={[]} />
+    <main className="grid min-h-screen grid-cols-[auto_400px] gap-y-8">
+      <div className="relative m-auto max-w-[562px]">
+        <div className="fixed top-0 z-20 w-full max-w-[562px] bg-greyTones-300 px-8 py-6">
+          <Image src={logo} alt="Logo" />
+        </div>
 
-      <div className="ml-[92px] grid grid-cols-2">
-        {sections.map((section) => {
-          return (
-            <section key={section.sys.id} className="col-span-2 grid grid-cols-subgrid">
-              {section?.__typename === "HomeSection" && (
-                <HomeSection home={section} skills={createSkillDictionary(skills)} />
-              )}
-              {section?.__typename === "CompaniesSection" && <CompaniesSection companies={section} />}
-              {section?.__typename === "SkillsSection" && (
-                <SkillsSection section={section} skills={createSkillDictionary(skills)} />
-              )}
-            </section>
-          );
-        })}
+        <IntroductionContent />
+        <div className="absolute mt-8">
+          <RecentWork />
+        </div>
       </div>
-
-      <section>teste</section>
+      <div>
+        <div className="fixed size-full bg-brownBeige-500">
+          <NavPanel />
+        </div>
+        <div className="fixed flex h-screen translate-x-[-150px] items-center">
+          <SelfPicture />
+        </div>
+      </div>
     </main>
   );
 }
