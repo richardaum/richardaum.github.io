@@ -1,6 +1,7 @@
 "use client";
 
 import { projects } from "@/data/projects";
+import { IconLink } from "@tabler/icons-react";
 
 export function RecentWork() {
   return (
@@ -12,7 +13,14 @@ export function RecentWork() {
             <article className="flex flex-col gap-3" key={index}>
               <h3 className="flex items-center font-semibold">
                 <div className="absolute -left-1 z-10 size-3 rounded-[4px] bg-redPink-500"></div>
-                {project.title}
+                <span className="flex gap-1">
+                  {project.title}
+                  {project.link && (
+                    <a href={project.link} target="_blank" rel="noreferrer">
+                      <IconLink className="text-redPink-500" />
+                    </a>
+                  )}
+                </span>
               </h3>
               <p>{project.description}</p>
               <p className="font-light">

@@ -25,6 +25,7 @@ const config = {
         },
         brownBeige: {
           500: "#BDAB8C",
+          600: "#4C4438",
         },
       },
     },

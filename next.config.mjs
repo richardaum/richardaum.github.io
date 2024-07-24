@@ -12,11 +12,16 @@ const nextConfig = {
       },
     ],
   },
-  webpack: (config, options) => {
+  webpack: (config) => {
     config.module.rules.push({
       test: /\.(graphql|gql)/,
       exclude: /node_modules/,
       loader: "raw-loader",
+    });
+
+    config.module.rules.push({
+      test: /\.pdf$/,
+      type: "asset/resource",
     });
 
     return config;

@@ -19,10 +19,10 @@ export default async function Home() {
         </div>
       </div>
       <div>
-        <div className="fixed size-full bg-brownBeige-500">
+        <div className="fixed h-full w-[400px] bg-brownBeige-500">
           <NavPanel />
         </div>
-        <div className="fixed flex h-screen translate-x-[-150px] items-center">
+        <div className="pointer-events-none fixed flex h-screen translate-x-[-150px] items-center">
           <SelfPicture />
         </div>
       </div>

@@ -29,7 +29,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="scroll-smooth" data-overlayscrollbars-initialize>
-      <body className={cn(eugusto.variable, figtree.className, "bg-greyTones-300")} data-overlayscrollbars-initialize>
+      <body
+        className={cn(eugusto.variable, figtree.className, "bg-greyTones-300 text-darkColors-900")}
+        data-overlayscrollbars-initialize
+      >
         <Scrollable />
         {children}
       </body>
