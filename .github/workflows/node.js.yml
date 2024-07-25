@@ -26,3 +26,5 @@ jobs:
 
       - name: Deploy my app 🚀
         run: bun run deploy
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
