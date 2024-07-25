@@ -1,9 +1,18 @@
 "use client";
 
 import { projects } from "@/data/projects";
+import { durationToYearsAndMonths, fromToToDuration } from "@/utils/duration";
+import { calculateTechUsage } from "@/utils/tech";
 import { IconLink } from "@tabler/icons-react";
+import { Duration } from "luxon";
+import { useTranslations } from "next-intl";
+import { Tooltip } from "react-tippy";
+
+const techUsage = calculateTechUsage(projects);
 
 export function RecentWork() {
+  const t = useTranslations("RecentWork");
+
   return (
     <div className="relative ml-2">
       <section className="border-l-4 border-greyTones-500 pl-5">
@@ -11,27 +20,43 @@ export function RecentWork() {
         <section className="flex flex-col gap-8 pb-8">
           {projects.map((project, index) => (
             <article className="flex flex-col gap-3" key={index}>
-              <h3 className="flex items-center font-semibold">
-                <div className="absolute -left-1 z-10 size-3 rounded-[4px] bg-redPink-500"></div>
-                <span className="flex gap-1">
-                  {project.title}
-                  {project.link && (
-                    <a href={project.link} target="_blank" rel="noreferrer">
-                      <IconLink className="text-redPink-500" />
-                    </a>
-                  )}
-                </span>
-              </h3>
-              <p>{project.description}</p>
-              <p className="font-light">
-                {project.techStack.map((technology, index) => (
-                  <span key={index} className="inline">
-                    <button className="underline decoration-dashed decoration-1 underline-offset-4">
-                      {technology}
-                    </button>
-                    {index < project.techStack.length - 1 && ", "}
+              <div className="flex flex-col">
+                <h3 className="flex items-center font-semibold">
+                  <div className="absolute -left-1 z-10 size-3 rounded-[4px] bg-redPink-500"></div>
+                  <span className="flex gap-1">
+                    {t(`${project.id}.title`)}
+                    {project.link && (
+                      <a href={project.link} target="_blank" rel="noreferrer">
+                        <IconLink className="text-redPink-500" />
+                      </a>
+                    )}
                   </span>
-                ))}
+                </h3>
+                <span className="text-sm text-greyTones-600">
+                  Worked for around {durationToYearsAndMonths(fromToToDuration(project.duration))}
+                </span>
+              </div>
+
+              <p>{t(`${project.id}.description`)}</p>
+              <p className="flex flex-wrap gap-1 font-light">
+                {project.techStack.map((technology, index) => {
+                  const tech = technology;
+                  const duration = durationToYearsAndMonths(
+                    Duration.fromObject({ days: techUsage[technology].totalDays }),
+                  );
+                  const projects = techUsage[technology].projectsCount;
+                  return (
+                    <span key={index}>
+                      <button className="underline decoration-dashed decoration-1 underline-offset-4">
+                        {/* @ts-expect-error children mismatch */}
+                        <Tooltip title={t("tooltip", { duration, projects, tech })} arrow position="bottom">
+                          {technology}
+                        </Tooltip>
+                      </button>
+                      {index < project.techStack.length - 1 && ", "}
+                    </span>
+                  );
+                })}
               </p>
             </article>
           ))}

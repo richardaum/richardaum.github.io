@@ -1,4 +1,6 @@
 import resume from "@/assets/files/resume.pdf";
+import { projects } from "@/data/projects";
+import { calculateTotalExperience } from "@/utils/tech";
 import {
   IconBrandDiscord,
   IconBrandGithub,
@@ -7,8 +9,11 @@ import {
   IconDownload,
   IconMail,
 } from "@tabler/icons-react";
+import { Copyright } from "./Copyright";
 
 export function NavPanel() {
+  const totalExperience = calculateTotalExperience(projects);
+
   return (
     <div className="flex h-full flex-col justify-between gap-8 text-brownBeige-600">
       <div className="ml-auto">
@@ -19,7 +24,7 @@ export function NavPanel() {
 
       <div className="relative z-10 flex flex-col items-center gap-8">
         <div className="w-[150px] border-b-4 border-current text-right font-display">
-          <p className="text-4xl">9+ years</p>
+          <p className="text-4xl">+{totalExperience} years</p>
           <p className="text-lg">Expert</p>
         </div>
         <div className="flex gap-3">
@@ -39,10 +44,8 @@ export function NavPanel() {
             <IconBrandSteam />
           </a>
         </div>
-        <p className="mb-2 text-center text-xs">
-          Designed and implemented by Richard Lopes © 2024 <br />
-          All rights reserved
-        </p>
+
+        <Copyright />
       </div>
     </div>
   );
