@@ -3,7 +3,7 @@
 import { useTranslations } from "next-intl";
 
 export function Copyright() {
-  const t = useTranslations("Panel");
+  const t = useTranslations("Home");
 
   return (
     <p className="mb-4 mr-auto w-[calc(100%-96px)] whitespace-pre-wrap pl-6 text-xs lg:w-full lg:text-center">

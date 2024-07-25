@@ -1,64 +1,65 @@
 {
-  "Panel": {
-    "copyright": "Designed and implemented by <nowrap>Richard Lopes</nowrap> © {year}\nAll rights reserved"
-  },
-  "RecentWork": {
-    "tooltip": "Around {duration} of experience with {tech} in {projects} {projects, plural, one {project} other {projects}}",
-    "arctouch": {
-      "title": "ArcTouch Website",
-      "description": "As a Tech Lead at <a>ArcTouch</a>, I established a modern tech stack for the application, emphasized best coding practices, and provided comprehensive technical support to the team through detailed documentation and regular syncs, while actively contributing to feature development and deployment."
-    },
-    "dailyPick": {
-      "title": "Daily Pick",
-      "description": "As a developer at <a>iFood</a>, I was involved in designing, implementing, and maintaining a bot for the Slack chat platform aimed at improving efficiency in daily meetings by implementing turns for the hosts of these ceremonies."
-    },
-    "pomodoro": {
-      "title": "Pomodoro Design System",
-      "description": "As a frontend developer at <a>iFood</a>, I implemented and maintained various core components of the Pomodoro. Additionally, I collaborated with the team in managing enhancement requests, such as documentation improvements, streamlining the onboarding process for contributing developers, suggesting automations, and applying general developer experience enhancements."
-    },
-    "chains": {
-      "title": "Partner Portal - Chains",
-      "description": "As a frontend developer at <a>iFood</a>, I proposed a scalable structure for the maintainability of the Chain Portal to enable centralized access to restaurants within the same chain. Additionally, I actively worked on developing new features, code reviews, and alignment with both the frontend and backend teams."
-    },
-    "catalog": {
-      "title": "Partner Portal - Catalog",
-      "description": "As a frontend developer, I participated in a project to display restaurant menus on the <a>iFood</a> platform. I actively worked on feature development, mentored colleagues, aligned functionalities, participated in estimation dynamics, refinements, plannings, code reviews, and the entire software development process alongside a team of other developers."
-    },
-    "financial": {
-      "title": "Partner Portal - Financial",
-      "description": "As a full stack developer at <a>iFood</a>, I had a significant impact on the frontend development of the Financial by migrating the application to a microfrontend-based model, transitioning from JavaScript to TypeScript, and adapting the application to use the Design System. I also continuously aligned with the backend team, occasionally contributing to backend tasks by reading and writing code, identifying undocumented behaviors directly in the code, and interacting with the database to troubleshoot and resolve customer issues in open tickets."
-    },
-    "symphonyChat": {
-      "title": "Symphony Chat",
-      "description": "As a frontend developer at <a>Daitan Group</a>, I worked on feature development, investigated and fixed application performance issues, coordinated with internal teams, conducted continuous code reviews, and participated in migrating legacy code to React."
-    },
-    "foodDelivery": {
-      "title": "Food Delivery",
-      "description": "As a software developer at H60, I designed, implemented, and maintained a food delivery management software from scratch. This included developing the frontend, backend, database, and data communication channels using a WebSocket module to streamline customer service flow and address management."
-    },
-    "digitalCatalog": {
-      "title": "iFood Digital Catalog",
-      "description": "As a frontend developer at <a>iFood</a>, I actively contributed to the UI development of the Digital Catalog platform, aimed at providing a customizable menu for restaurants. I was involved in developing features, conducting code reviews, discussing architecture alignments, and applying best design practices."
-    },
-    "itriadWhatsAppKaiOS": {
-      "title": "Whatsapp for KaiOS",
-      "description": "As a frontend developer at <a>iTRIAD</a>, I actively participated in the initial phase of the Whatsapp app for the KaiOS platform, directly interacting with the Facebook and Whatsapp development teams, conducting internal alignments with leadership, collaborating with developers to ensure quality deliveries, and receiving recognition for my contributions to the team."
-    },
-    "stoneFinancialConcialitionCronjob": {
-      "title": "Stone Financial Reconciliation Cronjob",
-      "description": "As a full stack developer at <a>Transire</a>, I was involved in creating and maintaining scripts for automating financial reconciliation between the acquirer Stone and a sub-acquirer using the API for data retrieval and cronjobs for executing the automation."
-    },
-    "mealCardBackoffice": {
-      "title": "Meal Card Backoffice",
-      "description": "As a frontend developer at <a>AXM</a>, I implemented new features for a backoffice platform managing the company's internal meal voucher and food voucher values."
-    },
-    "rfidAccessControl": {
-      "title": "RFID Access Control",
-      "description": "As a full stack developer at <a>AXM</a>, I built a REST API from scratch that received data from RFID readers and granted access to employees within an internal restaurant."
-    },
-    "alcatelStockControl": {
-      "title": "Alcatel Stock Control",
-      "description": "As a frontend developer at <a>iTRIAD</a>, I served as the sole frontend developer on a platform for integrating and simplifying SAP usage for inventory management in a factory."
+  "Home": {
+    "workedFor": "Worked for around {duration}",
+    "copyright": "Designed and implemented by <nowrap>Richard Lopes</nowrap> © {year}\nAll rights reserved",
+    "techTooltip": "Around {duration} of experience with {tech} in {projects} {projects, plural, one {project} other {projects}}",
+    "recentWork": {
+      "arctouch": {
+        "title": "ArcTouch Website",
+        "description": "As a Tech Lead at <a>ArcTouch</a>, I established a modern tech stack for the application, emphasized best coding practices, and provided comprehensive technical support to the team through detailed documentation and regular syncs, while actively contributing to feature development and deployment."
+      },
+      "dailyPick": {
+        "title": "Daily Pick",
+        "description": "As a developer at <a>iFood</a>, I was involved in designing, implementing, and maintaining a bot for the Slack chat platform aimed at improving efficiency in daily meetings by implementing turns for the hosts of these ceremonies."
+      },
+      "pomodoro": {
+        "title": "Pomodoro Design System",
+        "description": "As a frontend developer at <a>iFood</a>, I implemented and maintained various core components of the Pomodoro. Additionally, I collaborated with the team in managing enhancement requests, such as documentation improvements, streamlining the onboarding process for contributing developers, suggesting automations, and applying general developer experience enhancements."
+      },
+      "chains": {
+        "title": "Partner Portal - Chains",
+        "description": "As a frontend developer at <a>iFood</a>, I proposed a scalable structure for the maintainability of the Chain Portal to enable centralized access to restaurants within the same chain. Additionally, I actively worked on developing new features, code reviews, and alignment with both the frontend and backend teams."
+      },
+      "catalog": {
+        "title": "Partner Portal - Catalog",
+        "description": "As a frontend developer, I participated in a project to display restaurant menus on the <a>iFood</a> platform. I actively worked on feature development, mentored colleagues, aligned functionalities, participated in estimation dynamics, refinements, plannings, code reviews, and the entire software development process alongside a team of other developers."
+      },
+      "financial": {
+        "title": "Partner Portal - Financial",
+        "description": "As a full stack developer at <a>iFood</a>, I had a significant impact on the frontend development of the Financial by migrating the application to a microfrontend-based model, transitioning from JavaScript to TypeScript, and adapting the application to use the Design System. I also continuously aligned with the backend team, occasionally contributing to backend tasks by reading and writing code, identifying undocumented behaviors directly in the code, and interacting with the database to troubleshoot and resolve customer issues in open tickets."
+      },
+      "symphonyChat": {
+        "title": "Symphony Chat",
+        "description": "As a frontend developer at <a>Daitan Group</a>, I worked on feature development, investigated and fixed application performance issues, coordinated with internal teams, conducted continuous code reviews, and participated in migrating legacy code to React."
+      },
+      "foodDelivery": {
+        "title": "Food Delivery",
+        "description": "As a software developer at H60, I designed, implemented, and maintained a food delivery management software from scratch. This included developing the frontend, backend, database, and data communication channels using a WebSocket module to streamline customer service flow and address management."
+      },
+      "digitalCatalog": {
+        "title": "iFood Digital Catalog",
+        "description": "As a frontend developer at <a>iFood</a>, I actively contributed to the UI development of the Digital Catalog platform, aimed at providing a customizable menu for restaurants. I was involved in developing features, conducting code reviews, discussing architecture alignments, and applying best design practices."
+      },
+      "itriadWhatsAppKaiOS": {
+        "title": "Whatsapp for KaiOS",
+        "description": "As a frontend developer at <a>iTRIAD</a>, I actively participated in the initial phase of the Whatsapp app for the KaiOS platform, directly interacting with the Facebook and Whatsapp development teams, conducting internal alignments with leadership, collaborating with developers to ensure quality deliveries, and receiving recognition for my contributions to the team."
+      },
+      "stoneFinancialConcialitionCronjob": {
+        "title": "Stone Financial Reconciliation Cronjob",
+        "description": "As a full stack developer at <a>Transire</a>, I was involved in creating and maintaining scripts for automating financial reconciliation between the acquirer Stone and a sub-acquirer using the API for data retrieval and cronjobs for executing the automation."
+      },
+      "mealCardBackoffice": {
+        "title": "Meal Card Backoffice",
+        "description": "As a frontend developer at <a>AXM</a>, I implemented new features for a backoffice platform managing the company's internal meal voucher and food voucher values."
+      },
+      "rfidAccessControl": {
+        "title": "RFID Access Control",
+        "description": "As a full stack developer at <a>AXM</a>, I built a REST API from scratch that received data from RFID readers and granted access to employees within an internal restaurant."
+      },
+      "alcatelStockControl": {
+        "title": "Alcatel Stock Control",
+        "description": "As a frontend developer at <a>iTRIAD</a>, I served as the sole frontend developer on a platform for integrating and simplifying SAP usage for inventory management in a factory."
+      }
     }
   }
 }

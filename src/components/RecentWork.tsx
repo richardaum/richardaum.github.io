@@ -13,9 +13,9 @@ import { FadeInSection } from "./FadeInSection";
 const techUsage = calculateTechUsage(projects);
 
 export function RecentWork() {
-  const t = useTranslations("RecentWork");
+  const t = useTranslations("Home");
   const ref = useRef<HTMLDivElement>(null);
-  const inView = useInView(ref, { amount: 0.2, once: true });
+  const inView = useInView(ref, { amount: 0.1, once: true });
   const [visible, setIsScrollStarted] = useState(inView);
 
   useEffect(() => {
@@ -44,7 +44,7 @@ export function RecentWork() {
                     <h3 className="flex items-center font-semibold">
                       <div className="-ml-7 size-3 rounded-[4px] bg-redPink-500" />
                       <span className="flex gap-1 pl-4">
-                        {t(`${project.id}.title`)}
+                        {t(`recentWork.${project.id}.title`)}
                         {project.link && (
                           <a href={project.link} target="_blank" rel="noreferrer">
                             <IconLink className="text-redPink-500" />
@@ -53,11 +53,14 @@ export function RecentWork() {
                       </span>
                     </h3>
                     <span className="text-sm text-greyTones-600">
-                      Worked for around {durationToYearsAndMonths(fromToToDuration(project.duration))}
+                      {/* Worked for around {durationToYearsAndMonths(fromToToDuration(project.duration))} */}
+                      {t("workedFor", {
+                        duration: durationToYearsAndMonths(fromToToDuration(project.duration)),
+                      })}
                     </span>
                   </div>
                   <p>
-                    {t.rich(`${project.id}.description`, {
+                    {t.rich(`recentWork.${project.id}.description`, {
                       a: (children) => (
                         <a href={project.linkedin} target="_blank" rel="noreferrer" className="font-semibold">
                           {children}
@@ -75,7 +78,11 @@ export function RecentWork() {
                         <span key={index}>
                           <button className="underline decoration-dashed decoration-1 underline-offset-4">
                             {/* @ts-expect-error children mismatch */}
-                            <Tooltip title={`${t("tooltip", { duration, projects, tech })}`} arrow position="bottom">
+                            <Tooltip
+                              title={`${t("techTooltip", { duration, projects, tech })}`}
+                              arrow
+                              position="bottom"
+                            >
                               {technology}
                             </Tooltip>
                           </button>
