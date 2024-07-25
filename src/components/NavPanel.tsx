@@ -1,19 +1,17 @@
+"use client";
 import resume from "@/assets/files/resume.pdf";
 import { projects } from "@/data/projects";
 import { calculateTotalExperience } from "@/utils/tech";
-import {
-  IconBrandDiscord,
-  IconBrandGithub,
-  IconBrandLinkedin,
-  IconBrandSteam,
-  IconDownload,
-  IconMail,
-} from "@tabler/icons-react";
+import { IconBrandDiscord, IconBrandGithub, IconBrandLinkedin, IconBrandSteam, IconMail } from "@tabler/icons-react";
+import { useTranslations } from "next-intl";
 import { Copyright } from "./Copyright";
+import { DownloadCV } from "./DownloadCV";
 
 const totalExperience = calculateTotalExperience(projects);
 
 export function NavPanel({ children }: { children?: React.ReactNode }) {
+  const t = useTranslations("Home");
+  const totalExperienceInYears = totalExperience.shiftTo("years").years.toFixed(0);
   return (
     <div className="flex h-full flex-col justify-between gap-8 text-brownBeige-600">
       <div className="ml-auto">
@@ -23,7 +21,7 @@ export function NavPanel({ children }: { children?: React.ReactNode }) {
           rel="noreferrer"
           target="_blank"
         >
-          Download CV <IconDownload />
+          <DownloadCV />
         </a>
       </div>
 
@@ -31,8 +29,8 @@ export function NavPanel({ children }: { children?: React.ReactNode }) {
 
       <div className="relative z-10 m-4 flex flex-col items-center gap-8 rounded-xl bg-brownBeige-500/80 pt-4">
         <div className="w-[150px] border-b-4 border-current text-right font-display">
-          <p className="text-4xl">+{totalExperience.shiftTo("years").years.toFixed(0)} years</p>
-          <p className="text-lg">Expert</p>
+          <p className="text-4xl">{t("totalExperience", { years: totalExperienceInYears })}</p>
+          <p className="text-lg">{t("seniority")}</p>
         </div>
         <div className="flex gap-3">
           <a href="https://linkedin.com/in/richardaum">

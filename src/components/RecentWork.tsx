@@ -37,7 +37,7 @@ export function RecentWork() {
     <div ref={ref}>
       <FadeInSection amount="some" enabled={enabled}>
         <section className="border-l-4 border-greyTones-500 pl-4">
-          <h2 className="mb-6 font-display text-lg text-greyTones-600">Recent Work</h2>
+          <h2 className="mb-6 font-display text-lg text-greyTones-600">{t("recentWork.title")}</h2>
           <section className="flex flex-col gap-8 pb-8">
             {projects.map((project, index) => (
               <FadeInSection key={index} enabled={enabled}>
@@ -55,7 +55,6 @@ export function RecentWork() {
                       </span>
                     </h3>
                     <span className="text-sm text-greyTones-600">
-                      {/* Worked for around {durationToYearsAndMonths(fromToToDuration(project.duration))} */}
                       {t("workedFor", {
                         duration: durationToYearsAndMonths(fromToToDuration(project.duration)),
                       })}
