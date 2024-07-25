@@ -1,6 +1,8 @@
-import { DateTime, Duration } from "luxon";
+import { DateTime, Duration, Interval } from "luxon";
 
-export function durationToYearsAndMonths(_duration: Duration) {
+export function durationToYearsAndMonths(_duration?: Duration) {
+  if (!_duration) throw new Error("Duration is required");
+
   const duration = _duration.shiftToAll();
   const years = duration.years;
   const months = duration.months;
@@ -11,13 +13,8 @@ export function durationToYearsAndMonths(_duration: Duration) {
   return [yearsString, monthsString].filter((e) => e != null).join(" and ");
 }
 
-export function durationToYears(_duration: Duration) {
-  const duration = _duration.shiftTo("years");
-  const rawYears = duration.years;
-  const years = rawYears.toFixed(1);
-  return `${years} year${Number(years) !== 1 ? "s" : ""}`;
-}
-
 export function fromToToDuration({ from, to }: { from: string; to: string }) {
-  return Duration.fromObject({ years: DateTime.fromISO(to).diff(DateTime.fromISO(from), "years").years });
+  const interval = Interval.fromDateTimes(DateTime.fromISO(from), DateTime.fromISO(to));
+  const duration = Duration.fromMillis(interval.length()).shiftToAll();
+  return duration;
 }

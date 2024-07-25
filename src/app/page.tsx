@@ -5,6 +5,7 @@ import { RecentWork } from "@/components/RecentWork";
 import { SelfPicture } from "@/components/SelfPicture";
 import Image from "next/image";
 
+// eslint-disable-next-line import/no-unused-modules
 export default async function Home() {
   return (
     <main className="grid min-h-screen grid-cols-[auto_400px] gap-y-8">

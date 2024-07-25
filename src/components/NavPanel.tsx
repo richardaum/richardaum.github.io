@@ -11,9 +11,9 @@ import {
 } from "@tabler/icons-react";
 import { Copyright } from "./Copyright";
 
-export function NavPanel() {
-  const totalExperience = calculateTotalExperience(projects);
+const totalExperience = calculateTotalExperience(projects);
 
+export function NavPanel() {
   return (
     <div className="flex h-full flex-col justify-between gap-8 text-brownBeige-600">
       <div className="ml-auto">
@@ -24,7 +24,7 @@ export function NavPanel() {
 
       <div className="relative z-10 flex flex-col items-center gap-8">
         <div className="w-[150px] border-b-4 border-current text-right font-display">
-          <p className="text-4xl">+{totalExperience} years</p>
+          <p className="text-4xl">+{totalExperience.shiftTo("years").years.toFixed(0)} years</p>
           <p className="text-lg">Expert</p>
         </div>
         <div className="flex gap-3">

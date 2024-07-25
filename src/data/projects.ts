@@ -2,7 +2,8 @@ export const projects = [
   {
     id: "arctouch" as const,
     duration: { from: "2023-12-01", to: "2024-05-14" },
-    link: "https://arctouch.com/",
+    link: "https://arctouch.com",
+    linkedin: "https://www.linkedin.com/company/arctouch",
     techStack: [
       "React",
       "Next.js",
@@ -24,12 +25,14 @@ export const projects = [
     id: "pomodoro" as const,
     duration: { from: "2022-05-23", to: "2023-05-23" },
     link: "https://www.ifood.design",
+    linkedin: "https://www.linkedin.com/company/ifood",
     techStack: ["React", "Typescript", "Design System", "Git", "Node.js", "Script automation", "Yarn"],
   },
   {
     id: "catalog" as const,
     duration: { from: "2021-12-11", to: "2023-05-22" },
     link: "https://portal.ifood.com.br",
+    linkedin: "https://www.linkedin.com/company/ifood",
     techStack: [
       "React",
       "Typescript",
@@ -52,12 +55,14 @@ export const projects = [
     id: "dailyPick" as const,
     duration: { from: "2021-12-11", to: "2023-05-23" },
     link: "https://github.com/richardaum/daily-pick",
+    linkedin: "https://www.linkedin.com/company/ifood",
     techStack: ["Node.js", "Typescript", "Git", "Bolt for Slack"],
   },
   {
     id: "digitalCatalog" as const,
     duration: { from: "2021-12-11", to: "2022-12-11" },
     link: "https://portal.ifood.com.br",
+    linkedin: "https://www.linkedin.com/company/ifood",
     techStack: [
       "React",
       "Next.js",
@@ -82,6 +87,8 @@ export const projects = [
   {
     id: "chains" as const,
     duration: { from: "2023-05-23", to: "2023-12-01" },
+    link: "https://portal.ifood.com.br",
+    linkedin: "https://www.linkedin.com/company/ifood",
     techStack: [
       "Javascript",
       "ESLint",
@@ -103,6 +110,7 @@ export const projects = [
   {
     id: "financial" as const,
     link: "https://portal.ifood.com.br",
+    linkedin: "https://www.linkedin.com/company/ifood",
     duration: { from: "2019-06-10", to: "2021-12-10" },
     techStack: [
       "React",
@@ -142,32 +150,38 @@ export const projects = [
   },
   {
     id: "symphonyChat" as const,
-    link: "https://symphony.com/",
+    link: "https://symphony.com",
+    linkedin: "https://www.linkedin.com/company/daitan-group",
     duration: { from: "2017-12-15", to: "2019-06-07" },
     techStack: ["React", "Redux", "SASS", "CSS"],
   },
   {
     id: "itriadWhatsAppKaiOS" as const,
+    linkedin: "https://www.linkedin.com/company/instituto-triad-systems",
     duration: { from: "2017-05-20", to: "2017-12-13" },
     techStack: ["React", "Git", "CSS"],
   },
   {
+    id: "alcatelStockControl" as const,
+    linkedin: "https://www.linkedin.com/company/instituto-triad-systems",
+    duration: { from: "2015-10-01", to: "2016-03-04" },
+    techStack: ["Angular.js", "CSS", "Git"],
+  },
+  {
     id: "stoneFinancialConcialitionCronjob" as const,
+    linkedin: "https://www.linkedin.com/company/axm-consultoria-e-assessoria",
     duration: { from: "2016-09-16", to: "2016-10-21" },
     techStack: ["Node.js", "Git"],
   },
   {
     id: "mealCardBackoffice" as const,
+    linkedin: "https://www.linkedin.com/company/axm-consultoria-e-assessoria",
     duration: { from: "2016-03-05", to: "2016-09-09" },
     techStack: ["Angular.js", "Node.js", "Git", "Express.js", "CSS"],
   },
   {
-    id: "alcatelStockControl" as const,
-    duration: { from: "2015-10-01", to: "2016-03-04" },
-    techStack: ["Angular.js", "CSS", "Git"],
-  },
-  {
     id: "rfidAccessControl" as const,
+    linkedin: "https://www.linkedin.com/company/axm-consultoria-e-assessoria",
     duration: { from: "2015-10-01", to: "2016-03-04" },
     techStack: ["Java", "Git"],
   },

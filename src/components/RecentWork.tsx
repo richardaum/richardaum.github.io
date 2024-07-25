@@ -3,8 +3,7 @@
 import { projects } from "@/data/projects";
 import { durationToYearsAndMonths, fromToToDuration } from "@/utils/duration";
 import { calculateTechUsage } from "@/utils/tech";
-import { IconLink } from "@tabler/icons-react";
-import { Duration } from "luxon";
+import { IconExternalLink, IconLink } from "@tabler/icons-react";
 import { useTranslations } from "next-intl";
 import { Tooltip } from "react-tippy";
 
@@ -37,19 +36,27 @@ export function RecentWork() {
                 </span>
               </div>
 
-              <p>{t(`${project.id}.description`)}</p>
+              <p>
+                {t.rich(`${project.id}.description`, {
+                  a: (children) => (
+                    <a href={project.linkedin} target="_blank" rel="noreferrer" className="font-semibold">
+                      {children}
+                      <IconExternalLink className="inline size-4 align-text-top" />
+                    </a>
+                  ),
+                })}
+              </p>
               <p className="flex flex-wrap gap-1 font-light">
                 {project.techStack.map((technology, index) => {
                   const tech = technology;
-                  const duration = durationToYearsAndMonths(
-                    Duration.fromObject({ days: techUsage[technology].totalDays }),
-                  );
-                  const projects = techUsage[technology].projectsCount;
+                  const duration = durationToYearsAndMonths(techUsage.get(technology)?.duration);
+                  const projects = techUsage.get(technology)?.projectsCount;
+
                   return (
                     <span key={index}>
                       <button className="underline decoration-dashed decoration-1 underline-offset-4">
                         {/* @ts-expect-error children mismatch */}
-                        <Tooltip title={t("tooltip", { duration, projects, tech })} arrow position="bottom">
+                        <Tooltip title={`${t("tooltip", { duration, projects, tech })}`} arrow position="bottom">
                           {technology}
                         </Tooltip>
                       </button>

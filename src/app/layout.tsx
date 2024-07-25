@@ -20,11 +20,13 @@ const eugusto = localFont({
   variable: "--font-eugusto",
 });
 
+// eslint-disable-next-line import/no-unused-modules
 export const metadata: Metadata = {
   title: "Richard's portfolio",
   description: "This is a portfolio website for Richard, a frontend engineer.",
 };
 
+// eslint-disable-next-line import/no-unused-modules
 export default async function RootLayout({
   children,
 }: Readonly<{
