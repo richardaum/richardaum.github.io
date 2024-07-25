@@ -39,7 +39,7 @@ export default async function Home() {
             </div>
           </div>
           <IntroductionContent />
-          <div className={clsx("absolute mt-8 pb-24", paddingRight)}>
+          <div className={clsx("absolute mt-8 pb-24 pl-3", paddingRight)}>
             <RecentWork />
           </div>
         </div>

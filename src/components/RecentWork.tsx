@@ -36,7 +36,7 @@ export function RecentWork() {
   return (
     <div ref={ref}>
       <FadeInSection amount="some" enabled={enabled}>
-        <section className="border-l-4 border-greyTones-500 pl-5">
+        <section className="border-l-4 border-greyTones-500 pl-4">
           <h2 className="mb-6 font-display text-lg text-greyTones-600">Recent Work</h2>
           <section className="flex flex-col gap-8 pb-8">
             {projects.map((project, index) => (
@@ -44,8 +44,8 @@ export function RecentWork() {
                 <article className="flex flex-col gap-3">
                   <div className="flex flex-col">
                     <h3 className="flex items-center font-semibold">
-                      <div className="-ml-7 size-3 rounded-[4px] bg-redPink-500" />
-                      <span className="flex gap-1 pl-4">
+                      <div className="-ml-6 size-3 rounded-[4px] bg-redPink-500" />
+                      <span className="flex gap-1 pl-3">
                         {t(`recentWork.${project.id}.title`)}
                         {project.link && (
                           <a href={project.link} target="_blank" rel="noreferrer">
