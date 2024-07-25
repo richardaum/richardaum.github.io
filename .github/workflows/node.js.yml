@@ -14,13 +14,15 @@ jobs:
     steps:
       - name: Checkout 🛎️
         uses: actions/checkout@v4.1.3
+
+      - name: Setup bun 🛠️
         uses: oven-sh/setup-bun@v2
 
-      - name: Installing my packages
+      - name: Installing my packages 📦
         run: bun install
 
-      - name: Extract repository name
+      - name: Extract repository name 📦
         run: echo "BASE_PATH=/$(echo $GITHUB_REPOSITORY | cut -d '/' -f 2)" >> $GITHUB_ENV
 
-      - name: Deploy my app
+      - name: Deploy my app 🚀
         run: bun run deploy
