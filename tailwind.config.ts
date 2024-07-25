@@ -8,6 +8,17 @@ const config = {
       display: ["var(--font-eugusto)", "system-ui"],
     },
     extend: {
+      keyframes: {
+        fade: {
+          "0%": { opacity: "0" },
+          "25%": { opacity: "1" },
+          "75%": { opacity: "1" },
+          "100%": { opacity: "0" },
+        },
+      },
+      animation: {
+        fade: "fade 4s linear infinite",
+      },
       boxShadow: {
         "fab-default": "0px 4px 8px 3px rgba(0, 0, 0, 0.15), 0px 1px 3px rgba(0, 0, 0, 0.3)",
         "fab-hover": "0px 6px 10px 4px rgba(0, 0, 0, 0.15), 0px 2px 3px rgba(0, 0, 0, 0.3)",

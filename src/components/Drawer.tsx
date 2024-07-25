@@ -1,7 +1,15 @@
 "use client";
 import { openDrawerAtom } from "@/atoms/drawer";
 import { clsx } from "@/utils/tailwind";
-import { IconBrandLinkedin, IconX } from "@tabler/icons-react";
+import {
+  IconBrandDiscord,
+  IconBrandGithub,
+  IconBrandLinkedin,
+  IconBrandSteam,
+  IconMail,
+  IconX,
+} from "@tabler/icons-react";
+import { AnimatePresence, motion } from "framer-motion";
 import { useAtom } from "jotai";
 import { useOverlayScrollbars } from "overlayscrollbars-react";
 import { useEffect, useRef, useState } from "react";
@@ -50,7 +58,7 @@ export function Drawer() {
         ref={ref}
         id="drawer"
         className={clsx(
-          "fixed right-0 top-0 z-30 size-full translate-x-full overflow-auto bg-brownBeige-500 shadow-lg transition-all duration-300",
+          "fixed right-0 top-0 z-30 size-full translate-x-full select-none overflow-auto bg-brownBeige-500 shadow-lg transition-all duration-300",
           isOpen ? "translate-x-0" : "translate-x-full opacity-0",
         )}
       >
@@ -67,7 +75,7 @@ export function Drawer() {
           "focus-visible::bg-brownBeige-510",
           "fixed bottom-4 right-4 z-50",
           "flex size-14 items-center justify-center",
-          "rounded-xl bg-brownBeige-500",
+          "rounded-xl bg-brownBeige-500 text-brownBeige-600",
           "shadow-fab-default",
           "hover:bg-brownBeige-510 hover:shadow-fab-hover",
           "focus-visible:shadow-fab-hover",
@@ -80,8 +88,42 @@ export function Drawer() {
           },
         )}
       >
-        {isOpen ? <IconX className="size-6" /> : <IconBrandLinkedin className="size-6" />}
+        {isOpen ? <IconX className="size-6" /> : <SocialMediaAnimatedIcon />}
       </button>
     </>
+  );
+}
+
+const elements = [
+  <IconBrandLinkedin key="Linkedin" />,
+  <IconMail key="Mail" />,
+  <IconBrandGithub key="Github" />,
+  <IconBrandDiscord key="Discord" />,
+  <IconBrandSteam key="Steam" />,
+];
+
+function SocialMediaAnimatedIcon() {
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentIndex((prevIndex) => (prevIndex + 1) % elements.length);
+    }, 2000); // 2000ms = 2s de intervalo entre transições
+    return () => clearInterval(interval);
+  }, []);
+
+  return (
+    <AnimatePresence>
+      <motion.div
+        className="absolute"
+        key={currentIndex}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        transition={{ duration: 1 }}
+      >
+        {elements[currentIndex]}
+      </motion.div>
+    </AnimatePresence>
   );
 }

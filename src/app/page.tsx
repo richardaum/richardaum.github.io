@@ -17,11 +17,21 @@ export default async function Home() {
   return (
     <main className="grid min-h-screen gap-x-[148px] pt-[100px] lg:grid-cols-[auto_400px]">
       <div className={clsx("relative m-auto", paddingRight, maxWidth)}>
-        <div className={clsx("fixed top-0 z-20 flex w-full items-center bg-greyTones-300 px-8 py-6")}>
+        <div
+          className={clsx(
+            "fixed top-0 z-20 flex w-full select-none items-center bg-greyTones-300 py-6 pl-8 pr-6",
+            maxWidth,
+          )}
+        >
           <Image src={logo} alt="Logo" className="h-6 w-auto lg:h-8" />
 
-          <div className="ml-auto">
-            <a className="flex items-center gap-4 p-2" href={resume} rel="noreferrer" target="_blank">
+          <div className="ml-auto lg:hidden">
+            <a
+              className="flex items-center gap-4 rounded-xl bg-darkColors-900/20 p-3"
+              href={resume}
+              rel="noreferrer"
+              target="_blank"
+            >
               Download CV <IconDownload />
             </a>
           </div>
