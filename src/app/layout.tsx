@@ -1,5 +1,5 @@
 import { Scrollable } from "@/components/Scrollable";
-import { cn } from "@/utils/tailwind";
+import { clsx } from "@/utils/tailwind";
 import type { Metadata } from "next";
 import { NextIntlClientProvider } from "next-intl";
 import { getLocale, getMessages } from "next-intl/server";
@@ -22,7 +22,7 @@ const eugusto = localFont({
 
 // eslint-disable-next-line import/no-unused-modules
 export const metadata: Metadata = {
-  title: "Richard's portfolio",
+  title: "Richard's Portfolio",
   description: "This is a portfolio website for Richard, a frontend engineer.",
 };
 
@@ -38,7 +38,7 @@ export default async function RootLayout({
   return (
     <html lang={locale} className="scroll-smooth" data-overlayscrollbars-initialize>
       <body
-        className={cn(eugusto.variable, figtree.className, "bg-greyTones-300 text-darkColors-900")}
+        className={clsx(eugusto.variable, figtree.className, "bg-greyTones-300 text-darkColors-900")}
         data-overlayscrollbars-initialize
       >
         <NextIntlClientProvider messages={messages}>

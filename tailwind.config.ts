@@ -8,6 +8,11 @@ const config = {
       display: ["var(--font-eugusto)", "system-ui"],
     },
     extend: {
+      boxShadow: {
+        "fab-default": "0px 4px 8px 3px rgba(0, 0, 0, 0.15), 0px 1px 3px rgba(0, 0, 0, 0.3)",
+        "fab-hover": "0px 6px 10px 4px rgba(0, 0, 0, 0.15), 0px 2px 3px rgba(0, 0, 0, 0.3)",
+        "fab-pressed": "0px 4px 8px 3px rgba(0, 0, 0, 0.15), 0px 1px 3px rgba(0, 0, 0, 0.3)",
+      },
       colors: {
         darkColors: {
           600: "#000000",
@@ -25,6 +30,8 @@ const config = {
         },
         brownBeige: {
           500: "#BDAB8C",
+          510: "#A89B7E", // 10% darker for hover
+          520: "#948B70", // 20% darker for pressed
           600: "#4C4438",
         },
       },
@@ -32,4 +39,5 @@ const config = {
   },
 } satisfies Config;
 
+// eslint-disable-next-line import/no-unused-modules
 export default config;

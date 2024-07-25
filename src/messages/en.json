@@ -1,4 +1,7 @@
 {
+  "Panel": {
+    "copyright": "Designed and implemented by <nowrap>Richard Lopes</nowrap> © {year}\nAll rights reserved"
+  },
   "RecentWork": {
     "tooltip": "Around {duration} of experience with {tech} in {projects} {projects, plural, one {project} other {projects}}",
     "arctouch": {

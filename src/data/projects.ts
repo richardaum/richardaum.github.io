@@ -56,7 +56,7 @@ export const projects = [
     duration: { from: "2021-12-11", to: "2023-05-23" },
     link: "https://github.com/richardaum/daily-pick",
     linkedin: "https://www.linkedin.com/company/ifood",
-    techStack: ["Node.js", "Typescript", "Git", "Bolt for Slack"],
+    techStack: ["Node.js", "Typescript", "Git", "Bolt for Slack", "SQLite"],
   },
   {
     id: "digitalCatalog" as const,
@@ -105,6 +105,7 @@ export const projects = [
       "Styled Components",
       "Responsive design",
       "Vite",
+      "Script automation",
     ],
   },
   {
@@ -141,12 +142,13 @@ export const projects = [
       "BFF",
       "Kotlin",
       "Babel",
+      "PostgreSQL",
     ],
   },
   {
     id: "foodDelivery" as const,
     duration: { from: "2019-06-30", to: "2020-06-30" },
-    techStack: ["React", "Node.js", "Angular.js", "Git", "WebSockets"],
+    techStack: ["React", "Node.js", "Angular.js", "Git", "WebSockets", "MySQL", "Digital Ocean", "Dokku"],
   },
   {
     id: "symphonyChat" as const,
