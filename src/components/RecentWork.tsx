@@ -4,7 +4,6 @@ import { projects } from "@/data/projects";
 import { durationToYearsAndMonths, fromToToDuration } from "@/utils/duration";
 import { calculateTechUsage } from "@/utils/tech";
 import { IconExternalLink, IconLink } from "@tabler/icons-react";
-import { useInView } from "framer-motion";
 import { useTranslations } from "next-intl";
 import { useEffect, useRef, useState } from "react";
 import { Tooltip } from "react-tippy";
@@ -15,30 +14,33 @@ const techUsage = calculateTechUsage(projects);
 export function RecentWork() {
   const t = useTranslations("Home");
   const ref = useRef<HTMLDivElement>(null);
-  const inView = useInView(ref, { amount: 0.1, once: true });
-  const [visible, setIsScrollStarted] = useState(inView);
+  const [alreadyScrolled, setAlreadyScrolled] = useState(false);
+  const [atScrollTop, setAtScrollTop] = useState(true);
 
   useEffect(() => {
-    if (inView) {
-      setIsScrollStarted(true);
-      return;
-    }
     const handleScroll = () => {
-      setIsScrollStarted(true);
-      window.removeEventListener("scroll", handleScroll);
+      if (!alreadyScrolled) {
+        setAlreadyScrolled(true);
+      }
     };
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
-  }, [inView]);
+  }, [alreadyScrolled]);
+
+  useEffect(() => {
+    setAtScrollTop(window.scrollY === 0);
+  }, []);
+
+  const enabled = !atScrollTop || alreadyScrolled;
 
   return (
     <div ref={ref}>
-      <FadeInSection amount="some" enabled={visible}>
+      <FadeInSection amount="some" enabled={enabled}>
         <section className="border-l-4 border-greyTones-500 pl-5">
           <h2 className="mb-6 font-display text-lg text-greyTones-600">Recent Work</h2>
           <section className="flex flex-col gap-8 pb-8">
             {projects.map((project, index) => (
-              <FadeInSection key={index} enabled={visible}>
+              <FadeInSection key={index} enabled={enabled}>
                 <article className="flex flex-col gap-3">
                   <div className="flex flex-col">
                     <h3 className="flex items-center font-semibold">

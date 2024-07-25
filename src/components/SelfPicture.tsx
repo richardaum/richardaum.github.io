@@ -1,7 +1,7 @@
 "use client";
 import blob from "@/assets/images/blob.svg";
 import me from "@/assets/images/me.webp";
-import Image from "next/image";
+import Image from "next-export-optimize-images/image";
 
 export function SelfPicture() {
   return (

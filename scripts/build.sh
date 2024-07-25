@@ -1,3 +1,3 @@
 #!/usr/bin/env sh
 
-next build
+next build && bunx next-export-optimize-images

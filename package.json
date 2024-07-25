@@ -8,7 +8,9 @@
     "start": "scripty",
     "lint": "scripty",
     "generate": "scripty",
-    "generate:watch": "scripty"
+    "generate:watch": "scripty",
+    "deploy": "bun run build && bun run deploy-only",
+    "deploy-only": "gh-pages -d out --nojekyll"
   },
   "dependencies": {
     "@tabler/icons-react": "^3.11.0",
@@ -21,6 +23,7 @@
     "luxon": "^3.4.4",
     "markdown-to-jsx": "^7.4.7",
     "next": "14.2.4",
+    "next-export-optimize-images": "^4.5.0",
     "next-intl": "^3.17.2",
     "overlayscrollbars-react": "^0.5.6",
     "react": "^18",
@@ -43,6 +46,7 @@
     "eslint-plugin-import": "^2.29.1",
     "eslint-plugin-tailwindcss": "^3.17.4",
     "file-loader": "^6.2.0",
+    "gh-pages": "^6.1.1",
     "prettier": "^3.3.2",
     "raw-loader": "^4.0.2",
     "scripty": "^2.1.1",

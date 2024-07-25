@@ -1,7 +1,6 @@
 /* eslint-disable import/no-unused-modules */
 import { ImageResponse } from "next/og";
 
-export const runtime = "edge";
 export const size = {
   width: 16,
   height: 16,
