@@ -9,6 +9,7 @@ on:
 
 jobs:
   build:
+    concurrency: ci-${{ github.ref }}
     runs-on: ubuntu-latest
 
     steps:
@@ -21,8 +22,8 @@ jobs:
       - name: Installing my packages 📦
         run: bun install
 
-      - name: Extract repository name 📦
-        run: echo "BASE_PATH=/$(echo $GITHUB_REPOSITORY | cut -d '/' -f 2)" >> $GITHUB_ENV
+      - name: Build 🏗️
+        run: bun build
 
       - name: Deploy 🚀
         uses: JamesIves/github-pages-deploy-action@v4.6.0
