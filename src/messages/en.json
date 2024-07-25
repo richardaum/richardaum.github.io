@@ -8,6 +8,14 @@
     "seniority": "Expert",
     "recentWork": {
       "title": "Recent work",
+      "securityLandscape": {
+        "title": "Security Landscape",
+        "description": "As a developer on a freelance project, I crafted a complete frontend experience. From initial concept in Figma to final coding and delivery, I transformed ideas into a seamless and interactive user interface."
+      },
+      "myPortfolio": {
+        "title": "My Portfolio",
+        "description": "As a developer, I designed and implemented this portfolio from scratch to showcase my skills and experience. Enjoy exploring my professional journey through various skills, projects, and companies."
+      },
       "arctouch": {
         "title": "ArcTouch Website",
         "description": "As a Tech Lead at <a>ArcTouch</a>, I established a modern tech stack for the application, emphasized best coding practices, and provided comprehensive technical support to the team through detailed documentation and regular syncs, while actively contributing to feature development and deployment."

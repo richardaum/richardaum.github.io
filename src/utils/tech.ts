@@ -11,9 +11,10 @@ export const calculateTechUsage = (projects: Project[]) => {
         if (!acc[tech]) {
           acc[tech] = [];
         }
+        const toDateTime = DateTime.fromISO(project.duration.to);
         const interval = Interval.fromDateTimes(
           DateTime.fromISO(project.duration.from),
-          DateTime.fromISO(project.duration.to),
+          toDateTime.isValid ? toDateTime : DateTime.now(),
         );
         acc[tech].push(interval);
       });
@@ -40,9 +41,13 @@ export const calculateTechUsage = (projects: Project[]) => {
 };
 
 export const calculateTotalExperience = (projects: Project[]): Duration => {
-  const intervals = projects.map((project) =>
-    Interval.fromDateTimes(DateTime.fromISO(project.duration.from), DateTime.fromISO(project.duration.to)),
-  );
+  const intervals = projects.map((project) => {
+    const toDateTime = DateTime.fromISO(project.duration.to);
+    return Interval.fromDateTimes(
+      DateTime.fromISO(project.duration.from),
+      toDateTime.isValid ? toDateTime : DateTime.now(),
+    );
+  });
   const mergedIntervals = Interval.merge(intervals);
   const totalDuration = Duration.fromMillis(
     mergedIntervals.reduce((acc, interval) => acc + interval.length(), 0),

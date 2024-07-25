@@ -1,5 +1,16 @@
 export const projects = [
   {
+    id: "securityLandscape" as const,
+    duration: { from: "2024-06-26", to: "current" as const },
+    techStack: ["React", "Typescript", "Next.js", "Bun", "Tailwind CSS", "Git"],
+  },
+  {
+    id: "myPortfolio" as const,
+    duration: { from: "2024-05-24", to: "2024-07-25" },
+    link: "https://richardaum.github.io",
+    techStack: ["React", "Typescript", "Next.js", "Bun", "Tailwind CSS", "Git", "Github Pages", "Github Actions"],
+  },
+  {
     id: "arctouch" as const,
     duration: { from: "2023-12-01", to: "2024-05-14" },
     link: "https://arctouch.com",
@@ -155,7 +166,7 @@ export const projects = [
     link: "https://symphony.com",
     linkedin: "https://www.linkedin.com/company/daitan-group",
     duration: { from: "2017-12-15", to: "2019-06-07" },
-    techStack: ["React", "Redux", "SASS", "CSS"],
+    techStack: ["React", "Redux", "SASS", "CSS", "Git"],
   },
   {
     id: "itriadWhatsAppKaiOS" as const,

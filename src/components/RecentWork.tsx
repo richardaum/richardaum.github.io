@@ -2,6 +2,7 @@
 
 import { projects } from "@/data/projects";
 import { durationToYearsAndMonths, fromToToDuration } from "@/utils/duration";
+import { clsx } from "@/utils/tailwind";
 import { calculateTechUsage } from "@/utils/tech";
 import { IconExternalLink, IconLink } from "@tabler/icons-react";
 import { useTranslations } from "next-intl";
@@ -44,7 +45,12 @@ export function RecentWork() {
                 <article className="flex flex-col gap-3">
                   <div className="flex flex-col">
                     <h3 className="flex items-center font-semibold">
-                      <div className="-ml-6 size-3 rounded-[4px] bg-redPink-500" />
+                      <div
+                        className={clsx(
+                          "-ml-6 size-3 rounded-[4px]",
+                          project.duration.to !== "current" ? "bg-redPink-500" : "bg-green-600",
+                        )}
+                      />
                       <span className="flex gap-1 pl-3">
                         {t(`recentWork.${project.id}.title`)}
                         {project.link && (
