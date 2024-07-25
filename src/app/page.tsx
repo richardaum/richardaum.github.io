@@ -1,5 +1,6 @@
 import resume from "@/assets/files/resume.pdf";
 import logo from "@/assets/images/logo.svg";
+import { DownloadCV } from "@/components/DownloadCV";
 import { Drawer } from "@/components/Drawer";
 import { IntroductionContent } from "@/components/IntroductionContent";
 import { NavPanel } from "@/components/NavPanel";
@@ -7,7 +8,6 @@ import { RecentWork } from "@/components/RecentWork";
 import { ScrollHint } from "@/components/ScrollHint";
 import { SelfPicture } from "@/components/SelfPicture";
 import { clsx } from "@/utils/tailwind";
-import { IconDownload } from "@tabler/icons-react";
 import { Provider } from "jotai";
 import Image from "next/image";
 
@@ -19,7 +19,7 @@ export default async function Home() {
   return (
     <Provider>
       <main className="grid min-h-screen gap-x-[148px] pt-[100px] lg:grid-cols-[auto_400px]">
-        <div className={clsx("relative m-auto", paddingRight, maxWidth)}>
+        <div className={clsx("relative m-auto mt-6 lg:mt-auto", paddingRight, maxWidth)}>
           <div
             className={clsx(
               "fixed top-0 z-20 flex w-full select-none items-center bg-greyTones-300 py-6 pl-8 pr-6",
@@ -34,7 +34,7 @@ export default async function Home() {
                 rel="noreferrer"
                 target="_blank"
               >
-                Download CV <IconDownload />
+                <DownloadCV />
               </a>
             </div>
           </div>
