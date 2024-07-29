@@ -33,19 +33,19 @@ export function NavPanel({ children }: { children?: React.ReactNode }) {
           <p className="text-lg">{t("seniority")}</p>
         </div>
         <div className="flex gap-3">
-          <a href="https://linkedin.com/in/richardaum">
+          <a href="https://linkedin.com/in/richardaum" rel="noreferrer" target="_blank">
             <IconBrandLinkedin />
           </a>
-          <a href="mailto:richard.lopes92@gmail.com">
+          <a href="mailto:richard.lopes92@gmail.com" rel="noreferrer" target="_blank">
             <IconMail />
           </a>
-          <a href="https://github.com/richardaum">
+          <a href="https://github.com/richardaum" rel="noreferrer" target="_blank">
             <IconBrandGithub />
           </a>
-          <a href="https://discordapp.com/users/richardaum">
+          <a href="https://discordapp.com/users/richardaum" rel="noreferrer" target="_blank">
             <IconBrandDiscord />
           </a>
-          <a href="https://steamcommunity.com/id/richardaum">
+          <a href="https://steamcommunity.com/id/richardaum" rel="noreferrer" target="_blank">
             <IconBrandSteam />
           </a>
         </div>
