@@ -1,3 +1,4 @@
+import { MicrosoftClarity } from "@/components/MicrosoftClarity";
 import { Scrollable } from "@/components/Scrollable";
 import { clsx } from "@/utils/tailwind";
 import type { Metadata } from "next";
@@ -45,6 +46,8 @@ export default async function RootLayout({
           <Scrollable />
           {children}
         </NextIntlClientProvider>
+
+        <MicrosoftClarity />
       </body>
     </html>
   );
