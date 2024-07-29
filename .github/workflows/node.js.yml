@@ -21,6 +21,9 @@ jobs:
 
       - name: Installing my packages 📦
         run: bun install
+        env:
+          NEXT_PUBLIC_MICROSOFT_CLARITY_KEY: ${{ secrets.NEXT_PUBLIC_MICROSOFT_CLARITY_KEY }}
+          NEXT_PUBLIC_MICROSOFT_CLARITY_ENABLED: ${{ secrets.NEXT_PUBLIC_MICROSOFT_CLARITY_ENABLED }}
 
       - name: Build 🏗️
         run: bun run build
