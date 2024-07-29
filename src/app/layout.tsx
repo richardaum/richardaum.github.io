@@ -1,3 +1,4 @@
+import { Amplitude } from "@/components/Amplitude";
 import { MicrosoftClarity } from "@/components/MicrosoftClarity";
 import { Scrollable } from "@/components/Scrollable";
 import { clsx } from "@/utils/tailwind";
@@ -47,6 +48,7 @@ export default async function RootLayout({
           {children}
         </NextIntlClientProvider>
 
+        <Amplitude />
         <MicrosoftClarity />
       </body>
     </html>

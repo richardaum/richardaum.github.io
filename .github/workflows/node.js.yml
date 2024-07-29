@@ -27,6 +27,8 @@ jobs:
         env:
           NEXT_PUBLIC_MICROSOFT_CLARITY_KEY: ${{ secrets.NEXT_PUBLIC_MICROSOFT_CLARITY_KEY }}
           NEXT_PUBLIC_MICROSOFT_CLARITY_ENABLED: ${{ secrets.NEXT_PUBLIC_MICROSOFT_CLARITY_ENABLED }}
+          NEXT_PUBLIC_AMPLITUDE_KEY: ${{ secrets.NEXT_PUBLIC_AMPLITUDE_KEY }}
+          NEXT_PUBLIC_AMPLITUDE_ENABLED: ${{ secrets.NEXT_PUBLIC_AMPLITUDE_ENABLED }}
 
       - name: Deploy 🚀
         uses: JamesIves/github-pages-deploy-action@v4.6.0
