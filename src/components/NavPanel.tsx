@@ -2,7 +2,7 @@
 import resume from "@/assets/files/resume.pdf";
 import { projects } from "@/data/projects";
 import { calculateTotalExperience } from "@/utils/tech";
-import { IconBrandDiscord, IconBrandGithub, IconBrandLinkedin, IconBrandSteam, IconMail } from "@tabler/icons-react";
+import { IconBrandDiscord, IconBrandGithub, IconBrandLinkedin, IconBrandSteam } from "@tabler/icons-react";
 import { useTranslations } from "next-intl";
 import { Copyright } from "./Copyright";
 import { DownloadCV } from "./DownloadCV";
@@ -35,9 +35,6 @@ export function NavPanel({ children }: { children?: React.ReactNode }) {
         <div className="flex gap-3">
           <a href="https://linkedin.com/in/richardaum" rel="noreferrer" target="_blank">
             <IconBrandLinkedin />
-          </a>
-          <a href="mailto:richard.lopes92@gmail.com" rel="noreferrer" target="_blank">
-            <IconMail />
           </a>
           <a href="https://github.com/richardaum" rel="noreferrer" target="_blank">
             <IconBrandGithub />

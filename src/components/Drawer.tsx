@@ -1,14 +1,7 @@
 "use client";
 import { openDrawerAtom } from "@/atoms/drawer";
 import { clsx } from "@/utils/tailwind";
-import {
-  IconBrandDiscord,
-  IconBrandGithub,
-  IconBrandLinkedin,
-  IconBrandSteam,
-  IconMail,
-  IconX,
-} from "@tabler/icons-react";
+import { IconBrandDiscord, IconBrandGithub, IconBrandLinkedin, IconBrandSteam, IconX } from "@tabler/icons-react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useAtom } from "jotai";
 import { useOverlayScrollbars } from "overlayscrollbars-react";
@@ -96,7 +89,6 @@ export function Drawer() {
 
 const elements = [
   <IconBrandLinkedin key="Linkedin" />,
-  <IconMail key="Mail" />,
   <IconBrandGithub key="Github" />,
   <IconBrandDiscord key="Discord" />,
   <IconBrandSteam key="Steam" />,
