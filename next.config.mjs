@@ -8,7 +8,6 @@ const buildNextConfig = (phase) => {
   /** @type {import('next').NextConfig} */
   const config = {
     output: phase === PHASE_PRODUCTION_BUILD ? "export" : undefined,
-    distDir: "gh-pages",
     images: {
       loader: "akamai",
       path: "/",
