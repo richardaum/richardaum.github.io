@@ -1,7 +1,14 @@
 export const projects = [
   {
+    id: "way2b1" as const,
+    duration: { from: "2024-07-18", to: "current" as const },
+    link: "https://way2b1.com/",
+    linkedin: "https://www.linkedin.com/company/way2b1",
+    techStack: ["React", "Typescript", "Next.js", "Tailwind CSS", "Git", "Storybook", "Node.js", "TypeORM", "PostgreSQL"],
+  },
+  {
     id: "securityLandscape" as const,
-    duration: { from: "2024-06-26", to: "current" as const },
+    duration: { from: "2024-06-26", to: "2024-08-05" as const },
     techStack: ["React", "Typescript", "Next.js", "Bun", "Tailwind CSS", "Git"],
   },
   {
