@@ -8,7 +8,6 @@ import { getLocale, getMessages } from "next-intl/server";
 import { Figtree } from "next/font/google";
 import localFont from "next/font/local";
 import "overlayscrollbars/overlayscrollbars.css";
-import "react-tippy/dist/tippy.css";
 import "./globals.css";
 
 const figtree = Figtree({
