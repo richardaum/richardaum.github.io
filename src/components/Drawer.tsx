@@ -1,9 +1,8 @@
 "use client";
-import { openDrawerAtom } from "@/atoms/drawer";
+import { useDrawerStore } from "@/stores/drawer";
 import { clsx } from "@/utils/tailwind";
 import { IconBrandDiscord, IconBrandGithub, IconBrandLinkedin, IconBrandSteam, IconX } from "@tabler/icons-react";
 import { AnimatePresence, motion } from "framer-motion";
-import { useAtom } from "jotai";
 import { useOverlayScrollbars } from "overlayscrollbars-react";
 import { useEffect, useRef, useState } from "react";
 import { NavPanel } from "./NavPanel";
@@ -11,7 +10,7 @@ import { SelfPicture } from "./SelfPicture";
 
 export function Drawer() {
   const ref = useRef<HTMLDivElement>(null);
-  const [isOpen, setIsOpen] = useAtom(openDrawerAtom);
+  const { isOpen, setIsOpen } = useDrawerStore();
   const [isLargerThanLg, setIsLargerThanLg] = useState(false);
 
   useEffect(() => {

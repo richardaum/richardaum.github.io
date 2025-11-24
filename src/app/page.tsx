@@ -8,7 +8,6 @@ import { RecentWork } from "@/components/RecentWork";
 import { ScrollHint } from "@/components/ScrollHint";
 import { SelfPicture } from "@/components/SelfPicture";
 import { clsx } from "@/utils/tailwind";
-import { Provider } from "jotai";
 import Image from "next/image";
 
 const maxWidth = clsx("max-w-[660px]");
@@ -17,8 +16,7 @@ const paddingRight = clsx("pr-8");
 // eslint-disable-next-line import/no-unused-modules
 export default async function Home() {
   return (
-    <Provider>
-      <main className="grid min-h-screen gap-x-[148px] pt-[100px] lg:grid-cols-[auto_400px]">
+    <main className="grid min-h-screen gap-x-[148px] pt-[100px] lg:grid-cols-[auto_400px]">
         <div className={clsx("relative m-auto mt-6 lg:mt-auto", paddingRight, maxWidth)}>
           <div
             className={clsx(
@@ -55,6 +53,5 @@ export default async function Home() {
         <ScrollHint />
         <Drawer />
       </main>
-    </Provider>
   );
 }

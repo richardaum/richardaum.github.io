@@ -1,11 +1,10 @@
 "use client";
-import { openDrawerAtom } from "@/atoms/drawer";
-import { useAtom } from "jotai";
+import { useDrawerStore } from "@/stores/drawer";
 import { useOverlayScrollbars } from "overlayscrollbars-react";
 import { HTMLAttributes, useEffect } from "react";
 
 export const Scrollable = (props: HTMLAttributes<HTMLElement>) => {
-  const [isDrawerOpen] = useAtom(openDrawerAtom);
+  const isDrawerOpen = useDrawerStore((state) => state.isOpen);
 
   const [initialize, instance] = useOverlayScrollbars({
     options: {
