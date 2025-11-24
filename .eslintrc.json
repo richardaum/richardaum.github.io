@@ -4,6 +4,13 @@
     "plugin:@typescript-eslint/recommended",
     "plugin:import/recommended"
   ],
+  "settings": {
+    "import/resolver": {
+      "typescript": {
+        "alwaysTryTypes": true
+      }
+    }
+  },
   "rules": {
     "import/no-unused-modules": [1, { "unusedExports": true }]
   }

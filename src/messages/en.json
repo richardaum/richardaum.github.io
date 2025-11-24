@@ -2,7 +2,7 @@
   "Home": {
     "workedFor": "Worked for around {duration}",
     "durationTooltip": "From {from} to {to}",
-    "copyright": "Designed and implemented by <nowrap>Richard Lopes</nowrap> © {year}\nAll rights reserved",
+    "copyright": "{lastUpdate, select, empty {} other {<lastUpdate>Last update: <nowrap>{lastUpdateDate}</nowrap></lastUpdate>\n}}Designed and implemented by <nowrap>Richard Lopes</nowrap> © {year}\nAll rights reserved",
     "techTooltip": "Around {duration} of experience with {tech} in {projects} {projects, plural, one {project} other {projects}}",
     "downloadCV": "Download CV",
     "totalExperience": "+{years} {years, plural, one {year} other {years}}",

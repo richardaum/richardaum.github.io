@@ -39,3 +39,6 @@ next-env.d.ts
 .env
 .env.*local
 errors
+
+# build info (generated during build)
+/src/data/build-info.json
