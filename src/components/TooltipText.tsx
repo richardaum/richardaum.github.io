@@ -1,3 +1,4 @@
+import { clsx } from "@/utils/tailwind";
 import { Tooltip } from "react-tippy";
 
 interface TooltipTextProps {
@@ -8,15 +9,11 @@ interface TooltipTextProps {
   className?: string;
 }
 
-export function TooltipText({
-  text,
-  tooltip,
-  position = "bottom",
-  arrow = true,
-  className = "underline decoration-dashed decoration-1 underline-offset-4",
-}: TooltipTextProps) {
+export function TooltipText({ text, tooltip, position = "bottom", arrow = true, className }: TooltipTextProps) {
   return (
-    <button className={className}>
+    <button
+      className={clsx("border border-dashed underline decoration-dashed decoration-1 underline-offset-4", className)}
+    >
       {/* @ts-expect-error children mismatch */}
       <Tooltip title={tooltip} arrow={arrow} position={position}>
         {text}
@@ -24,4 +21,3 @@ export function TooltipText({
     </button>
   );
 }
-
