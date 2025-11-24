@@ -75,7 +75,6 @@ export const projects = [
       "Node.js",
       "Script automation",
       "Yarn",
-      "GraphQL",
       "Javascript",
     ],
   },
@@ -157,6 +156,7 @@ export const projects = [
       "Responsive design",
       "Vite",
       "Script automation",
+      "GraphQL",
     ],
   },
   {
