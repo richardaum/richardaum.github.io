@@ -12,7 +12,7 @@ interface TooltipProps {
 
 export function Tooltip({ children, content, side = "bottom", sideOffset = 5, arrow = true, className }: TooltipProps) {
   return (
-    <TooltipPrimitive.Provider>
+    <TooltipPrimitive.Provider delayDuration={100}>
       <TooltipPrimitive.Root>
         <TooltipPrimitive.Trigger asChild>{children}</TooltipPrimitive.Trigger>
         <TooltipPrimitive.Portal>
@@ -20,7 +20,11 @@ export function Tooltip({ children, content, side = "bottom", sideOffset = 5, ar
             side={side}
             sideOffset={sideOffset}
             className={clsx(
-              "z-50 overflow-hidden rounded-md bg-darkColors-900 px-3 py-1.5 text-xs text-white shadow-md",
+              "select-none rounded-md bg-darkColors-900 px-3 py-1.5 text-sm text-white shadow-md will-change-[transform,opacity]",
+              "data-[state=delayed-open]:data-[side=bottom]:animate-slideUpAndFade",
+              "data-[state=delayed-open]:data-[side=left]:animate-slideRightAndFade",
+              "data-[state=delayed-open]:data-[side=right]:animate-slideLeftAndFade",
+              "data-[state=delayed-open]:data-[side=top]:animate-slideDownAndFade",
               className,
             )}
           >
@@ -32,4 +36,3 @@ export function Tooltip({ children, content, side = "bottom", sideOffset = 5, ar
     </TooltipPrimitive.Provider>
   );
 }
-
