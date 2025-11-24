@@ -5,10 +5,11 @@ import { durationToYearsAndMonths, fromToToDuration } from "@/utils/duration";
 import { clsx } from "@/utils/tailwind";
 import { calculateTechUsage } from "@/utils/tech";
 import { IconExternalLink, IconLink } from "@tabler/icons-react";
+import { DateTime } from "luxon";
 import { useTranslations } from "next-intl";
 import { useEffect, useRef, useState } from "react";
-import { Tooltip } from "react-tippy";
 import { FadeInSection } from "./FadeInSection";
+import { TooltipText } from "./TooltipText";
 
 const techUsage = calculateTechUsage(projects);
 
@@ -61,9 +62,25 @@ export function RecentWork() {
                       </span>
                     </h3>
                     <span className="text-sm text-greyTones-600">
-                      {t("workedFor", {
-                        duration: durationToYearsAndMonths(fromToToDuration(project.duration)),
-                      })}
+                      <TooltipText
+                        text={t("workedFor", {
+                          duration: durationToYearsAndMonths(fromToToDuration(project.duration)),
+                        })}
+                        tooltip={t("durationTooltip", {
+                          from: DateTime.fromISO(project.duration.from).toLocaleString({
+                            month: "long",
+                            year: "numeric",
+                          }),
+                          to:
+                            project.duration.to === "current"
+                              ? "current"
+                              : DateTime.fromISO(project.duration.to).toLocaleString({
+                                  month: "long",
+                                  year: "numeric",
+                                }),
+                        })}
+                        className=""
+                      />
                     </span>
                   </div>
                   <p>
@@ -83,16 +100,7 @@ export function RecentWork() {
                       const projects = techUsage.get(technology)?.projectsCount;
                       return (
                         <span key={index}>
-                          <button className="underline decoration-dashed decoration-1 underline-offset-4">
-                            {/* @ts-expect-error children mismatch */}
-                            <Tooltip
-                              title={`${t("techTooltip", { duration, projects, tech })}`}
-                              arrow
-                              position="bottom"
-                            >
-                              {technology}
-                            </Tooltip>
-                          </button>
+                          <TooltipText text={technology} tooltip={t("techTooltip", { duration, projects, tech })} />
                           {index < project.techStack.length - 1 && ", "}
                         </span>
                       );
