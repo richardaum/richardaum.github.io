@@ -42,8 +42,7 @@ const buildNextConfig = (phase) => {
 
 const config = (phase) => {
   const config = withNextIntl(buildNextConfig(phase));
-  const previousConfig = phase === PHASE_PRODUCTION_BUILD ? withExportImages(config) : config;
-  return previousConfig;
+  return withExportImages(config);
 };
 
 export default config;
