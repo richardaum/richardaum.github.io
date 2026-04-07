@@ -1,7 +1,5 @@
-"use client";
-
-import { useTranslations } from "next-intl";
 import buildInfo from "@/data/build-info.json";
+import { getTranslations } from "next-intl/server";
 
 function formatBuildDate(dateString: string): string {
   try {
@@ -19,8 +17,8 @@ function formatBuildDate(dateString: string): string {
   }
 }
 
-export function Copyright() {
-  const t = useTranslations("Home");
+export async function Copyright() {
+  const t = await getTranslations("Home");
   const buildDate = formatBuildDate(buildInfo.buildDate);
 
   return (

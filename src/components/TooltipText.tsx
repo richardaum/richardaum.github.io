@@ -1,3 +1,5 @@
+"use client";
+
 import { clsx } from "@/utils/tailwind";
 import { Tooltip } from "./Tooltip";
 

@@ -1,16 +1,15 @@
-"use client";
 import { projects } from "@/data/projects";
 import { calculateTotalExperience } from "@/utils/tech";
 import { IconBrandDiscord, IconBrandGithub, IconBrandLinkedin, IconBrandSteam } from "@tabler/icons-react";
-import { useTranslations } from "next-intl";
+import { getTranslations } from "next-intl/server";
 import { Copyright } from "./Copyright";
 import { DownloadCV } from "./DownloadCV";
 
 const totalExperience = calculateTotalExperience(projects);
 const resume = "/resume.pdf";
 
-export function NavPanel({ children }: { children?: React.ReactNode }) {
-  const t = useTranslations("Home");
+export async function NavPanel({ children }: { children?: React.ReactNode }) {
+  const t = await getTranslations("Home");
   const totalExperienceInYears = totalExperience.shiftTo("years").years.toFixed(0);
   return (
     <div className="flex h-full flex-col justify-between gap-8 text-brownBeige-600">

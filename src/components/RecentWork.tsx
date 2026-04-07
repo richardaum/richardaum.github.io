@@ -1,48 +1,26 @@
-"use client";
-
 import { projects } from "@/data/projects";
 import { durationToYearsAndMonths, fromToToDuration } from "@/utils/duration";
 import { clsx } from "@/utils/tailwind";
 import { calculateTechUsage } from "@/utils/tech";
 import { IconExternalLink, IconLink } from "@tabler/icons-react";
 import { DateTime } from "luxon";
-import { useTranslations } from "next-intl";
-import { useEffect, useRef, useState } from "react";
+import { getTranslations } from "next-intl/server";
 import { FadeInSection } from "./FadeInSection";
 import { TooltipText } from "./TooltipText";
 
 const techUsage = calculateTechUsage(projects);
 
-export function RecentWork() {
-  const t = useTranslations("Home");
-  const ref = useRef<HTMLDivElement>(null);
-  const [alreadyScrolled, setAlreadyScrolled] = useState(false);
-  const [atScrollTop, setAtScrollTop] = useState(true);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      if (!alreadyScrolled) {
-        setAlreadyScrolled(true);
-      }
-    };
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, [alreadyScrolled]);
-
-  useEffect(() => {
-    setAtScrollTop(window.scrollY === 0);
-  }, []);
-
-  const enabled = !atScrollTop || alreadyScrolled;
+export async function RecentWork() {
+  const t = await getTranslations("Home");
 
   return (
-    <div ref={ref}>
-      <FadeInSection amount="some" enabled={enabled}>
+    <div>
+      <FadeInSection amount="some" enabled>
         <section className="border-l-4 border-greyTones-500 pl-4">
           <h2 className="mb-6 font-display text-lg text-greyTones-600">{t("recentWork.title")}</h2>
           <section className="flex flex-col gap-8 pb-8">
             {projects.map((project, index) => (
-              <FadeInSection key={index} enabled={enabled}>
+              <FadeInSection key={index} enabled>
                 <article className="flex flex-col gap-3">
                   <div className="flex flex-col">
                     <h3 className="flex items-center font-semibold">

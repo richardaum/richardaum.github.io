@@ -1,5 +1,3 @@
-"use client";
-
 export function IntroductionContent() {
   return (
     <div className="flex items-center">

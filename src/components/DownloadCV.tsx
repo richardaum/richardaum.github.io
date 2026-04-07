@@ -1,9 +1,8 @@
-"use client";
 import { IconDownload } from "@tabler/icons-react";
-import { useTranslations } from "next-intl";
+import { getTranslations } from "next-intl/server";
 
-export function DownloadCV() {
-  const t = useTranslations("Home");
+export async function DownloadCV() {
+  const t = await getTranslations("Home");
   return (
     <>
       {t("downloadCV")} <IconDownload />

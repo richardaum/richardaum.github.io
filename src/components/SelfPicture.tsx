@@ -1,4 +1,3 @@
-"use client";
 import blob from "@/assets/images/blob.svg";
 import me from "@/assets/images/me.webp";
 import Image from "next-export-optimize-images/image";
