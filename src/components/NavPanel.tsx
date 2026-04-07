@@ -35,7 +35,7 @@ export async function NavPanel({ children }: { children?: React.ReactNode }) {
 
       <div className="relative z-10 m-4 flex flex-col items-center gap-8 rounded-xl bg-brownBeige-500/80 pt-4">
         <Tooltip content={experienceTooltip}>
-          <div className="w-[150px] border-b-4 border-current bg-red-500 text-right font-display">
+          <div className="w-[150px] border-b-4 border-current text-right font-display">
             <p className="text-4xl">{t("totalExperience", { years: totalExperienceInYears })}</p>
             <p className="text-lg">{t("seniority")}</p>
           </div>
