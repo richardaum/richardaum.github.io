@@ -5,7 +5,7 @@ import { IconBrandDiscord, IconBrandGithub, IconBrandLinkedin, IconBrandSteam, I
 import { AnimatePresence, motion } from "framer-motion";
 import { useOverlayScrollbars } from "overlayscrollbars-react";
 import { useEffect, useRef, useState } from "react";
-import { NavPanel } from "./NavPanel";
+import { MobileNavPanel } from "./MobileNavPanel";
 import { SelfPicture } from "./SelfPicture";
 
 export function Drawer() {
@@ -54,11 +54,11 @@ export function Drawer() {
           isOpen ? "translate-x-0" : "translate-x-full opacity-0",
         )}
       >
-        <NavPanel>
+        <MobileNavPanel>
           <div className="mx-auto">
             <SelfPicture />
           </div>
-        </NavPanel>
+        </MobileNavPanel>
       </div>
 
       <button
