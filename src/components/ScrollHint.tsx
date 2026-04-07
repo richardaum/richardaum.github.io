@@ -1,21 +1,12 @@
 "use client";
 import { IconMouse } from "@tabler/icons-react";
 import { motion } from "framer-motion";
-import { useEffect, useState } from "react";
+import { useScrollGate } from "@/hooks/useScrollGate";
 import { Tooltip } from "./Tooltip";
 
 export function ScrollHint() {
-  const [visible, setVisible] = useState(false);
-
-  // check scrolltop > 0
-  useEffect(() => {
-    const handleScroll = () => {
-      setVisible(window.scrollY === 0);
-    };
-    handleScroll();
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  const { isAtTop, hasScrolled } = useScrollGate();
+  const visible = isAtTop && !hasScrolled;
 
   return (
     visible && (
