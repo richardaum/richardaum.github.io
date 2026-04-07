@@ -1,5 +1,6 @@
 "use client";
 import { useDrawerStore } from "@/stores/drawer";
+import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { clsx } from "@/utils/tailwind";
 import { IconBrandDiscord, IconBrandGithub, IconBrandLinkedin, IconBrandSteam, IconX } from "@tabler/icons-react";
 import { AnimatePresence, motion } from "framer-motion";
@@ -11,15 +12,7 @@ import { SelfPicture } from "./SelfPicture";
 export function Drawer() {
   const ref = useRef<HTMLDivElement>(null);
   const { isOpen, setIsOpen } = useDrawerStore();
-  const [isLargerThanLg, setIsLargerThanLg] = useState(false);
-
-  useEffect(() => {
-    const mediaQuery = window.matchMedia("(min-width: 1024px)");
-    setIsLargerThanLg(mediaQuery.matches);
-    const listener = () => setIsLargerThanLg(mediaQuery.matches);
-    mediaQuery.addEventListener("change", listener);
-    return () => mediaQuery.removeEventListener("change", listener);
-  }, []);
+  const isLargerThanLg = useMediaQuery("(min-width: 1024px)");
 
   useEffect(() => {
     if (isLargerThanLg) setIsOpen(false);
