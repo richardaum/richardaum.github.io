@@ -13,7 +13,7 @@ export function TooltipText({ text, tooltip, position = "bottom", arrow = true, 
   return (
     <Tooltip content={tooltip} side={position} arrow={arrow}>
       <button
-        className={clsx("border border-dashed underline decoration-dashed decoration-1 underline-offset-4", className)}
+        className={clsx("underline underline-offset-4", className)}
       >
         {text}
       </button>
