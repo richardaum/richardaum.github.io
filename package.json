@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "sh ./scripts/generate-build-info.sh && sh ./scripts/prepare-static-assets.sh && next dev",
+    "dev": "sh ./scripts/generate-build-info.sh && sh ./scripts/prepare-static-assets.sh && next dev -p 3002",
     "build": "sh ./scripts/generate-build-info.sh && sh ./scripts/prepare-static-assets.sh && next build && next-export-optimize-images",
     "start": "next start",
     "lint": "eslint .",
@@ -48,6 +48,7 @@
     "eslint-plugin-import": "^2.29.1",
     "gh-pages": "^6.1.1",
     "jiti": "^2.6.1",
+    "postcss": "^8.5.8",
     "prettier": "^3.3.2",
     "prettier-plugin-tailwindcss": "^0.7.1",
     "sharp": "^0.33.4",
