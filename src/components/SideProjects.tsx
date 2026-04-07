@@ -1,24 +1,24 @@
 "use client";
 
-import { recentWorkProjects } from "@/data/projects";
+import { sideProjects } from "@/data/projects";
 import { durationToYearsAndMonths, fromToToDuration } from "@/utils/duration";
 import { clsx } from "@/utils/tailwind";
 import { calculateTechUsage } from "@/utils/tech";
-import { IconExternalLink, IconLink } from "@tabler/icons-react";
+import { IconLink } from "@tabler/icons-react";
 import { DateTime } from "luxon";
 import { useTranslations } from "next-intl";
 import { TooltipText } from "./TooltipText";
 
-const techUsage = calculateTechUsage(recentWorkProjects);
+const techUsage = calculateTechUsage(sideProjects);
 
-export function RecentWork() {
+export function SideProjects() {
   const t = useTranslations("Home");
 
   return (
     <section className="border-l-4 border-greyTones-500 pl-4">
-      <h2 className="mb-6 font-display text-lg text-greyTones-600">{t("recentWork.title")}</h2>
+      <h2 className="mb-6 font-display text-lg text-greyTones-600">{t("sideProjects.title")}</h2>
       <section className="flex flex-col gap-8 pb-8">
-        {recentWorkProjects.map((project) => (
+        {sideProjects.map((project) => (
           <article key={project.id} className="flex flex-col gap-3">
             <div className="flex flex-col">
               <h3 className="flex items-center font-semibold">
@@ -29,7 +29,7 @@ export function RecentWork() {
                   )}
                 />
                 <span className="flex gap-1 pl-3">
-                  {t(`recentWork.${project.id}.title`)}
+                  {t(`sideProjects.${project.id}.title`)}
                   {project.link && (
                     <a href={project.link} target="_blank" rel="noreferrer">
                       <IconLink className="text-redPink-500" />
@@ -59,16 +59,7 @@ export function RecentWork() {
                 />
               </span>
             </div>
-            <p>
-              {t.rich(`recentWork.${project.id}.description`, {
-                a: (children) => (
-                  <a href={project.linkedin} target="_blank" rel="noreferrer" className="font-semibold">
-                    {children}
-                    <IconExternalLink className="inline size-4 align-text-top" />
-                  </a>
-                ),
-              })}
-            </p>
+            <p>{t(`sideProjects.${project.id}.description`)}</p>
             <p className="flex flex-wrap gap-1 font-light">
               {project.techStack.map((technology, index) => {
                 const tech = technology;

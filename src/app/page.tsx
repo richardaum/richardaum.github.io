@@ -5,6 +5,7 @@ import { IntroductionContent } from "@/components/IntroductionContent";
 import { NavPanel } from "@/components/NavPanel";
 import { RecentWork } from "@/components/RecentWork";
 import { SelfPicture } from "@/components/SelfPicture";
+import { SideProjects } from "@/components/SideProjects";
 import { clsx } from "@/utils/tailwind";
 import Image from "next/image";
 
@@ -38,6 +39,7 @@ export default async function Home() {
           <IntroductionContent />
           <div className={clsx("absolute mt-8 pb-24 pl-3", paddingRight)}>
             <RecentWork />
+            <SideProjects />
           </div>
         </div>
         <div className="hidden lg:block">

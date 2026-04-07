@@ -1,4 +1,4 @@
-export const projects = [
+export const recentWorkProjects = [
   {
     id: "way2b1" as const,
     duration: { from: "2024-07-18", to: "2026-03-31" },
@@ -16,27 +16,6 @@ export const projects = [
       "PostgreSQL",
       "Git",
       "JavaScript",
-    ],
-  },
-  {
-    id: "securityLandscape" as const,
-    duration: { from: "2024-06-26", to: "2024-08-05" },
-    techStack: ["React", "Next.js", "TypeScript", "TailwindCSS", "Bun", "Git", "JavaScript"],
-  },
-  {
-    id: "myPortfolio" as const,
-    duration: { from: "2024-05-24", to: "2024-07-25" },
-    link: "https://richardaum.github.io",
-    techStack: [
-      "React",
-      "Next.js",
-      "TypeScript",
-      "TailwindCSS",
-      "Bun",
-      "Git",
-      "JavaScript",
-      "Github Pages",
-      "Github Actions",
     ],
   },
   {
@@ -197,11 +176,6 @@ export const projects = [
     ],
   },
   {
-    id: "foodDelivery" as const,
-    duration: { from: "2019-06-30", to: "2020-06-30" },
-    techStack: ["React", "Node.js", "WebSockets", "MySQL", "Git", "JavaScript", "Angular.js", "DigitalOcean", "Dokku"],
-  },
-  {
     id: "symphonyChat" as const,
     link: "https://symphony.com",
     linkedin: "https://www.linkedin.com/company/daitan-group",
@@ -239,3 +213,34 @@ export const projects = [
     techStack: ["Git", "JavaScript", "Java"],
   },
 ];
+
+export const sideProjects = [
+  {
+    id: "securityLandscape" as const,
+    duration: { from: "2024-06-26", to: "2024-08-05" },
+    techStack: ["React", "Next.js", "TypeScript", "TailwindCSS", "Bun", "Git", "JavaScript"],
+  },
+  {
+    id: "myPortfolio" as const,
+    duration: { from: "2024-05-24", to: "2024-07-25" },
+    link: "https://richardaum.github.io",
+    techStack: [
+      "React",
+      "Next.js",
+      "TypeScript",
+      "TailwindCSS",
+      "Bun",
+      "Git",
+      "JavaScript",
+      "Github Pages",
+      "Github Actions",
+    ],
+  },
+  {
+    id: "foodDelivery" as const,
+    duration: { from: "2019-06-30", to: "2020-06-30" },
+    techStack: ["React", "Node.js", "WebSockets", "MySQL", "Git", "JavaScript", "Angular.js", "DigitalOcean", "Dokku"],
+  },
+];
+
+export const projects = [...recentWorkProjects, ...sideProjects];
