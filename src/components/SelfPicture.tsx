@@ -1,5 +1,5 @@
 import blob from "@/assets/images/blob.svg";
-import me from "@/assets/images/me.webp";
+import me from "@/assets/images/me-fhd.webp";
 import { Img } from "@/components/Img";
 
 export function SelfPicture() {
