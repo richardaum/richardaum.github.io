@@ -1,4 +1,5 @@
 import puppeteer from 'puppeteer-core';
+import { createHash } from 'crypto';
 import { fileURLToPath } from 'url';
 import path from 'path';
 import { existsSync } from 'fs';
@@ -17,8 +18,17 @@ function printUsage() {
       '  node scripts/resume/generate-pdf.mjs --html <inputHtmlPath> --output <outputPdfPath>\n' +
       '  node scripts/resume/generate-pdf.mjs --text "Some text" --output <outputPdfPath>\n' +
       '  node scripts/resume/generate-pdf.mjs --text-file <inputTextPath> --output <outputPdfPath>\n' +
-      '  echo "Some text" | node scripts/resume/generate-pdf.mjs --stdin --output <outputPdfPath>\n',
+      '  echo "Some text" | node scripts/resume/generate-pdf.mjs --stdin --output <outputPdfPath>\n' +
+      '  node scripts/resume/generate-pdf.mjs --force  (always regenerate, ignore SHA cache)\n',
   );
+}
+
+function sha256Hex(content) {
+  return createHash('sha256').update(content, 'utf8').digest('hex');
+}
+
+function sourceHashSidecarPath(pdfPath) {
+  return `${pdfPath}.source.sha256`;
 }
 
 function escapeHtml(value) {
@@ -92,6 +102,7 @@ let inputHtmlPath = null;
 let outputPdfPath = DEFAULT_OUTPUT_PDF;
 let textInput = null;
 let useStdin = false;
+let forceRegenerate = false;
 const positional = [];
 
 for (let i = 0; i < args.length; i += 1) {
@@ -129,6 +140,10 @@ for (let i = 0; i < args.length; i += 1) {
     useStdin = true;
     continue;
   }
+  if (arg === '--force') {
+    forceRegenerate = true;
+    continue;
+  }
   positional.push(arg);
 }
 
@@ -161,6 +176,25 @@ if (inputHtmlPath && !existsSync(inputHtmlPath)) {
   process.exit(1);
 }
 
+let sourceForHash = pageContentHtml;
+if (!sourceForHash && inputHtmlPath) {
+  sourceForHash = await fs.readFile(inputHtmlPath, 'utf-8');
+}
+const contentDigest = sha256Hex(sourceForHash);
+const sidecarPath = sourceHashSidecarPath(outputPdfPath);
+
+if (!forceRegenerate && existsSync(outputPdfPath)) {
+  try {
+    const previous = (await fs.readFile(sidecarPath, 'utf8')).trim();
+    if (previous === contentDigest) {
+      console.log(`PDF up to date (SHA-256 of input unchanged), skipping: ${outputPdfPath}`);
+      process.exit(0);
+    }
+  } catch {
+    // Missing or unreadable sidecar — regenerate
+  }
+}
+
 const browser = await puppeteer.launch({
   executablePath: '/usr/bin/google-chrome',
   args: ['--no-sandbox', '--disable-setuid-sandbox'],
@@ -182,4 +216,6 @@ await page.pdf({
 });
 
 await browser.close();
+
+await fs.writeFile(sidecarPath, `${contentDigest}\n`, 'utf8');
 console.log(`PDF generated successfully: ${outputPdfPath}`);
