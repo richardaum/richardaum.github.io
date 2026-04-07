@@ -22,7 +22,7 @@ export function Tooltip({ children, content, side = "bottom", sideOffset = 5, ar
             side={side}
             sideOffset={sideOffset}
             className={clsx(
-              "select-none rounded-md bg-darkColors-900 px-3 py-1.5 text-sm text-white shadow-md will-change-[transform,opacity]",
+              "z-[120] select-none rounded-md bg-darkColors-900 px-3 py-1.5 text-sm text-white shadow-md will-change-[transform,opacity]",
               "data-[state=delayed-open]:data-[side=bottom]:animate-slideUpAndFade",
               "data-[state=delayed-open]:data-[side=left]:animate-slideRightAndFade",
               "data-[state=delayed-open]:data-[side=right]:animate-slideLeftAndFade",
