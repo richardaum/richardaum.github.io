@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "sh ./scripts/generate-build-info.sh && sh ./scripts/prepare-static-assets.sh && next dev -p 3002",
-    "build": "sh ./scripts/generate-build-info.sh && sh ./scripts/prepare-static-assets.sh && next build && next-export-optimize-images",
+    "build": "sh ./scripts/generate-build-info.sh && sh ./scripts/prepare-static-assets.sh && next build",
     "start": "next start",
     "lint": "eslint .",
     "deploy": "yarn build && yarn deploy-only",
@@ -23,7 +23,6 @@
     "luxon": "^3.4.4",
     "markdown-to-jsx": "^7.4.7",
     "next": "^16.2.2",
-    "next-export-optimize-images": "^4.5.0",
     "next-intl": "^4.9.0",
     "overlayscrollbars": "^2.14.0",
     "overlayscrollbars-react": "^0.5.6",
@@ -51,7 +50,6 @@
     "postcss": "^8.5.8",
     "prettier": "^3.3.2",
     "prettier-plugin-tailwindcss": "^0.7.1",
-    "sharp": "^0.33.4",
     "tailwindcss": "^3.4.4",
     "typescript": "^5.5.0-beta"
   },

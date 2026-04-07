@@ -6,8 +6,8 @@ import { NavPanel } from "@/components/NavPanel";
 import { RecentWork } from "@/components/RecentWork";
 import { SelfPicture } from "@/components/SelfPicture";
 import { SideProjects } from "@/components/SideProjects";
+import { Img } from "@/components/Img";
 import { clsx } from "@/utils/tailwind";
-import Image from "next/image";
 
 const maxWidth = clsx("max-w-[660px]");
 const paddingRight = clsx("pr-8");
@@ -24,7 +24,7 @@ export default async function Home() {
               maxWidth,
             )}
           >
-            <Image src={logo} alt="Logo" className="h-6 w-auto lg:h-8" />
+            <Img src={logo} alt="Logo" className="h-6 w-auto lg:h-8" priority />
             <div className="ml-auto lg:hidden">
               <a
                 className="flex items-center gap-4 rounded-xl bg-darkColors-900/20 p-3"

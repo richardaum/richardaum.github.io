@@ -1,12 +1,12 @@
 import blob from "@/assets/images/blob.svg";
 import me from "@/assets/images/me.webp";
-import Image from "next-export-optimize-images/image";
+import { Img } from "@/components/Img";
 
 export function SelfPicture() {
   return (
     <div className="relative">
       <div className="relative z-20 h-[433px] w-[283px]">
-        <Image
+        <Img
           src={me}
           alt="Richard's photo"
           fill
@@ -17,7 +17,7 @@ export function SelfPicture() {
       </div>
       <div className="absolute top-0 z-10">
         <div className="relative h-[400px] w-[409px]">
-          <Image
+          <Img
             src={blob}
             alt="Blob"
             className="translate-y-[-20px] object-contain"
