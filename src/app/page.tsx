@@ -1,4 +1,3 @@
-import resume from "@/assets/files/resume.pdf";
 import logo from "@/assets/images/logo.svg";
 import { DownloadCV } from "@/components/DownloadCV";
 import { Drawer } from "@/components/Drawer";
@@ -12,6 +11,7 @@ import Image from "next/image";
 
 const maxWidth = clsx("max-w-[660px]");
 const paddingRight = clsx("pr-8");
+const resume = "/resume.pdf";
 
 // eslint-disable-next-line import/no-unused-modules
 export default async function Home() {

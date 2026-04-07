@@ -1,5 +1,4 @@
 "use client";
-import resume from "@/assets/files/resume.pdf";
 import { projects } from "@/data/projects";
 import { calculateTotalExperience } from "@/utils/tech";
 import { IconBrandDiscord, IconBrandGithub, IconBrandLinkedin, IconBrandSteam } from "@tabler/icons-react";
@@ -8,6 +7,7 @@ import { Copyright } from "./Copyright";
 import { DownloadCV } from "./DownloadCV";
 
 const totalExperience = calculateTotalExperience(projects);
+const resume = "/resume.pdf";
 
 export function NavPanel({ children }: { children?: React.ReactNode }) {
   const t = useTranslations("Home");

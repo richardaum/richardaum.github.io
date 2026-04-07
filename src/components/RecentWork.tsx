@@ -96,8 +96,17 @@ export function RecentWork() {
                   <p className="flex flex-wrap gap-1 font-light">
                     {project.techStack.map((technology, index) => {
                       const tech = technology;
-                      const duration = durationToYearsAndMonths(techUsage.get(technology)?.duration);
-                      const projects = techUsage.get(technology)?.projectsCount;
+                      const usage = techUsage.get(technology);
+                      if (!usage) {
+                        return (
+                          <span key={index}>
+                            {technology}
+                            {index < project.techStack.length - 1 && ", "}
+                          </span>
+                        );
+                      }
+                      const duration = durationToYearsAndMonths(usage.duration);
+                      const projects = usage.projectsCount;
                       return (
                         <span key={index}>
                           <TooltipText text={technology} tooltip={t("techTooltip", { duration, projects, tech })} />

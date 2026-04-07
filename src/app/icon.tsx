@@ -5,6 +5,7 @@ export const size = {
   width: 16,
   height: 16,
 };
+export const dynamic = "force-static";
 export const contentType = "image/png";
 export default function Icon() {
   return new ImageResponse(

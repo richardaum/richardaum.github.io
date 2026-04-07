@@ -1,5 +1,5 @@
 "use client";
-import { motion, useInView, UseInViewOptions } from "framer-motion";
+import { motion, useInView } from "framer-motion";
 import { useRef } from "react";
 
 export const FadeInSection = ({
@@ -9,7 +9,7 @@ export const FadeInSection = ({
 }: {
   children: React.ReactNode;
   enabled: boolean;
-  amount?: UseInViewOptions["amount"];
+  amount?: "some" | "all" | number;
 }) => {
   const ref = useRef<HTMLDivElement>(null);
   const inView = useInView(ref, {
