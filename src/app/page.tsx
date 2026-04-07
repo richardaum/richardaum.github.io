@@ -4,7 +4,6 @@ import { Drawer } from "@/components/Drawer";
 import { IntroductionContent } from "@/components/IntroductionContent";
 import { NavPanel } from "@/components/NavPanel";
 import { RecentWork } from "@/components/RecentWork";
-import { ScrollHint } from "@/components/ScrollHint";
 import { SelfPicture } from "@/components/SelfPicture";
 import { clsx } from "@/utils/tailwind";
 import Image from "next/image";
@@ -50,7 +49,6 @@ export default async function Home() {
             <SelfPicture />
           </div>
         </div>
-        <ScrollHint />
         <Drawer />
       </main>
   );
