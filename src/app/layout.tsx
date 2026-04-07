@@ -7,7 +7,7 @@ import { NextIntlClientProvider } from "next-intl";
 import { getLocale, getMessages } from "next-intl/server";
 import { Figtree } from "next/font/google";
 import localFont from "next/font/local";
-import "overlayscrollbars/overlayscrollbars.css";
+import "overlayscrollbars/styles/overlayscrollbars.css";
 import "./globals.css";
 
 const figtree = Figtree({
