@@ -32,11 +32,9 @@ export function Drawer() {
   }, [instance, initialize]);
 
   const handleDrawerToggleClick = () => {
-    if (!isOpen) {
-      instance()?.elements().viewport.scrollTo({ top: 0 });
-    }
     setIsOpen((prev) => !prev);
   };
+
   return (
     <>
       <div
@@ -68,7 +66,7 @@ export function Drawer() {
           "lg:hidden",
           "transition-all duration-300",
           {
-            "bg-greyTones-300 hover:bg-greyTones-300/80 focus-visible:bg-greyTones-300/80 active:bg-greyTones-300/50 rounded-[56px]":
+            "rounded-[56px] bg-greyTones-300 hover:bg-greyTones-300/80 focus-visible:bg-greyTones-300/80 active:bg-greyTones-300/50":
               isOpen,
           },
         )}

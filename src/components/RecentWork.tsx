@@ -8,7 +8,6 @@ import { IconExternalLink, IconLink } from "@tabler/icons-react";
 import { DateTime } from "luxon";
 import { useTranslations } from "next-intl";
 import { useRef } from "react";
-import { useScrollGate } from "@/hooks/useScrollGate";
 import { FadeInSection } from "./FadeInSection";
 import { TooltipText } from "./TooltipText";
 
@@ -17,8 +16,7 @@ const techUsage = calculateTechUsage(projects);
 export function RecentWork() {
   const t = useTranslations("Home");
   const ref = useRef<HTMLDivElement>(null);
-  const { hasScrolled, isAtTop } = useScrollGate();
-  const enabled = hasScrolled || !isAtTop;
+  const enabled = true;
 
   return (
     <div ref={ref}>
