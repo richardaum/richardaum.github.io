@@ -1,0 +1,257 @@
+{
+  "Git": {
+    "days": 3599,
+    "months": 118.23,
+    "years": 9.85
+  },
+  "JavaScript": {
+    "days": 3599,
+    "months": 118.23,
+    "years": 9.85
+  },
+  "React": {
+    "days": 3221,
+    "months": 105.81,
+    "years": 8.82
+  },
+  "CSS": {
+    "days": 2722,
+    "months": 89.42,
+    "years": 7.45
+  },
+  "TypeScript": {
+    "days": 2475,
+    "months": 81.31,
+    "years": 6.78
+  },
+  "SASS": {
+    "days": 2337,
+    "months": 76.77,
+    "years": 6.4
+  },
+  "Node.js": {
+    "days": 2286,
+    "months": 75.1,
+    "years": 6.26
+  },
+  "Design Systems": {
+    "days": 1799,
+    "months": 59.1,
+    "years": 4.93
+  },
+  "Jest": {
+    "days": 1798,
+    "months": 59.07,
+    "years": 4.92
+  },
+  "React Testing Library": {
+    "days": 1798,
+    "months": 59.07,
+    "years": 4.92
+  },
+  "ESLint": {
+    "days": 1798,
+    "months": 59.07,
+    "years": 4.92
+  },
+  "HTML": {
+    "days": 1798,
+    "months": 59.07,
+    "years": 4.92
+  },
+  "Responsive design": {
+    "days": 1798,
+    "months": 59.07,
+    "years": 4.92
+  },
+  "Micro-frontends": {
+    "days": 1633,
+    "months": 53.65,
+    "years": 4.47
+  },
+  "Styled Components": {
+    "days": 1633,
+    "months": 53.65,
+    "years": 4.47
+  },
+  "PostgreSQL": {
+    "days": 1535,
+    "months": 50.43,
+    "years": 4.2
+  },
+  "Redux": {
+    "days": 1453,
+    "months": 47.73,
+    "years": 3.98
+  },
+  "Yarn": {
+    "days": 1442,
+    "months": 47.37,
+    "years": 3.95
+  },
+  "React Query": {
+    "days": 1279,
+    "months": 42.02,
+    "years": 3.5
+  },
+  "Next.js": {
+    "days": 1206,
+    "months": 39.62,
+    "years": 3.3
+  },
+  "Java": {
+    "days": 1069,
+    "months": 35.12,
+    "years": 2.93
+  },
+  "Fastify": {
+    "days": 914,
+    "months": 30.03,
+    "years": 2.5
+  },
+  "Cypress": {
+    "days": 914,
+    "months": 30.03,
+    "years": 2.5
+  },
+  "Webpack": {
+    "days": 914,
+    "months": 30.03,
+    "years": 2.5
+  },
+  "Docker": {
+    "days": 914,
+    "months": 30.03,
+    "years": 2.5
+  },
+  "Mocha": {
+    "days": 914,
+    "months": 30.03,
+    "years": 2.5
+  },
+  "Enzyme": {
+    "days": 914,
+    "months": 30.03,
+    "years": 2.5
+  },
+  "BFF": {
+    "days": 914,
+    "months": 30.03,
+    "years": 2.5
+  },
+  "Kotlin": {
+    "days": 914,
+    "months": 30.03,
+    "years": 2.5
+  },
+  "Babel": {
+    "days": 914,
+    "months": 30.03,
+    "years": 2.5
+  },
+  "GraphQL": {
+    "days": 813,
+    "months": 26.71,
+    "years": 2.23
+  },
+  "Angular.js": {
+    "days": 709,
+    "months": 23.29,
+    "years": 1.94
+  },
+  "TailwindCSS": {
+    "days": 676,
+    "months": 22.21,
+    "years": 1.85
+  },
+  "Storybook": {
+    "days": 621,
+    "months": 20.4,
+    "years": 1.7
+  },
+  "TypeORM": {
+    "days": 621,
+    "months": 20.4,
+    "years": 1.7
+  },
+  "Script automation": {
+    "days": 557,
+    "months": 18.3,
+    "years": 1.52
+  },
+  "Bolt for Slack": {
+    "days": 528,
+    "months": 17.35,
+    "years": 1.45
+  },
+  "SQLite": {
+    "days": 528,
+    "months": 17.35,
+    "years": 1.45
+  },
+  "WebSockets": {
+    "days": 366,
+    "months": 12.02,
+    "years": 1
+  },
+  "MySQL": {
+    "days": 366,
+    "months": 12.02,
+    "years": 1
+  },
+  "DigitalOcean": {
+    "days": 366,
+    "months": 12.02,
+    "years": 1
+  },
+  "Dokku": {
+    "days": 366,
+    "months": 12.02,
+    "years": 1
+  },
+  "Progressive Web Apps (PWA)": {
+    "days": 365,
+    "months": 11.99,
+    "years": 1
+  },
+  "Vite": {
+    "days": 192,
+    "months": 6.31,
+    "years": 0.53
+  },
+  "Express.js": {
+    "days": 188,
+    "months": 6.18,
+    "years": 0.51
+  },
+  "Contentful": {
+    "days": 165,
+    "months": 5.42,
+    "years": 0.45
+  },
+  "Accessibility": {
+    "days": 165,
+    "months": 5.42,
+    "years": 0.45
+  },
+  "Technical Leadership": {
+    "days": 165,
+    "months": 5.42,
+    "years": 0.45
+  },
+  "Bun": {
+    "days": 73,
+    "months": 2.4,
+    "years": 0.2
+  },
+  "Github Pages": {
+    "days": 62,
+    "months": 2.04,
+    "years": 0.17
+  },
+  "Github Actions": {
+    "days": 62,
+    "months": 2.04,
+    "years": 0.17
+  }
+}
