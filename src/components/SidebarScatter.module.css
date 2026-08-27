@@ -13,3 +13,9 @@
   display: block;
   background: #bdab8c;
 }
+
+@media (max-width: 1023px) {
+  .scatter {
+    display: none;
+  }
+}
