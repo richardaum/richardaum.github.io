@@ -7,6 +7,7 @@ import { RecentWork } from "@/components/RecentWork";
 import { SelfPicture } from "@/components/SelfPicture";
 import { SideProjects } from "@/components/SideProjects";
 import { SectionNav } from "@/components/SectionNav";
+import { SidebarScatter } from "@/components/SidebarScatter";
 import { Technologies } from "@/components/Technologies";
 import styles from "@/components/NavPanel.module.css";
 import { Img } from "@/components/Img";
@@ -19,7 +20,8 @@ const resume = "/resume.pdf";
 // eslint-disable-next-line import/no-unused-modules
 export default async function Home() {
   return (
-    <main className="grid min-h-screen gap-x-[148px] pt-[100px] lg:grid-cols-[auto_400px]">
+    <main className="relative grid min-h-screen gap-x-[148px] pt-[100px] lg:grid-cols-[auto_400px]">
+        <SidebarScatter />
         <div className={clsx("relative m-auto mt-6 lg:mt-auto", paddingRight, maxWidth)}>
           <div
             className={clsx(

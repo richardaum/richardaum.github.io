@@ -1,0 +1,15 @@
+.scatter {
+  position: absolute;
+  top: 0;
+  right: 392px;
+  width: 336px;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.pixel {
+  position: absolute;
+  display: block;
+  background: #bdab8c;
+}
