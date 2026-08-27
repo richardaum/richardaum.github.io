@@ -7,6 +7,7 @@ import { RecentWork } from "@/components/RecentWork";
 import { SelfPicture } from "@/components/SelfPicture";
 import { SideProjects } from "@/components/SideProjects";
 import { SectionNav } from "@/components/SectionNav";
+import { Technologies } from "@/components/Technologies";
 import { Img } from "@/components/Img";
 import { clsx } from "@/utils/tailwind";
 
@@ -45,6 +46,9 @@ export default async function Home() {
             </div>
             <div id="side-projects" className="scroll-mt-32">
               <SideProjects />
+            </div>
+            <div id="technologies" className="scroll-mt-32">
+              <Technologies />
             </div>
           </div>
         </div>

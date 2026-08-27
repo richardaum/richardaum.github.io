@@ -1,18 +1,16 @@
-"use client";
-
 import { recentWorkProjects } from "@/data/projects";
 import { durationToYearsAndMonths, fromToToDuration } from "@/utils/duration";
 import { clsx } from "@/utils/tailwind";
 import { calculateTechUsage } from "@/utils/tech";
 import { IconExternalLink, IconLink } from "@tabler/icons-react";
 import { DateTime } from "luxon";
-import { useTranslations } from "next-intl";
+import { getTranslations } from "next-intl/server";
 import { TooltipText } from "./TooltipText";
 
 const techUsage = calculateTechUsage(recentWorkProjects);
 
-export function RecentWork() {
-  const t = useTranslations("Home");
+export async function RecentWork() {
+  const t = await getTranslations("Home");
 
   return (
     <section className="border-l-4 border-greyTones-500 pl-4">

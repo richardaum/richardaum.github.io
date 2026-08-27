@@ -1,6 +1,7 @@
 const sections = [
   { id: "recent-work", label: "Recent work" },
   { id: "side-projects", label: "Side projects" },
+  { id: "technologies", label: "Technologies" },
 ] as const;
 
 export function SectionNav() {

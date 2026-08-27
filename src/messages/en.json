@@ -8,6 +8,9 @@
     "totalExperience": "+{years} {years, plural, one {year} other {years}}",
     "experienceBreakdownTooltip": "{years} years, {months} months, and {days} days of experience",
     "seniority": "Expert",
+    "technologies": {
+      "title": "Technologies"
+    },
     "recentWork": {
       "title": "Recent work",
       "eqwi": {
