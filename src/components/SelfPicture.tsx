@@ -1,32 +1,27 @@
-import blob from "@/assets/images/blob.svg";
+import blob from "@/assets/images/blob-authentic.png";
 import me from "@/assets/images/me-fhd.webp";
 import { Img } from "@/components/Img";
+import styles from "./SelfPicture.module.css";
+
+const blobUrl = typeof blob === "string" ? blob : blob.src;
 
 export function SelfPicture() {
   return (
-    <div className="relative">
-      <div className="relative z-20 h-[433px] w-[283px]">
-        <Img
-          src={me}
-          alt="Richard's photo"
-          fill
-          quality={100}
-          sizes="283px"
-          className="z-10 rounded-full object-cover object-left"
-        />
-      </div>
-      <div className="absolute top-0 z-10">
-        <div className="relative h-[400px] w-[409px]">
-          <Img
-            src={blob}
-            alt="Blob"
-            className="translate-y-[-20px] object-contain"
-            fill
-            quality={100}
-            sizes="409px"
-          />
-        </div>
-      </div>
+    <div
+      className={styles.frame}
+      style={{
+        WebkitMaskImage: `url(${blobUrl})`,
+        maskImage: `url(${blobUrl})`,
+      }}
+    >
+      <Img
+        src={me}
+        alt="Richard's photo"
+        fill
+        quality={100}
+        sizes="320px"
+        className="object-cover object-[0%_18%]"
+      />
     </div>
   );
 }

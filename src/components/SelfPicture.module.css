@@ -1,0 +1,14 @@
+.frame {
+  position: relative;
+  width: auto;
+  height: min(100%, 480px);
+  max-width: 100%;
+  aspect-ratio: 2 / 3;
+  flex-shrink: 1;
+  -webkit-mask-position: center;
+  mask-position: center;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-size: 100% 100%;
+  mask-size: 100% 100%;
+}

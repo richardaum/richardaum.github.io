@@ -8,6 +8,7 @@ import { SelfPicture } from "@/components/SelfPicture";
 import { SideProjects } from "@/components/SideProjects";
 import { SectionNav } from "@/components/SectionNav";
 import { Technologies } from "@/components/Technologies";
+import styles from "@/components/NavPanel.module.css";
 import { Img } from "@/components/Img";
 import { clsx } from "@/utils/tailwind";
 
@@ -56,7 +57,7 @@ export default async function Home() {
           <div className="fixed top-0 z-20 h-full w-[400px] bg-brownBeige-500" />
           <div className="fixed top-0 z-30 h-full w-[400px]">
             <NavPanel>
-              <div className="pointer-events-none flex translate-x-[-150px] items-center">
+              <div className={`${styles.pictureSlot} pointer-events-none flex-1`}>
                 <SelfPicture />
               </div>
             </NavPanel>
