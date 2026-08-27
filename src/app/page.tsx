@@ -6,6 +6,7 @@ import { NavPanel } from "@/components/NavPanel";
 import { RecentWork } from "@/components/RecentWork";
 import { SelfPicture } from "@/components/SelfPicture";
 import { SideProjects } from "@/components/SideProjects";
+import { SectionNav } from "@/components/SectionNav";
 import { Img } from "@/components/Img";
 import { clsx } from "@/utils/tailwind";
 
@@ -25,7 +26,7 @@ export default async function Home() {
             )}
           >
             <Img src={logo} alt="Logo" className="h-6 w-auto lg:h-8" priority />
-            <div className="ml-auto lg:hidden">
+            <div className="hidden ml-auto lg:hidden">
               <a
                 className="flex items-center gap-4 rounded-xl bg-darkColors-900/20 p-3"
                 href={resume}
@@ -38,8 +39,13 @@ export default async function Home() {
           </div>
           <IntroductionContent />
           <div className={clsx("absolute mt-8 pb-24 pl-3", paddingRight)}>
-            <RecentWork />
-            <SideProjects />
+            <SectionNav />
+            <div id="recent-work" className="scroll-mt-32">
+              <RecentWork />
+            </div>
+            <div id="side-projects" className="scroll-mt-32">
+              <SideProjects />
+            </div>
           </div>
         </div>
         <div className="hidden lg:block">
