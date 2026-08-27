@@ -20,7 +20,7 @@ export async function NavPanel({ children }: { children?: React.ReactNode }) {
   });
   return (
     <div className="flex h-full flex-col justify-between gap-8 text-brownBeige-600">
-      <div className="ml-auto">
+      <div className="hidden ml-auto">
         <a
           className="m-2 flex items-center gap-4 rounded-xl bg-darkColors-900/20 p-3 text-greyTones-300"
           href={resume}
