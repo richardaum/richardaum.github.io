@@ -1,5 +1,11 @@
 export const recentWorkProjects = [
   {
+    id: "eqwi" as const,
+    duration: { from: "2026-08-17", to: "current" },
+    linkedin: "https://www.linkedin.com/company/105557641/",
+    techStack: ["React", "Next.js", "TypeScript", "Storybook", "Jest", "Claude Code", "Cursor", "Git", "JavaScript"],
+  },
+  {
     id: "way2b1" as const,
     duration: { from: "2024-07-18", to: "2026-03-31" },
     link: "https://way2b1.com/",
@@ -215,6 +221,15 @@ export const recentWorkProjects = [
 ];
 
 export const sideProjects = [
+  {
+    id: "newJobTracker" as const,
+    duration: { from: "2026-03-01", to: "current" },
+    link: "https://job-tracker-web-eta.vercel.app/",
+    peerlistUrl: "https://peerlist.io/richardaum/project/newjobtracker",
+    peerlistBadge:
+      "https://peerlist.io/api/v1/projects/embed/PRJHLKLOOE6LJENKQ1P8ONOQANOLPD?showUpvote=true&theme=light",
+    techStack: ["React", "Next.js", "TypeScript", "NestJS", "GraphQL", "PostgreSQL", "Git", "JavaScript"],
+  },
   {
     id: "securityLandscape" as const,
     duration: { from: "2024-06-26", to: "2024-08-05" },

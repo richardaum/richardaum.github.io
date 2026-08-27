@@ -10,6 +10,10 @@
     "seniority": "Expert",
     "recentWork": {
       "title": "Recent work",
+      "eqwi": {
+        "title": "EQWI - Glassdoor (Indeed)",
+        "description": "As a Senior Frontend Engineer at <a>EQWI</a>, working on the Glassdoor (Indeed) account, I build and maintain frontend features with Next.js, TypeScript, and Storybook, leaning on AI-assisted workflows with Claude Code and Cursor to move faster without cutting corners on quality."
+      },
       "way2b1": {
         "title": "Way2B1",
         "description": "As a frontend developer at <a>Way2B1</a>, I am responsible for creating and optimizing the user interface of the platform, always focusing on delivering a smooth and intuitive experience. I work closely with the design and backend teams to ensure that the features meet our users' needs, providing seamless and efficient navigation. Way2B1 offers a comprehensive platform for families and their trusted professionals to collaborate, manage information, and make aligned decisions securely. My focus is on delivering solutions that enhance the platform's usability, making it easier for families and professionals to stay organized and manage complex tasks together."
@@ -69,6 +73,10 @@
     },
     "sideProjects": {
       "title": "Side Projects",
+      "newJobTracker": {
+        "title": "NewJobTracker",
+        "description": "A job-application copilot: paste a job posting and NewJobTracker drafts the application, scores your fit against your resume, and carries it through every pipeline stage to a signed offer, running on your own OpenAI API key instead of a shared one."
+      },
       "securityLandscape": {
         "title": "Security Landscape",
         "description": "As a developer on a freelance project, I crafted a complete frontend experience. From initial concept in Figma to final coding and delivery, I transformed ideas into a seamless and interactive user interface."

@@ -19,7 +19,13 @@ export function SideProjects() {
       <h2 className="mb-6 font-display text-lg text-greyTones-600">{t("sideProjects.title")}</h2>
       <section className="flex flex-col gap-8 pb-8">
         {sideProjects.map((project) => (
-          <article key={project.id} className="flex flex-col gap-3">
+          <article key={project.id} className="relative flex flex-col gap-3">
+            {"peerlistUrl" in project && project.peerlistUrl && project.peerlistBadge && (
+              <a href={project.peerlistUrl} target="_blank" rel="noreferrer" className="absolute right-0 top-0">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={project.peerlistBadge} alt="Live on Peerlist" width={150} height={40} />
+              </a>
+            )}
             <div className="flex flex-col">
               <h3 className="flex items-center font-semibold">
                 <div

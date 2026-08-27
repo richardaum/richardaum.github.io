@@ -45,10 +45,11 @@ export default async function Home() {
         <div className="hidden lg:block">
           <div className="fixed top-0 z-20 h-full w-[400px] bg-brownBeige-500" />
           <div className="fixed top-0 z-30 h-full w-[400px]">
-            <NavPanel />
-          </div>
-          <div className="pointer-events-none fixed z-20 flex h-screen translate-x-[-150px] translate-y-[-100px] items-center">
-            <SelfPicture />
+            <NavPanel>
+              <div className="pointer-events-none flex translate-x-[-150px] items-center">
+                <SelfPicture />
+              </div>
+            </NavPanel>
           </div>
         </div>
         <Drawer />
