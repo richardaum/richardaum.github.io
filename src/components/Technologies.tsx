@@ -16,13 +16,18 @@ function formatDuration(duration: Duration) {
   return units.map(({ value, label }) => `${value} ${label}${value === 1 ? "" : "s"}`).join(" and ");
 }
 
+function getPrimaryCategory(technology: string) {
+  const categories = skillCategories[technology as keyof typeof skillCategories];
+  return categories?.[0];
+}
+
 export async function Technologies() {
   const t = await getTranslations("Home");
   const technologies = Array.from(calculateTechUsage(projects)).sort(
     ([, first], [, second]) => second.duration.as("milliseconds") - first.duration.as("milliseconds"),
   );
   const technologyGroups = skillCategoryOrder
-    .map((category) => [category, technologies.filter(([technology]) => skillCategories[technology]?.[0] === category)] as const)
+    .map((category) => [category, technologies.filter(([technology]) => getPrimaryCategory(technology) === category)] as const)
     .filter(([, group]) => group.length > 0);
 
   return (
