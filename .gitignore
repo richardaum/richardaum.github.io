@@ -42,3 +42,6 @@ errors
 
 # build info (generated during build)
 /src/data/build-info.json
+
+# playwright mcp
+/.playwright-mcp/
