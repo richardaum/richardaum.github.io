@@ -2,8 +2,20 @@ export const recentWorkProjects = [
   {
     id: "eqwi" as const,
     duration: { from: "2026-08-17", to: "current" },
+    link: "https://www.glassdoor.com",
     linkedin: "https://www.linkedin.com/company/105557641/",
-    techStack: ["React", "Next.js", "TypeScript", "Storybook", "Jest", "Claude Code", "Cursor", "Git", "JavaScript"],
+    techStack: [
+      "React",
+      "Next.js",
+      "TypeScript",
+      "CSS Modules",
+      "Storybook",
+      "Jest",
+      "Claude Code",
+      "Cursor",
+      "Git",
+      "JavaScript",
+    ],
   },
   {
     id: "way2b1" as const,
@@ -224,7 +236,7 @@ export const sideProjects = [
   {
     id: "newJobTracker" as const,
     duration: { from: "2026-03-01", to: "current" },
-    link: "https://job-tracker-web-eta.vercel.app/",
+    link: "https://newjobtracker.app",
     peerlistUrl: "https://peerlist.io/richardaum/project/newjobtracker",
     peerlistBadge:
       "https://peerlist.io/api/v1/projects/embed/PRJHLKLOOE6LJENKQ1P8ONOQANOLPD?showUpvote=true&theme=light",
