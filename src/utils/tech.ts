@@ -1,7 +1,7 @@
 import { Project, TechUsage } from "@/types/work";
 import { DateTime, Duration, Interval } from "luxon";
 
-export const calculateTechUsage = (projects: Project[]) => {
+export const calculateTechUsage = (projects: Project[], now: DateTime = DateTime.now()) => {
   const techUsageMap = new Map<string, TechUsage>();
 
   // get tech with overlapped intervals
@@ -14,7 +14,7 @@ export const calculateTechUsage = (projects: Project[]) => {
         const toDateTime = DateTime.fromISO(project.duration.to);
         const interval = Interval.fromDateTimes(
           DateTime.fromISO(project.duration.from),
-          toDateTime.isValid ? toDateTime : DateTime.now(),
+          toDateTime.isValid ? toDateTime : now,
         );
         acc[tech].push(interval);
       });
@@ -40,12 +40,12 @@ export const calculateTechUsage = (projects: Project[]) => {
   return techUsageMap;
 };
 
-export const calculateTotalExperience = (projects: Project[]): Duration => {
+export const calculateTotalExperience = (projects: Project[], now: DateTime = DateTime.now()): Duration => {
   const intervals = projects.map((project) => {
     const toDateTime = DateTime.fromISO(project.duration.to);
     return Interval.fromDateTimes(
       DateTime.fromISO(project.duration.from),
-      toDateTime.isValid ? toDateTime : DateTime.now(),
+      toDateTime.isValid ? toDateTime : now,
     );
   });
   const mergedIntervals = Interval.merge(intervals);

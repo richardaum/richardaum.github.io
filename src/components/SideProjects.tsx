@@ -1,15 +1,10 @@
 "use client";
 
 import { sideProjects } from "@/data/projects";
-import { durationToYearsAndMonths, fromToToDuration } from "@/utils/duration";
 import { clsx } from "@/utils/tailwind";
-import { calculateTechUsage } from "@/utils/tech";
 import { IconLink } from "@tabler/icons-react";
-import { DateTime } from "luxon";
 import { useTranslations } from "next-intl";
-import { TooltipText } from "./TooltipText";
-
-const techUsage = calculateTechUsage(sideProjects);
+import { TechTooltipText, WorkedFor } from "./LiveDuration";
 
 export function SideProjects() {
   const t = useTranslations("Home");
@@ -44,49 +39,17 @@ export function SideProjects() {
                 </span>
               </h3>
               <span className="text-sm text-greyTones-600">
-                <TooltipText
-                  text={t("workedFor", {
-                    duration: durationToYearsAndMonths(fromToToDuration(project.duration)),
-                  })}
-                  tooltip={t("durationTooltip", {
-                    from: DateTime.fromISO(project.duration.from).toLocaleString({
-                      month: "long",
-                      year: "numeric",
-                    }),
-                    to:
-                      project.duration.to === "current"
-                        ? "current"
-                        : DateTime.fromISO(project.duration.to).toLocaleString({
-                            month: "long",
-                            year: "numeric",
-                          }),
-                  })}
-                  className=""
-                />
+                <WorkedFor from={project.duration.from} to={project.duration.to} />
               </span>
             </div>
             <p>{t(`sideProjects.${project.id}.description`)}</p>
             <p className="flex flex-wrap gap-1 font-light">
-              {project.techStack.map((technology, index) => {
-                const tech = technology;
-                const usage = techUsage.get(technology);
-                if (!usage) {
-                  return (
-                    <span key={index}>
-                      {technology}
-                      {index < project.techStack.length - 1 && ", "}
-                    </span>
-                  );
-                }
-                const duration = durationToYearsAndMonths(usage.duration);
-                const projects = usage.projectsCount;
-                return (
-                  <span key={index}>
-                    <TooltipText text={technology} tooltip={t("techTooltip", { duration, projects, tech })} />
-                    {index < project.techStack.length - 1 && ", "}
-                  </span>
-                );
-              })}
+              {project.techStack.map((technology, index) => (
+                <span key={index}>
+                  <TechTooltipText technology={technology} scope="side" />
+                  {index < project.techStack.length - 1 && ", "}
+                </span>
+              ))}
             </p>
           </article>
         ))}

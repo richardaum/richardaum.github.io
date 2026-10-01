@@ -19,9 +19,9 @@ export function durationToYearsAndMonths(_duration?: Duration) {
   return parts.join(" and ");
 }
 
-export function fromToToDuration({ from, to }: { from: string; to: string }) {
+export function fromToToDuration({ from, to }: { from: string; to: string }, now: DateTime = DateTime.now()) {
   const toDateTime = DateTime.fromISO(to);
-  const interval = Interval.fromDateTimes(DateTime.fromISO(from), toDateTime.isValid ? toDateTime : DateTime.now());
+  const interval = Interval.fromDateTimes(DateTime.fromISO(from), toDateTime.isValid ? toDateTime : now);
   const duration = Duration.fromMillis(interval.length()).shiftToAll();
   return duration;
 }

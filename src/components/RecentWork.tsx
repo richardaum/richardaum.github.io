@@ -1,13 +1,8 @@
 import { recentWorkProjects } from "@/data/projects";
-import { durationToYearsAndMonths, fromToToDuration } from "@/utils/duration";
 import { clsx } from "@/utils/tailwind";
-import { calculateTechUsage } from "@/utils/tech";
 import { IconExternalLink, IconLink } from "@tabler/icons-react";
-import { DateTime } from "luxon";
 import { getTranslations } from "next-intl/server";
-import { TooltipText } from "./TooltipText";
-
-const techUsage = calculateTechUsage(recentWorkProjects);
+import { TechTooltipText, WorkedFor } from "./LiveDuration";
 
 export async function RecentWork() {
   const t = await getTranslations("Home");
@@ -36,25 +31,7 @@ export async function RecentWork() {
                 </span>
               </h3>
               <span className="text-sm text-greyTones-600">
-                <TooltipText
-                  text={t("workedFor", {
-                    duration: durationToYearsAndMonths(fromToToDuration(project.duration)),
-                  })}
-                  tooltip={t("durationTooltip", {
-                    from: DateTime.fromISO(project.duration.from).toLocaleString({
-                      month: "long",
-                      year: "numeric",
-                    }),
-                    to:
-                      project.duration.to === "current"
-                        ? "current"
-                        : DateTime.fromISO(project.duration.to).toLocaleString({
-                            month: "long",
-                            year: "numeric",
-                          }),
-                  })}
-                  className=""
-                />
+                <WorkedFor from={project.duration.from} to={project.duration.to} />
               </span>
             </div>
             <p>
@@ -68,26 +45,12 @@ export async function RecentWork() {
               })}
             </p>
             <p className="flex flex-wrap gap-1 font-light">
-              {project.techStack.map((technology, index) => {
-                const tech = technology;
-                const usage = techUsage.get(technology);
-                if (!usage) {
-                  return (
-                    <span key={index}>
-                      {technology}
-                      {index < project.techStack.length - 1 && ", "}
-                    </span>
-                  );
-                }
-                const duration = durationToYearsAndMonths(usage.duration);
-                const projects = usage.projectsCount;
-                return (
-                  <span key={index}>
-                    <TooltipText text={technology} tooltip={t("techTooltip", { duration, projects, tech })} />
-                    {index < project.techStack.length - 1 && ", "}
-                  </span>
-                );
-              })}
+              {project.techStack.map((technology, index) => (
+                <span key={index}>
+                  <TechTooltipText technology={technology} scope="recent" />
+                  {index < project.techStack.length - 1 && ", "}
+                </span>
+              ))}
             </p>
           </article>
         ))}
