@@ -1,6 +1,14 @@
 import { Project, TechUsage } from "@/types/work";
 import { DateTime, Duration, Interval } from "luxon";
 
+// Projects that have not started yet (from > now) count as a zero-length interval.
+const projectInterval = ({ duration }: Project, now: DateTime) => {
+  const from = DateTime.fromISO(duration.from);
+  const to = DateTime.fromISO(duration.to);
+  const end = to.isValid ? to : now;
+  return Interval.fromDateTimes(from, end < from ? from : end);
+};
+
 export const calculateTechUsage = (projects: Project[], now: DateTime = DateTime.now()) => {
   const techUsageMap = new Map<string, TechUsage>();
 
@@ -11,12 +19,7 @@ export const calculateTechUsage = (projects: Project[], now: DateTime = DateTime
         if (!acc[tech]) {
           acc[tech] = [];
         }
-        const toDateTime = DateTime.fromISO(project.duration.to);
-        const interval = Interval.fromDateTimes(
-          DateTime.fromISO(project.duration.from),
-          toDateTime.isValid ? toDateTime : now,
-        );
-        acc[tech].push(interval);
+        acc[tech].push(projectInterval(project, now));
       });
 
       return acc;
@@ -41,13 +44,7 @@ export const calculateTechUsage = (projects: Project[], now: DateTime = DateTime
 };
 
 export const calculateTotalExperience = (projects: Project[], now: DateTime = DateTime.now()): Duration => {
-  const intervals = projects.map((project) => {
-    const toDateTime = DateTime.fromISO(project.duration.to);
-    return Interval.fromDateTimes(
-      DateTime.fromISO(project.duration.from),
-      toDateTime.isValid ? toDateTime : now,
-    );
-  });
+  const intervals = projects.map((project) => projectInterval(project, now));
   const mergedIntervals = Interval.merge(intervals);
   const totalDuration = Duration.fromMillis(
     mergedIntervals.reduce((acc, interval) => acc + interval.length(), 0),

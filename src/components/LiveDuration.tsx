@@ -22,6 +22,15 @@ export function WorkedFor({ from, to }: { from: string; to: string }) {
   const t = useTranslations("Home");
   const now = useNow();
 
+  if (DateTime.fromISO(from) > now) {
+    return (
+      <TooltipText
+        text={t("startsOn", { date: formatMonthYear(from) })}
+        tooltip={DateTime.fromISO(from).toLocaleString(DateTime.DATE_FULL)}
+      />
+    );
+  }
+
   return (
     <TooltipText
       text={t("workedFor", { duration: durationToYearsAndMonths(fromToToDuration({ from, to }, now)) })}

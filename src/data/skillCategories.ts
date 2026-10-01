@@ -17,6 +17,14 @@ export const skillCategories = {
   HTML: ["frontend"],
   Vite: ["frontend", "tooling"],
   "React Query": ["frontend"],
+  "TanStack Router": ["frontend"],
+  "React Hook Form": ["frontend"],
+  Zod: ["frontend"],
+  "Radix UI": ["frontend"],
+  "React Aria": ["frontend"],
+  Stitches: ["frontend"],
+  Nivo: ["frontend"],
+  "Vega-Lite": ["frontend"],
   "Design Systems": ["frontend"],
   "Micro-frontends": ["frontend", "architecture"],
   "Progressive Web Apps (PWA)": ["frontend"],
@@ -34,6 +42,7 @@ export const skillCategories = {
   BFF: ["backend", "architecture"],
   WebSockets: ["backend", "apis"],
   "Bolt for Slack": ["apis"],
+  "REST APIs": ["apis"],
 
   // Data
   PostgreSQL: ["data"],
@@ -43,6 +52,8 @@ export const skillCategories = {
 
   // Testing and quality
   Jest: ["testing"],
+  Vitest: ["testing"],
+  Playwright: ["testing"],
   "React Testing Library": ["testing"],
   Cypress: ["testing"],
   Mocha: ["testing"],
@@ -51,6 +62,7 @@ export const skillCategories = {
 
   // Tooling and delivery
   Git: ["tooling"],
+  Storybook: ["tooling"],
   Yarn: ["tooling"],
   Webpack: ["tooling"],
   Babel: ["tooling"],
