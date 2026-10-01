@@ -1,6 +1,6 @@
 "use client";
 
-import { sideProjects } from "@/data/projects";
+import { visibleSideProjects } from "@/data/projects";
 import { clsx } from "@/utils/tailwind";
 import { IconLink } from "@tabler/icons-react";
 import { useTranslations } from "next-intl";
@@ -13,7 +13,7 @@ export function SideProjects() {
     <section className="border-l-4 border-greyTones-500 pl-4">
       <h2 className="mb-6 font-display text-lg text-greyTones-600">{t("sideProjects.title")}</h2>
       <section className="flex flex-col gap-8 pb-8">
-        {sideProjects.map((project) => (
+        {visibleSideProjects.map((project) => (
           <article key={project.id} className="relative flex flex-col gap-3">
             {"peerlistUrl" in project && project.peerlistUrl && project.peerlistBadge && (
               <a href={project.peerlistUrl} target="_blank" rel="noreferrer" className="absolute right-0 top-0">

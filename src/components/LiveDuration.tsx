@@ -1,6 +1,6 @@
 "use client";
 
-import { projects, recentWorkProjects, sideProjects } from "@/data/projects";
+import { visibleProjects, visibleRecentWorkProjects, visibleSideProjects } from "@/data/projects";
 import { useNow } from "@/hooks/useNow";
 import { durationToYearsAndMonths, fromToToDuration } from "@/utils/duration";
 import { calculateTechUsage, calculateTotalExperience } from "@/utils/tech";
@@ -12,7 +12,7 @@ import { TooltipText } from "./TooltipText";
 
 // Leaf components: only the text that depends on "now" is rendered on the client.
 
-const scopes = { all: projects, recent: recentWorkProjects, side: sideProjects };
+const scopes = { all: visibleProjects, recent: visibleRecentWorkProjects, side: visibleSideProjects };
 
 function formatMonthYear(date: string) {
   return DateTime.fromISO(date).toLocaleString({ month: "long", year: "numeric" });
@@ -54,7 +54,7 @@ export function TechTooltipText({ technology, scope }: { technology: string; sco
 
 export function TechDuration({ technology }: { technology: string }) {
   const now = useNow();
-  const usage = useMemo(() => calculateTechUsage(projects, now).get(technology), [technology, now]);
+  const usage = useMemo(() => calculateTechUsage(visibleProjects, now).get(technology), [technology, now]);
   if (!usage) return null;
 
   const { years, months } = usage.duration.shiftTo("years", "months");
@@ -71,7 +71,7 @@ export function TechDuration({ technology }: { technology: string }) {
 export function TotalExperience({ withTooltip = false }: { withTooltip?: boolean }) {
   const t = useTranslations("Home");
   const now = useNow();
-  const total = useMemo(() => calculateTotalExperience(projects, now), [now]);
+  const total = useMemo(() => calculateTotalExperience(visibleProjects, now), [now]);
   const detailed = total.shiftTo("years", "months", "days");
 
   const content = (

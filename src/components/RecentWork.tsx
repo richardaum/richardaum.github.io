@@ -1,4 +1,4 @@
-import { recentWorkProjects } from "@/data/projects";
+import { visibleRecentWorkProjects } from "@/data/projects";
 import { clsx } from "@/utils/tailwind";
 import { IconExternalLink, IconLink } from "@tabler/icons-react";
 import { getTranslations } from "next-intl/server";
@@ -11,7 +11,7 @@ export async function RecentWork() {
     <section className="border-l-4 border-greyTones-500 pl-4">
       <h2 className="mb-6 font-display text-lg text-greyTones-600">{t("recentWork.title")}</h2>
       <section className="flex flex-col gap-8 pb-8">
-        {recentWorkProjects.map((project) => (
+        {visibleRecentWorkProjects.map((project) => (
           <article key={project.id} className="flex flex-col gap-3">
             <div className="flex flex-col">
               <h3 className="flex items-center font-semibold">

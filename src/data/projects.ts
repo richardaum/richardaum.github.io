@@ -1,6 +1,7 @@
 export const recentWorkProjects = [
   {
     id: "eqwi" as const,
+    hidden: true,
     duration: { from: "2026-08-17", to: "current" },
     link: "https://www.glassdoor.com",
     linkedin: "https://www.linkedin.com/company/105557641/",
@@ -276,3 +277,9 @@ export const sideProjects = [
 ];
 
 export const projects = [...recentWorkProjects, ...sideProjects];
+
+const isVisible = (project: object) => !("hidden" in project && project.hidden);
+
+export const visibleRecentWorkProjects = recentWorkProjects.filter(isVisible);
+export const visibleSideProjects = sideProjects.filter(isVisible);
+export const visibleProjects = [...visibleRecentWorkProjects, ...visibleSideProjects];

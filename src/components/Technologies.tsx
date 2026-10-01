@@ -1,4 +1,4 @@
-import { projects } from "@/data/projects";
+import { visibleProjects } from "@/data/projects";
 import { skillCategories, skillCategoryLabels, skillCategoryOrder, type SkillCategory } from "@/data/skillCategories";
 import { calculateTechUsage } from "@/utils/tech";
 import { getTranslations } from "next-intl/server";
@@ -11,7 +11,7 @@ function getPrimaryCategory(technology: string) {
 
 export async function Technologies() {
   const t = await getTranslations("Home");
-  const technologies = Array.from(calculateTechUsage(projects)).sort(
+  const technologies = Array.from(calculateTechUsage(visibleProjects)).sort(
     ([, first], [, second]) => second.duration.as("milliseconds") - first.duration.as("milliseconds"),
   );
   const technologyGroups = skillCategoryOrder
